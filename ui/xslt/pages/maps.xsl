@@ -206,7 +206,7 @@
 
 		<div class="row">
 			<xsl:apply-templates
-				select="lst[not(@name = 'mint_geo') and not(@name = 'mint_facet') and not(matches(@name, '^symbol_[obv|rev]'))] | lst[@name = 'mint_facet' and $collection_type = 'hoard']"
+				select="lst[not(@name = 'productionPlace_geo') and not(@name = 'productionPlace_facet') and not(@name = 'mint_geo') and not(@name = 'mint_facet') and not(matches(@name, '^symbol_[obv|rev]'))] | lst[@name = 'mint_facet' and $collection_type = 'hoard']"
 				mode="facet"/>
 
 		</div>

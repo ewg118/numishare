@@ -210,8 +210,8 @@
 	</xsl:template>
 
 	<xsl:template match="doc" mode="query">
-		<xsl:variable name="lat" select="normalize-space(substring-after(tokenize(arr[@name = 'mint_geo']/str[1], '\|')[3], ','))"/>
-		<xsl:variable name="long" select="normalize-space(substring-before(tokenize(arr[@name = 'mint_geo']/str[1], '\|')[3], ','))"/>
+		<xsl:variable name="lat" select="if (arr[@name = 'productionPlace_geo']) then normalize-space(substring-after(tokenize(arr[@name = 'productionPlace_geo']/str[1], '\|')[3], ',')) else normalize-space(substring-after(tokenize(arr[@name = 'mint_geo']/str[1], '\|')[3], ','))"/>
+		<xsl:variable name="long" select="if (arr[@name = 'productionPlace_geo']) then normalize-space(substring-before(tokenize(arr[@name = 'productionPlace_geo']/str[1], '\|')[3], ',')) else normalize-space(substring-before(tokenize(arr[@name = 'mint_geo']/str[1], '\|')[3], ','))"/>
 		<xsl:if test="number($lat) and number($long)">
 			
 			<_object>
