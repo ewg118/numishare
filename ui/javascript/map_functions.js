@@ -355,6 +355,7 @@ $(document).ready(function () {
         var fillColor;
         switch (feature.properties.type) {
             case 'mint':
+            case 'productionPlace':
             fillColor = '#6992fd';
             break;
             case 'hoard':
