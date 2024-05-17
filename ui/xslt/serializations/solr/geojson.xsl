@@ -83,7 +83,7 @@
 								<xsl:value-of select="$uri"/>
 							</uri>
 							<type>
-								<xsl:value-of select="$pointType"/>
+								<xsl:value-of select="if ($pointType = 'productionPlace') then 'mint' else $pointType"/>
 							</type>
 							<radius>
 								<xsl:variable name="count" select="number(.)"/>
