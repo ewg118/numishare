@@ -857,7 +857,7 @@
 	</xsl:template>
 
 	<!-- suppress the geographic coordinates as a facet -->
-	<xsl:template match="lst[@name = 'mint_geo']" mode="facet"/>
+	<xsl:template match="lst[@name = 'mint_geo']|lst[@name = 'productionPlace_geo']" mode="facet"/>
 
 	<!-- ****** REMOVING INDIVIDUAL QUERY COMPONENTS (DISPLAY ABOVE RESULT LIST) ****** -->
 	<xsl:template name="remove_facets">
@@ -868,7 +868,7 @@
 				<xsl:when test="$q = '*:*' or not(string($q))">
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('results_all-terms', $lang)"/>
-						<xsl:if test="count(//lst[@name = 'mint_geo']/int) &gt; 0 or count(//lst[@name = 'findspot_geo']/int) &gt; 0">
+						<xsl:if test="count(//lst[@name = 'mint_geo']/int) &gt; 0 or count(//lst[@name = 'findspot_geo']/int) &gt; 0 or count(//lst[@name = 'productionPlace_geo']/int) &gt; 0 or count(//lst[@name = 'hoard_geo']/int) &gt; 0">
 							<small>
 								<a href="#resultMap" id="map_results">
 									<xsl:value-of select="numishare:normalizeLabel('results_map-results', $lang)"/>
@@ -880,7 +880,7 @@
 				<xsl:otherwise>
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('results_filters', $lang)"/>
-						<xsl:if test="count(//lst[@name = 'mint_geo']/int) &gt; 0 or count(//lst[@name = 'findspot_geo']/int) &gt; 0">
+						<xsl:if test="count(//lst[@name = 'mint_geo']/int) &gt; 0 or count(//lst[@name = 'findspot_geo']/int) &gt; 0 or count(//lst[@name = 'productionPlace_geo']/int) &gt; 0 or count(//lst[@name = 'hoard_geo']/int) &gt; 0">
 							<small>
 								<a href="#resultMap" id="map_results">
 									<xsl:value-of select="numishare:normalizeLabel('results_map-results', $lang)"/>
