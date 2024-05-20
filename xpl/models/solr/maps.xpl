@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-	Copyright (C) 2010 Ethan Gruber
-	EADitor: https://github.com/ewg118/eaditor
-	Apache License 2.0: https://github.com/ewg118/eaditor
-	
+	Author: Ethan Gruber
+	Date Modified: May 2024
+	Function: issue a Solr query to evaluate the availability of geographic points and related facets for the maps-based browse page
 -->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors">
 
@@ -71,20 +70,20 @@
 						<xsl:when test="string($department)">
 							<xsl:choose>
 								<xsl:when test="string($lang)">
-									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+(productionPlace_geo:*+OR+findspot_geo:*+OR+subject_geo:*)+AND+department_facet:', encode-for-uri(concat('&#x022;', $department, '&#x022;')), '&amp;start=', $start, $facets, '&amp;facet.field=productionPlace_geo&amp;facet.limit=1&amp;facet.sort=index&amp;facet=true')"/>
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+(productionPlace_geo:*+OR+findspot_geo:*+OR+subject_geo:*+OR+hoard_geo:*)+AND+department_facet:', encode-for-uri(concat('&#x022;', $department, '&#x022;')), '&amp;start=', $start, $facets, '&amp;facet.field=productionPlace_geo&amp;facet.limit=1&amp;facet.sort=index&amp;facet=true')"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+(productionPlace_geo:*+OR+findspot_geo:*+OR+subject_geo:*)+AND+department_facet:', encode-for-uri(concat('&#x022;', $department, '&#x022;')), '&amp;start=', $start, $facets, '&amp;facet.field=productionPlace_geo&amp;facet.limit=1&amp;facet.sort=index&amp;facet=true')"/>
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+(productionPlace_geo:*+OR+findspot_geo:*+OR+subject_geo:*+OR+hoard_geo:*)+AND+department_facet:', encode-for-uri(concat('&#x022;', $department, '&#x022;')), '&amp;start=', $start, $facets, '&amp;facet.field=productionPlace_geo&amp;facet.limit=1&amp;facet.sort=index&amp;facet=true')"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:choose>
 								<xsl:when test="string($lang)">
-									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+(productionPlace_geo:*+OR+findspot_geo:*+OR+subject_geo:*)&amp;start=', $start, $facets, '&amp;facet.field=productionPlace_geo&amp;facet.limit=1&amp;facet.sort=index&amp;facet=true')"/>
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+(productionPlace_geo:*+OR+findspot_geo:*+OR+subject_geo:*+OR+hoard_geo:*)&amp;start=', $start, $facets, '&amp;facet.field=productionPlace_geo&amp;facet.limit=1&amp;facet.sort=index&amp;facet=true')"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+(productionPlace_geo:*+OR+findspot_geo:*+OR+subject_geo:*)&amp;start=', $start, $facets, '&amp;facet.field=productionPlace_geo&amp;facet.limit=1&amp;facet.sort=index&amp;facet=true')"/>
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+(productionPlace_geo:*+OR+findspot_geo:*+OR+subject_geo:*+OR+hoard_geo:*)&amp;start=', $start, $facets, '&amp;facet.field=productionPlace_geo&amp;facet.limit=1&amp;facet.sort=index&amp;facet=true')"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:otherwise>
