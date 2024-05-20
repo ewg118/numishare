@@ -165,7 +165,7 @@
 					<xsl:choose>
 						<xsl:when test="$numFound &gt; 0">
 							<!-- include resultMap div when there are geographical results-->
-							<xsl:if test="count(//lst[@name='mint_geo']/int) &gt; 0 or count(//lst[@name='findspot_geo']/int) &gt; 0">
+							<xsl:if test="count(//lst[@name='mint_geo']/int) &gt; 0 or count(//lst[@name='findspot_geo']/int) &gt; 0 or count(//lst[@name='productionPlace_geo']/int) &gt; 0 or count(//lst[@name='hoard_geo']/int) &gt; 0">
 								<div style="display:none">
 									<div id="resultMap"/>
 								</div>
@@ -244,7 +244,7 @@
 							<a href="{$display_path}feed/{$query}">
 								<img src="{$include_path}/images/atom-medium.png" title="Atom" alt="Atom"/>
 							</a>
-							<xsl:if test="count(//lst[@name='mint_geo']/int) &gt; 0">
+							<xsl:if test="count(//lst[@name='mint_geo']/int) &gt; 0 or count(//lst[@name='productionPlace_geo']/int) &gt; 0">
 								<xsl:choose>
 									<xsl:when test="/content/config/collection_type = 'hoard'">
 										<a href="{$display_path}findspots.kml{$query}" rel="nofollow">
@@ -267,11 +267,11 @@
 								<!-- the image below is copyright of Mark James, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:Chart_bar.png -->
 								<img src="{$include_path}/images/visualize.png" title="Visualize" alt="Visualize"/>
 							</a>
-							<xsl:if test="//lst[@name='mint_geo'][count(int) &gt; 0] or //lst[@name='findspot_geo'][count(int) &gt; 0]">
+							<xsl:if test="//lst[@name='mint_geo'][count(int) &gt; 0] or //lst[@name='findspot_geo'][count(int) &gt; 0] or //lst[@name='productionPlace_geo'][count(int) &gt; 0] or //lst[@name='hoard_geo'][count(int) &gt; 0]">
 								<div id="geodata">
 									<h4><xsl:value-of select="numishare:regularize_node('geographic', $lang)"/></h4>
 									<ul>
-										<xsl:if test="//lst[@name='mint_geo'][count(int) &gt; 0]">
+										<xsl:if test="//lst[@name='mint_geo'][count(int) &gt; 0] or //lst[@name='productionPlace_geo'][count(int) &gt; 0]">
 											<li><b>Mints: </b> <a href="{$display_path}mints.geojson{$query}" rel="nofollow">GeoJSON</a>, <a href="{$display_path}mints.kml{$query}" rel="nofollow">KML</a></li>
 										</xsl:if>
 										<xsl:if test="//lst[@name='findspot_geo'][count(int) &gt; 0]">
