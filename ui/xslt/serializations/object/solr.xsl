@@ -182,6 +182,13 @@
 					<xsl:copy-of select="document(concat($href, '.rdf'))/rdf:RDF/*"/>
 				</xsl:if>
 			</xsl:for-each>
+			
+			<xsl:if test="descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'numismatics.org')]">
+				<xsl:copy-of select="document(concat(descendant::nuds:findspotDesc/@xlink:href, '.rdf'))/rdf:RDF/*"/>
+			</xsl:if>
+			<xsl:if test="descendant::nuds:hoard[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'numismatics.org')]">
+				<xsl:copy-of select="document(concat(descendant::nuds:hoard/@xlink:href, '.rdf'))/rdf:RDF/*"/>
+			</xsl:if>
 		</rdf:RDF>
 	</xsl:variable>
 

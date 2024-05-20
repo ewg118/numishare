@@ -531,9 +531,18 @@
 					<xsl:value-of select="$href"/>
 				</field>
 
-				<xsl:call-template name="parse_findspot_uri">
+				<xsl:call-template name="parse_hoard_uri">
 					<xsl:with-param name="href" select="$href"/>
-					<xsl:with-param name="label"/>
+					<xsl:with-param name="label">
+						<xsl:choose>
+							<xsl:when test="$rdf/*[@rdf:about = $href]/skos:prefLabel[@xml:lang = 'en']">
+								<xsl:value-of select="$rdf/*[@rdf:about = $href]/skos:prefLabel[@xml:lang = 'en']"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="$href"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:with-param>
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:otherwise>
@@ -593,9 +602,25 @@
 		</field>
 
 		<xsl:if test="@xlink:href">
+			<xsl:variable name="href" select="@xlink:href"/>
+			
 			<field name="hoard_uri">
 				<xsl:value-of select="@xlink:href"/>
 			</field>
+			
+			<xsl:call-template name="parse_hoard_uri">
+				<xsl:with-param name="href" select="$href"/>
+				<xsl:with-param name="label">
+					<xsl:choose>
+						<xsl:when test="$rdf/*[@rdf:about = $href]/skos:prefLabel[@xml:lang = 'en']">
+							<xsl:value-of select="$rdf/*[@rdf:about = $href]/skos:prefLabel[@xml:lang = 'en']"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="normalize-space(.)"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:with-param>
+			</xsl:call-template>
 		</xsl:if>
 	</xsl:template>
 
@@ -681,28 +706,29 @@
 
 	<xsl:template name="parse_hoard_uri">
 		<xsl:param name="href"/>
-
-		<xsl:variable name="label">
-			<xsl:choose>
-				<xsl:when test="$rdf/*[@rdf:about = $href]/skos:prefLabel[@xml:lang = 'en']">
-					<xsl:value-of select="$rdf/*[@rdf:about = $href]/skos:prefLabel[@xml:lang = 'en']"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="$href"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
+		<xsl:param name="label"/>
+		
 
 		<xsl:if test="$rdf//*[@rdf:about = $href]/nmo:hasFindspot">
 			<!-- @rdf:resource comes within P89 if it's certain -->
 			<xsl:variable name="gazetteerURI"
-				select="$rdf//*[@rdf:about = $uri]/nmo:hasFindspot/descendant::crm:P89_falls_within[contains(@rdf:resource, 'geonames.org') or contains(@rdf:resource, 'wikidata.org')]/@rdf:resource"/>
+				select="$rdf//*[@rdf:about = $href]/nmo:hasFindspot/descendant::crm:P89_falls_within[contains(@rdf:resource, 'geonames.org') or contains(@rdf:resource, 'wikidata.org')]/@rdf:resource"/>
 
 			<xsl:if test="string($gazetteerURI)">
 				<xsl:variable name="spatialThingURI" select="$rdf//*[@rdf:about = $gazetteerURI]/crm:P168_place_is_defined_by/@rdf:resource"/>
 
 				<xsl:if test="$spatialThingURI">
-					<true>true</true>
+					
+					<xsl:if test="$rdf//*[@rdf:about = $spatialThingURI][geo:lat and geo:long]">
+						<field name="hoard_geo">
+							<xsl:value-of select="$label"/>
+							<xsl:text>|</xsl:text>
+							<xsl:value-of select="$href"/>
+							<xsl:text>|</xsl:text>
+							<xsl:value-of select="concat($rdf//*[@rdf:about = $spatialThingURI]/geo:long, ',', $rdf//*[@rdf:about = $spatialThingURI]/geo:lat)"/>
+						</field>
+					</xsl:if>
+					
 				</xsl:if>
 			</xsl:if>
 		</xsl:if>

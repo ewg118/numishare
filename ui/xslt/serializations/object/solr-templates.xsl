@@ -645,8 +645,8 @@
 				</field>
 			</xsl:for-each>
 
-			<!-- get dynasty/political entity from Nomisma RDF, but only if the role is not statedAuthority -->			
-			<xsl:if test="not($role = 'statedAuthority')">
+			<!-- get dynasty/political entity from Nomisma RDF, but only if the role is not statedAuthority or portrait -->			
+			<xsl:if test="not($role = 'statedAuthority') and not($role = 'portrait')">
 				<xsl:for-each select="$rdf/*[@rdf:about = $href]/org:memberOf">
 					<xsl:variable name="dynasty_uri" select="@rdf:resource"/>
 					<xsl:variable name="label" select="

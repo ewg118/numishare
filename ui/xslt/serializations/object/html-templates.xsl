@@ -685,7 +685,7 @@
 		</xsl:choose>
 
 		<!-- if the element is a persname with a Nomisma URI, then extract the state and dynasty from the Nomisma RDF -->
-		<xsl:if test="local-name() = 'persname' and contains(@xlink:href, 'nomisma.org') and not(@xlink:role = 'statedAuthority')">
+		<xsl:if test="local-name() = 'persname' and contains(@xlink:href, 'nomisma.org') and not(@xlink:role = 'statedAuthority' or @xlink:role = 'portrait')">
 			<xsl:variable name="href" select="@xlink:href"/>
 
 			<!-- only insert entity links that do exist in NUDS elements -->
