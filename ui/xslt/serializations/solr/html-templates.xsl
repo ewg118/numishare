@@ -262,7 +262,7 @@
 							<xsl:value-of select="numishare:regularize_node('denomination', $lang)"/>
 						</dt>
 						<dd>
-							<xsl:for-each select="arr[@name = 'denomination_facet']/str">
+							<xsl:for-each select="distinct-values(arr[@name = 'denomination_facet']/str)">
 								<xsl:value-of select="."/>
 								<xsl:if test="not(position() = last())">
 									<xsl:text>, </xsl:text>
@@ -278,7 +278,7 @@
 								<xsl:value-of select="numishare:regularize_node('productionPlace', $lang)"/>
 							</dt>
 							<dd>
-								<xsl:for-each select="arr[@name = 'productionPlace_facet']/str">
+								<xsl:for-each select="distinct-values(arr[@name = 'productionPlace_facet']/str)">
 									<xsl:value-of select="."/>
 									<xsl:if test="not(position() = last())">
 										<xsl:text>, </xsl:text>
@@ -291,7 +291,7 @@
 								<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
 							</dt>
 							<dd>
-								<xsl:for-each select="arr[@name = 'mint_facet']/str">
+								<xsl:for-each select="distinct-values(arr[@name = 'mint_facet']/str)">
 									<xsl:value-of select="."/>
 									<xsl:if test="not(position() = last())">
 										<xsl:text>, </xsl:text>

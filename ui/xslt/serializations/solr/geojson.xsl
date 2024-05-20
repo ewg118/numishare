@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Author: Ethan Gruber
-	Date modified: April 2020
+	Date modified: May 2024
 	Function: serialize Solr results for geographic docs into GeoJSON -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs" version="2.0">
 	<xsl:include href="../json/json-metamodel.xsl"/>

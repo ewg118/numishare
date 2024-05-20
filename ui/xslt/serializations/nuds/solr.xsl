@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="2.0" xmlns:nuds="http://nomisma.org/nuds"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nm="http://nomisma.org/id/"
-	xmlns:nmo="http://nomisma.org/ontology#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mets="http://www.loc.gov/METS/"
-	xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:gml="http://www.opengis.net/gml" xmlns:res="http://www.w3.org/2005/sparql-results#"
-	xmlns:numishare="https://github.com/ewg118/numishare"
-	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
-	xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-	xmlns:digest="org.apache.commons.codec.digest.DigestUtils" exclude-result-prefixes="#all">
+<xsl:stylesheet version="2.0" xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nm="http://nomisma.org/id/"
+	xmlns:nmo="http://nomisma.org/ontology#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:mets="http://www.loc.gov/METS/" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml"
+	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:digest="org.apache.commons.codec.digest.DigestUtils" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"
+	xmlns:crmgeo="http://www.ics.forth.gr/isl/CRMgeo/" exclude-result-prefixes="#all">
 
 	<xsl:template name="nuds">
 		<!-- create default document -->
@@ -54,8 +50,7 @@
 				<xsl:choose>
 					<xsl:when test="nuds:control/nuds:otherRecordId[@localType = 'sortId']">
 						<field name="sortid">
-							<xsl:value-of
-								select="nuds:control/nuds:otherRecordId[@localType = 'sortId']"/>
+							<xsl:value-of select="nuds:control/nuds:otherRecordId[@localType = 'sortId']"/>
 						</field>
 					</xsl:when>
 					<xsl:otherwise>
@@ -71,9 +66,7 @@
 				<xsl:choose>
 					<xsl:when test="nuds:control/nuds:otherRecordId[@localType = 'typeNumber']">
 						<field name="typeNumber">
-							<xsl:value-of
-								select="nuds:control/nuds:otherRecordId[@localType = 'typeNumber']"
-							/>
+							<xsl:value-of select="nuds:control/nuds:otherRecordId[@localType = 'typeNumber']"/>
 						</field>
 					</xsl:when>
 					<xsl:otherwise>
@@ -105,9 +98,7 @@
 						</field>
 
 						<!-- list associated coin types -->
-						<xsl:apply-templates
-							select="$die-types//group[identifier = $id]/descendant::res:result"
-							mode="die-types"/>
+						<xsl:apply-templates select="$die-types//group[identifier = $id]/descendant::res:result" mode="die-types"/>
 					</xsl:when>
 				</xsl:choose>
 
@@ -131,16 +122,13 @@
 			</field>
 			<field name="timestamp">
 				<xsl:choose>
-					<xsl:when
-						test="descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime castable as xs:dateTime">
+					<xsl:when test="descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime castable as xs:dateTime">
 						<xsl:value-of
 							select="format-dateTime(xs:dateTime(descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime), '[Y0001]-[M01]-[D01]T[h01]:[m01]:[s01]Z')"
 						/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of
-							select="format-dateTime(current-dateTime(), '[Y0001]-[M01]-[D01]T[h01]:[m01]:[s01]Z')"
-						/>
+						<xsl:value-of select="format-dateTime(current-dateTime(), '[Y0001]-[M01]-[D01]T[h01]:[m01]:[s01]Z')"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</field>
@@ -148,8 +136,7 @@
 			<xsl:apply-templates select="nuds:control/nuds:rightsStmt"/>
 
 			<!-- if there are any uncertain type attributions, flag this in a solr field -->
-			<xsl:if
-				test="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)][@certainty]">
+			<xsl:if test="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)][@certainty]">
 				<field name="typeUncertain">true</field>
 			</xsl:if>
 
@@ -184,9 +171,7 @@
 							</xsl:choose>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of
-								select="$nudsGroup//object[@xlink:href = $href]/descendant::nuds:title"
-							/>
+							<xsl:value-of select="$nudsGroup//object[@xlink:href = $href]/descendant::nuds:title"/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</field>
@@ -207,8 +192,7 @@
 
 
 			<!-- if there are subtypes, extract the legend and type description or symbols, if missing from parent record (only extract information to index for type-level type)-->
-			<xsl:if
-				test="not(nuds:control/nuds:otherRecordId[@semantic = 'skos:broader']) and ($index_subtype_metadata = true() or $index_subtypes_as_references = true())">
+			<xsl:if test="not(nuds:control/nuds:otherRecordId[@semantic = 'skos:broader']) and ($index_subtype_metadata = true() or $index_subtypes_as_references = true())">
 
 				<!-- index subtype metadata -->
 				<xsl:if test="$index_subtype_metadata = true()">
@@ -217,8 +201,7 @@
 						<xsl:copy-of select="descendant::nuds:typeDesc"/>
 					</xsl:variable>
 
-					<xsl:variable name="hasReferences" select="boolean(descendant::nuds:reference)"
-						as="xs:boolean"/>
+					<xsl:variable name="hasReferences" select="boolean(descendant::nuds:reference)" as="xs:boolean"/>
 
 
 					<xsl:if test="count($subtypes//type[@recordId = $id]/subtype) &gt; 0">
@@ -227,22 +210,13 @@
 							<xsl:variable name="side" select="."/>
 							<xsl:variable name="sideAbbr" select="substring($side, 1, 3)"/>
 
-							<xsl:variable name="hasTypes"
-								select="boolean($typeDesc/*[local-name() = $side]/nuds:type)"
-								as="xs:boolean"/>
-							<xsl:variable name="hasLegends"
-								select="boolean($typeDesc/*[local-name() = $side]/nuds:legend)"
-								as="xs:boolean"/>
-							<xsl:variable name="hasSymbols"
-								select="boolean($typeDesc/*[local-name() = $side]/nuds:symbol)"
-								as="xs:boolean"/>
-							<xsl:variable name="hasDies"
-								select="boolean($typeDesc/*[local-name() = $side]/nuds:die)"
-								as="xs:boolean"/>
+							<xsl:variable name="hasTypes" select="boolean($typeDesc/*[local-name() = $side]/nuds:type)" as="xs:boolean"/>
+							<xsl:variable name="hasLegends" select="boolean($typeDesc/*[local-name() = $side]/nuds:legend)" as="xs:boolean"/>
+							<xsl:variable name="hasSymbols" select="boolean($typeDesc/*[local-name() = $side]/nuds:symbol)" as="xs:boolean"/>
+							<xsl:variable name="hasDies" select="boolean($typeDesc/*[local-name() = $side]/nuds:die)" as="xs:boolean"/>
 
 							<!-- type descriptions -->
-							<xsl:if
-								test="$hasTypes = false() and $subtypes//type[@recordId = $id]/subtype/descendant::*[local-name() = $side]/nuds:type/nuds:description">
+							<xsl:if test="$hasTypes = false() and $subtypes//type[@recordId = $id]/subtype/descendant::*[local-name() = $side]/nuds:type/nuds:description">
 								<xsl:variable name="pieces" as="item()*">
 									<xsl:for-each select="
 											distinct-values($subtypes//type[@recordId = $id]/subtype/descendant::*[local-name() = $side]/nuds:type/nuds:description[if (string($lang)) then
@@ -266,14 +240,11 @@
 							</xsl:if>
 
 							<!-- legend -->
-							<xsl:if
-								test="$hasLegends = false() and $subtypes//type[@recordId = $id]/subtype/descendant::*[local-name() = $side]/nuds:legend">
+							<xsl:if test="$hasLegends = false() and $subtypes//type[@recordId = $id]/subtype/descendant::*[local-name() = $side]/nuds:legend">
 								<xsl:variable name="pieces" as="item()*">
 									<legends>
-										<xsl:for-each
-											select="$subtypes//type[@recordId = $id]/subtype/descendant::*[local-name() = $side]/nuds:legend">
-											<xsl:if
-												test="not(self::node() = preceding::nuds:legend)">
+										<xsl:for-each select="$subtypes//type[@recordId = $id]/subtype/descendant::*[local-name() = $side]/nuds:legend">
+											<xsl:if test="not(self::node() = preceding::nuds:legend)">
 												<xsl:copy-of select="self::node()"/>
 											</xsl:if>
 										</xsl:for-each>
@@ -285,8 +256,7 @@
 									<xsl:for-each select="$pieces//nuds:legend">
 										<xsl:choose>
 											<xsl:when test="tei:div[@type = 'edition']/tei:ab">
-												<xsl:apply-templates
-												select="tei:div[@type = 'edition']/tei:ab"/>
+												<xsl:apply-templates select="tei:div[@type = 'edition']/tei:ab"/>
 											</xsl:when>
 											<xsl:otherwise>
 												<xsl:value-of select="."/>
@@ -306,11 +276,9 @@
 							</xsl:if>
 
 							<!-- symbols -->
-							<xsl:if
-								test="$hasSymbols = false() and $subtypes//type[@recordId = $id]/subtype/descendant::*[local-name() = $side]/nuds:symbol">
+							<xsl:if test="$hasSymbols = false() and $subtypes//type[@recordId = $id]/subtype/descendant::*[local-name() = $side]/nuds:symbol">
 
-								<xsl:apply-templates
-									select="$subtypes//type[@recordId = $id]/subtype/descendant::*[local-name() = $side]/nuds:symbol">
+								<xsl:apply-templates select="$subtypes//type[@recordId = $id]/subtype/descendant::*[local-name() = $side]/nuds:symbol">
 									<xsl:with-param name="side" select="substring($side, 1, 3)"/>
 								</xsl:apply-templates>
 							</xsl:if>
@@ -318,10 +286,8 @@
 							<!-- die IDs -->
 							<!--<xsl:if test="not($typeDesc/*[local-name() = $side]/nuds:die) and count($subtypes//type[@recordId = $id]/subtype) &gt; 0"> </xsl:if>-->
 
-							<xsl:if
-								test="$hasDies = false() and $subtypes//type[@recordId = $id]/subtype/descendant::*[local-name() = $side]/nuds:die">
-								<xsl:apply-templates
-									select="$subtypes//type[@recordId = $id]/subtype/descendant::*[local-name() = $side]/nuds:die">
+							<xsl:if test="$hasDies = false() and $subtypes//type[@recordId = $id]/subtype/descendant::*[local-name() = $side]/nuds:die">
+								<xsl:apply-templates select="$subtypes//type[@recordId = $id]/subtype/descendant::*[local-name() = $side]/nuds:die">
 									<xsl:with-param name="side" select="substring($side, 1, 3)"/>
 								</xsl:apply-templates>
 							</xsl:if>
@@ -331,8 +297,7 @@
 						<!-- index type references for the subtypes -->
 						<xsl:variable name="refs" as="element()*">
 							<refs>
-								<xsl:for-each
-									select="$subtypes//type[@recordId = $id]/subtype/descendant::nuds:refDesc/nuds:reference">
+								<xsl:for-each select="$subtypes//type[@recordId = $id]/subtype/descendant::nuds:refDesc/nuds:reference">
 									<ref>
 										<xsl:call-template name="get_ref"/>
 									</ref>
@@ -388,8 +353,7 @@
 				<!-- subtype fulltext -->
 				<xsl:if test="count($subtypes//type[@recordId = $id]/subtype) &gt; 0">
 					<field name="fulltext">
-						<xsl:for-each
-							select="$subtypes//type[@recordId = $id]/subtype/descendant::nuds:descMeta/descendant-or-self::text()">
+						<xsl:for-each select="$subtypes//type[@recordId = $id]/subtype/descendant::nuds:descMeta/descendant-or-self::text()">
 							<xsl:value-of select="normalize-space(.)"/>
 							<xsl:text> </xsl:text>
 						</xsl:for-each>
@@ -427,21 +391,14 @@
 					<xsl:with-param name="typeDesc" as="node()*">
 						<xsl:choose>
 							<xsl:when test="descendant::nuds:typeDesc[string(@xlink:href)]">
-								<xsl:variable name="href"
-									select="descendant::nuds:typeDesc/@xlink:href"/>
+								<xsl:variable name="href" select="descendant::nuds:typeDesc/@xlink:href"/>
 
-								<xsl:copy-of
-									select="$nudsGroup//object[@xlink:href = $href]//nuds:typeDesc"
-								/>
+								<xsl:copy-of select="$nudsGroup//object[@xlink:href = $href]//nuds:typeDesc"/>
 							</xsl:when>
-							<xsl:when
-								test="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]">
-								<xsl:variable name="href"
-									select="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem']/@xlink:href"/>
+							<xsl:when test="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]">
+								<xsl:variable name="href" select="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem']/@xlink:href"/>
 
-								<xsl:copy-of
-									select="$nudsGroup//object[@xlink:href = $href]//nuds:typeDesc"
-								/>
+								<xsl:copy-of select="$nudsGroup//object[@xlink:href = $href]//nuds:typeDesc"/>
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:copy-of select="descendant::nuds:typeDesc"/>
@@ -527,9 +484,7 @@
 							select="distinct-values(nuds:typeDesc[@xlink:href]/@xlink:href | descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][@xlink:href]/@xlink:href)">
 							<xsl:variable name="uri" select="."/>
 
-							<xsl:copy-of
-								select="$nudsGroup/descendant::object[@xlink:href = $uri]/descendant::nuds:typeDesc"
-							/>
+							<xsl:copy-of select="$nudsGroup/descendant::object[@xlink:href = $uri]/descendant::nuds:typeDesc"/>
 						</xsl:for-each>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -571,7 +526,7 @@
 			<xsl:when test="string(@xlink:href)">
 				<xsl:variable name="href" select="@xlink:href"/>
 
-				<!-- the @xlink:href of a findspotDesc is presumed to a a hoard URI -->				
+				<!-- the @xlink:href of a findspotDesc is presumed to a a hoard URI -->
 				<field name="hoard_uri">
 					<xsl:value-of select="$href"/>
 				</field>
@@ -591,23 +546,21 @@
 		<xsl:apply-templates select="nuds:hoard | nuds:discovery"/>
 
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:findspot">
 		<xsl:param name="objectURI"/>
-		
+
 		<xsl:if test="nuds:description">
 			<field name="context_facet">
 				<xsl:value-of select="nuds:description"/>
 			</field>
 		</xsl:if>
-		
+
 		<xsl:choose>
 			<xsl:when test="nuds:fallsWithin/nuds:geogname/@xlink:href">
 				<xsl:call-template name="parse_findspot_uri">
-					<xsl:with-param name="href"
-						select="nuds:fallsWithin/nuds:geogname/@xlink:href"/>
-					<xsl:with-param name="label"
-						select="nuds:fallsWithin/nuds:geogname"/>
+					<xsl:with-param name="href" select="nuds:fallsWithin/nuds:geogname/@xlink:href"/>
+					<xsl:with-param name="label" select="nuds:fallsWithin/nuds:geogname"/>
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:otherwise>
@@ -624,16 +577,14 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<field name="findspot_facet">
-							<xsl:value-of
-								select="nuds:fallsWithin/nuds:geogname[@xlink:role = 'findspot']"
-							/>
+							<xsl:value-of select="nuds:fallsWithin/nuds:geogname[@xlink:role = 'findspot']"/>
 						</field>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
-		
-		<xsl:apply-templates select="nuds:geogname[@xlink:role = 'stratigraphicUnit'] | nuds:geogname[@xlink:role='area']|nuds:spatialContext"/>
+
+		<xsl:apply-templates select="nuds:geogname[@xlink:role = 'stratigraphicUnit'] | nuds:geogname[@xlink:role = 'area'] | nuds:spatialContext"/>
 	</xsl:template>
 
 	<xsl:template match="nuds:hoard">
@@ -647,17 +598,17 @@
 			</field>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:discovery">
 		<xsl:apply-templates select="nuds:date | nuds:project/nuds:title" mode="discovery"/>
 	</xsl:template>
-	
-	<xsl:template match="nuds:date"  mode="discovery">
-		
+
+	<xsl:template match="nuds:date" mode="discovery">
+
 		<field name="discoveryDate_display">
 			<xsl:value-of select="."/>
 		</field>
-		
+
 		<xsl:if test="@standardDate castable as xs:integer">
 			<field name="discoveryDate_num">
 				<xsl:value-of select="@standardDate"/>
@@ -669,9 +620,9 @@
 				<xsl:value-of select="@standardDate"/>
 			</field>
 		</xsl:if>
-		
+
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:title" mode="discovery">
 		<field name="projectName_facet">
 			<xsl:value-of select="."/>
@@ -692,8 +643,7 @@
 							nuds:fallsWithin/nuds:geogname/@xlink:href
 						else
 							concat($objectURI, '#findspot')"> </xsl:variable>
-				<xsl:variable name="coords"
-					select="tokenize(nuds:fallsWithin/gml:location/gml:Point/gml:coordinates, ',')"/>
+				<xsl:variable name="coords" select="tokenize(nuds:fallsWithin/gml:location/gml:Point/gml:coordinates, ',')"/>
 
 				<field name="findspot_facet">
 					<xsl:value-of select="$label"/>
@@ -704,34 +654,58 @@
 					<xsl:text>|</xsl:text>
 					<xsl:value-of select="$uri"/>
 					<xsl:text>|</xsl:text>
-					<xsl:value-of
-						select="concat(normalize-space($coords[2]), ',', normalize-space($coords[1]))"
-					/>
+					<xsl:value-of select="concat(normalize-space($coords[2]), ',', normalize-space($coords[1]))"/>
 				</field>
 			</xsl:when>
 			<xsl:when test="gml:location">
 				<xsl:variable name="label" select="nuds:geogname"/>
-				<xsl:variable name="uri" select="concat($objectURI, '#findspot')"/> 				
-				<xsl:variable name="coords"
-					select="tokenize(gml:location/gml:Point/gml:pos, ' ')"/>
-				
+				<xsl:variable name="uri" select="concat($objectURI, '#findspot')"/>
+				<xsl:variable name="coords" select="tokenize(gml:location/gml:Point/gml:pos, ' ')"/>
+
 				<field name="findspot_facet">
 					<xsl:value-of select="$label"/>
 				</field>
-				
+
 				<field name="findspot_geo">
 					<xsl:value-of select="$label"/>
 					<xsl:text>|</xsl:text>
 					<xsl:value-of select="$uri"/>
 					<xsl:text>|</xsl:text>
-					<xsl:value-of
-						select="concat(normalize-space($coords[2]), ',', normalize-space($coords[1]))"
-					/>
+					<xsl:value-of select="concat(normalize-space($coords[2]), ',', normalize-space($coords[1]))"/>
 				</field>
 			</xsl:when>
 		</xsl:choose>
 
 
+	</xsl:template>
+
+	<xsl:template name="parse_hoard_uri">
+		<xsl:param name="href"/>
+
+		<xsl:variable name="label">
+			<xsl:choose>
+				<xsl:when test="$rdf/*[@rdf:about = $href]/skos:prefLabel[@xml:lang = 'en']">
+					<xsl:value-of select="$rdf/*[@rdf:about = $href]/skos:prefLabel[@xml:lang = 'en']"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$href"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<xsl:if test="$rdf//*[@rdf:about = $href]/nmo:hasFindspot">
+			<!-- @rdf:resource comes within P89 if it's certain -->
+			<xsl:variable name="gazetteerURI"
+				select="$rdf//*[@rdf:about = $uri]/nmo:hasFindspot/descendant::crm:P89_falls_within[contains(@rdf:resource, 'geonames.org') or contains(@rdf:resource, 'wikidata.org')]/@rdf:resource"/>
+
+			<xsl:if test="string($gazetteerURI)">
+				<xsl:variable name="spatialThingURI" select="$rdf//*[@rdf:about = $gazetteerURI]/crm:P168_place_is_defined_by/@rdf:resource"/>
+
+				<xsl:if test="$spatialThingURI">
+					<true>true</true>
+				</xsl:if>
+			</xsl:if>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template name="parse_findspot_uri">
@@ -742,8 +716,8 @@
 			<xsl:when test="contains($href, 'nomisma.org')">
 				<xsl:variable name="label">
 					<xsl:choose>
-						<xsl:when test="$rdf/*[@rdf:about = $href]/skos:prefLabel[@xml:lang='en']">
-							<xsl:value-of select="$rdf/*[@rdf:about = $href]/skos:prefLabel[@xml:lang='en']"/>
+						<xsl:when test="$rdf/*[@rdf:about = $href]/skos:prefLabel[@xml:lang = 'en']">
+							<xsl:value-of select="$rdf/*[@rdf:about = $href]/skos:prefLabel[@xml:lang = 'en']"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="$href"/>
@@ -756,17 +730,14 @@
 				</field>
 
 				<xsl:if test="$rdf/*[@rdf:about = $href]/nmo:hasFindspot">
-					<xsl:variable name="findspot_uri"
-						select="$rdf/*[@rdf:about = $href]/nmo:hasFindspot/@rdf:resource"/>
+					<xsl:variable name="findspot_uri" select="$rdf/*[@rdf:about = $href]/nmo:hasFindspot/@rdf:resource"/>
 
 					<field name="findspot_geo">
 						<xsl:value-of select="$label"/>
 						<xsl:text>|</xsl:text>
 						<xsl:value-of select="$findspot_uri"/>
 						<xsl:text>|</xsl:text>
-						<xsl:value-of
-							select="concat($rdf/*[@rdf:about = $findspot_uri]/geo:long, ',', $rdf/*[@rdf:about = $findspot_uri]/geo:lat)"
-						/>
+						<xsl:value-of select="concat($rdf/*[@rdf:about = $findspot_uri]/geo:long, ',', $rdf/*[@rdf:about = $findspot_uri]/geo:lat)"/>
 					</field>
 
 					<field name="findspot_uri">
@@ -779,8 +750,7 @@
 
 
 						<!-- insert hierarchical facets -->
-						<xsl:variable name="hierarchy_pieces"
-							select="tokenize($geonames//place[@id = $geonamesUri]/@hierarchy, '\|')"/>
+						<xsl:variable name="hierarchy_pieces" select="tokenize($geonames//place[@id = $geonamesUri]/@hierarchy, '\|')"/>
 						<xsl:variable name="count" select="count($hierarchy_pieces)"/>
 
 						<xsl:for-each select="$hierarchy_pieces">
@@ -789,16 +759,13 @@
 							<xsl:choose>
 								<xsl:when test="$position = 1">
 									<field name="findspot_hier">
-										<xsl:value-of
-											select="concat('L', position(), '|', substring-after(., '/'), '/', substring-before(., '/'))"
-										/>
+										<xsl:value-of select="concat('L', position(), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>
 									</field>
 								</xsl:when>
 								<xsl:otherwise>
 									<field name="findspot_hier">
 										<xsl:value-of
-											select="concat(substring-before($hierarchy_pieces[$position - 1], '/'), '|', substring-after(., '/'), '/', substring-before(., '/'))"
-										/>
+											select="concat(substring-before($hierarchy_pieces[$position - 1], '/'), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>
 									</field>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -827,8 +794,7 @@
 
 				<xsl:if test="$regionHierarchy = true()">
 					<!-- insert hierarchical facets -->
-					<xsl:variable name="hierarchy_pieces"
-						select="tokenize($geonames//place[@id = $href]/@hierarchy, '\|')"/>
+					<xsl:variable name="hierarchy_pieces" select="tokenize($geonames//place[@id = $href]/@hierarchy, '\|')"/>
 					<xsl:variable name="count" select="count($hierarchy_pieces)"/>
 
 					<xsl:for-each select="$hierarchy_pieces">
@@ -837,16 +803,13 @@
 						<xsl:choose>
 							<xsl:when test="$position = 1">
 								<field name="findspot_hier">
-									<xsl:value-of
-										select="concat('L', position(), '|', substring-after(., '/'), '/', substring-before(., '/'))"
-									/>
+									<xsl:value-of select="concat('L', position(), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>
 								</field>
 							</xsl:when>
 							<xsl:otherwise>
 								<field name="findspot_hier">
 									<xsl:value-of
-										select="concat(substring-before($hierarchy_pieces[$position - 1], '/'), '|', substring-after(., '/'), '/', substring-before(., '/'))"
-									/>
+										select="concat(substring-before($hierarchy_pieces[$position - 1], '/'), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>
 								</field>
 							</xsl:otherwise>
 						</xsl:choose>
@@ -870,9 +833,7 @@
 						<xsl:text>|</xsl:text>
 						<xsl:value-of select="$href"/>
 						<xsl:text>|</xsl:text>
-						<xsl:value-of
-							select="nuds:findspot/nuds:fallsWithin/gml:location/gml:Point/gml:coordinates"
-						/>
+						<xsl:value-of select="nuds:findspot/nuds:fallsWithin/gml:location/gml:Point/gml:coordinates"/>
 					</field>
 				</xsl:if>
 
@@ -889,8 +850,7 @@
 	<xsl:template match="mets:fileSec">
 
 		<!-- handle standard photographs -->
-		<xsl:for-each
-			select="mets:fileGrp[@USE = 'obverse' or @USE = 'reverse' or @USE = 'combined']">
+		<xsl:for-each select="mets:fileGrp[@USE = 'obverse' or @USE = 'reverse' or @USE = 'combined']">
 			<xsl:variable name="side" select="substring(@USE, 1, 3)"/>
 
 			<xsl:choose>
@@ -899,19 +859,14 @@
 						<xsl:value-of select="mets:file/mets:FLocat/@xlink:href"/>
 					</field>
 					<field name="thumbnail_{$side}">
-						<xsl:value-of
-							select="concat(mets:file/mets:FLocat/@xlink:href, '/full/,120/0/default.jpg')"
-						/>
+						<xsl:value-of select="concat(mets:file/mets:FLocat/@xlink:href, '/full/,120/0/default.jpg')"/>
 					</field>
 					<field name="reference_{$side}">
-						<xsl:value-of
-							select="concat(mets:file/mets:FLocat/@xlink:href, '/full/400,/0/default.jpg')"
-						/>
+						<xsl:value-of select="concat(mets:file/mets:FLocat/@xlink:href, '/full/400,/0/default.jpg')"/>
 					</field>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:for-each
-						select="mets:file[@USE = 'iiif' or @USE = 'archive' or @USE = 'thumbnail' or @USE = 'reference']">
+					<xsl:for-each select="mets:file[@USE = 'iiif' or @USE = 'archive' or @USE = 'thumbnail' or @USE = 'reference']">
 						<field name="{@USE}_{$side}">
 							<xsl:value-of select="mets:FLocat/@xlink:href"/>
 						</field>
@@ -934,19 +889,14 @@
 					<xsl:value-of select="mets:file/mets:FLocat/@xlink:href"/>
 				</field>
 				<field name="thumbnail_com">
-					<xsl:value-of
-						select="concat(mets:file/mets:FLocat/@xlink:href, '/full/,120/0/default.jpg')"
-					/>
+					<xsl:value-of select="concat(mets:file/mets:FLocat/@xlink:href, '/full/,120/0/default.jpg')"/>
 				</field>
 				<field name="reference_com">
-					<xsl:value-of
-						select="concat(mets:file/mets:FLocat/@xlink:href, '/full/400,/0/default.jpg')"
-					/>
+					<xsl:value-of select="concat(mets:file/mets:FLocat/@xlink:href, '/full/400,/0/default.jpg')"/>
 				</field>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:for-each
-					select="mets:file[@USE = 'iiif' or @USE = 'archive' or @USE = 'thumbnail' or @USE = 'reference']">
+				<xsl:for-each select="mets:file[@USE = 'iiif' or @USE = 'archive' or @USE = 'thumbnail' or @USE = 'reference']">
 					<field name="{@USE}_com">
 						<xsl:value-of select="mets:FLocat/@xlink:href"/>
 					</field>
@@ -957,7 +907,7 @@
 
 	<xsl:template match="nuds:physDesc">
 		<xsl:param name="lang"/>
-		
+
 		<xsl:apply-templates select="nuds:axis"/>
 		<xsl:apply-templates select="nuds:measurementsSet"/>
 		<xsl:apply-templates select="nuds:conservationState">
@@ -988,23 +938,22 @@
 				</field>
 			</xsl:if>
 		</xsl:for-each>
-		
-		
+
+
 	</xsl:template>
 
 	<xsl:template match="nuds:conservationState">
 		<xsl:param name="lang"/>
-		
+
 		<xsl:apply-templates
-			select="descendant::nuds:secondaryTreatment[string(.) or string(@xlink:href)] | descendant::nuds:condition[string(.) or string(@xlink:href)] | descendant::nuds:wear[string(.) or string(@xlink:href)]"
-		>
+			select="descendant::nuds:secondaryTreatment[string(.) or string(@xlink:href)] | descendant::nuds:condition[string(.) or string(@xlink:href)] | descendant::nuds:wear[string(.) or string(@xlink:href)]">
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
 	</xsl:template>
 
 	<xsl:template match="nuds:adminDesc">
 		<xsl:for-each select="nuds:collection | nuds:repository | nuds:owner | nuds:department | nuds:physloc">
-			
+
 			<field name="{local-name()}_facet">
 				<xsl:value-of select="normalize-space(.)"/>
 			</field>
@@ -1013,7 +962,7 @@
 					<xsl:value-of select="@xlink:href"/>
 				</field>
 			</xsl:if>
-			
+
 			<xsl:if test="@localType">
 				<field name="{@localType}_facet">
 					<xsl:value-of select="normalize-space(.)"/>
@@ -1109,8 +1058,7 @@
 				<xsl:value-of select="$title"/>
 			</field>
 		</xsl:if>
-		<xsl:if
-			test="res:binding[@name = 'long']/res:literal and res:binding[@name = 'lat']/res:literal">
+		<xsl:if test="res:binding[@name = 'long']/res:literal and res:binding[@name = 'lat']/res:literal">
 			<field name="findspot_uri">
 				<xsl:value-of select="$uri"/>
 			</field>
@@ -1119,16 +1067,13 @@
 				<xsl:text>|</xsl:text>
 				<xsl:value-of select="$uri"/>
 				<xsl:text>|</xsl:text>
-				<xsl:value-of
-					select="concat(res:binding[@name = 'long']/res:literal, ',', res:binding[@name = 'lat']/res:literal)"
-				/>
+				<xsl:value-of select="concat(res:binding[@name = 'long']/res:literal, ',', res:binding[@name = 'lat']/res:literal)"/>
 			</field>
 		</xsl:if>
 
 		<xsl:if test="contains($uri, 'geonames.org')">
 			<!-- if the findspot is a geonamesId, then establish the findspot_hier facet -->
-			<xsl:variable name="hierarchy_pieces"
-				select="tokenize($geonames//place[@id = $uri]/@hierarchy, '\|')"/>
+			<xsl:variable name="hierarchy_pieces" select="tokenize($geonames//place[@id = $uri]/@hierarchy, '\|')"/>
 			<xsl:variable name="count" select="count($hierarchy_pieces)"/>
 
 			<xsl:for-each select="$hierarchy_pieces">
@@ -1137,16 +1082,12 @@
 				<xsl:choose>
 					<xsl:when test="$position = 1">
 						<field name="findspot_hier">
-							<xsl:value-of
-								select="concat('L', position(), '|', substring-after(., '/'), '/', substring-before(., '/'))"
-							/>
+							<xsl:value-of select="concat('L', position(), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>
 						</field>
 					</xsl:when>
 					<xsl:otherwise>
 						<field name="findspot_hier">
-							<xsl:value-of
-								select="concat(substring-before($hierarchy_pieces[$position - 1], '/'), '|', substring-after(., '/'), '/', substring-before(., '/'))"
-							/>
+							<xsl:value-of select="concat(substring-before($hierarchy_pieces[$position - 1], '/'), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>
 						</field>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -1170,9 +1111,7 @@
 			<xsl:value-of select="res:binding[@name = 'label']/res:literal"/>
 		</field>
 		<field name="relatedType_facet">
-			<xsl:value-of
-				select="concat(res:binding[@name = 'type']/res:uri, '|', res:binding[@name = 'label']/res:literal)"
-			/>
+			<xsl:value-of select="concat(res:binding[@name = 'type']/res:uri, '|', res:binding[@name = 'label']/res:literal)"/>
 		</field>
 	</xsl:template>
 
