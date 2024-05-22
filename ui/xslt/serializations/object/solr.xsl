@@ -68,13 +68,15 @@
 			</xsl:for-each>
 
 			<!-- include individual REST calls for URIs not in a recognized, Numishare based id/ namespace -->
-			<xsl:for-each select="$type_list//type_series_item[not(@type_series)]">
+			
+			<!-- commenting out indexing of RPC Online metadata -->
+			<!--<xsl:for-each select="$type_list//type_series_item[not(@type_series)]">
 				<xsl:variable name="uri" select="."/>
 
 				<xsl:call-template name="numishare:getNudsDocument">
 					<xsl:with-param name="uri" select="$uri"/>
 				</xsl:call-template>
-			</xsl:for-each>
+			</xsl:for-each>-->
 
 			<!-- get typeDesc -->
 			<xsl:for-each select="descendant::nuds:typeDesc[not(string(@xlink:href))]">
