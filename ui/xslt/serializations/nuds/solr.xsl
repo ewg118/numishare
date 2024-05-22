@@ -715,17 +715,17 @@
 				select="$rdf//*[@rdf:about = $href]/nmo:hasFindspot/descendant::crm:P89_falls_within[contains(@rdf:resource, 'geonames.org') or contains(@rdf:resource, 'wikidata.org')]/@rdf:resource"/>
 
 			<xsl:if test="string($gazetteerURI)">
-				<xsl:variable name="spatialThingURI" select="$rdf//*[@rdf:about = $gazetteerURI]/crm:P168_place_is_defined_by/@rdf:resource"/>
+				<xsl:variable name="spatialThingURI" select="$rdf//*[@rdf:about = $gazetteerURI][1]/crm:P168_place_is_defined_by/@rdf:resource"/>
 
 				<xsl:if test="$spatialThingURI">
 					
-					<xsl:if test="$rdf//*[@rdf:about = $spatialThingURI][geo:lat and geo:long]">
+					<xsl:if test="$rdf//*[@rdf:about = $spatialThingURI][1][geo:lat and geo:long]">
 						<field name="hoard_geo">
 							<xsl:value-of select="$label"/>
 							<xsl:text>|</xsl:text>
 							<xsl:value-of select="$href"/>
 							<xsl:text>|</xsl:text>
-							<xsl:value-of select="concat($rdf//*[@rdf:about = $spatialThingURI]/geo:long, ',', $rdf//*[@rdf:about = $spatialThingURI]/geo:lat)"/>
+							<xsl:value-of select="concat($rdf//*[@rdf:about = $spatialThingURI][1]/geo:long, ',', $rdf//*[@rdf:about = $spatialThingURI][1]/geo:lat)"/>
 						</field>
 					</xsl:if>
 					
