@@ -183,12 +183,12 @@
 				</xsl:if>
 			</xsl:for-each>
 			
-			<xsl:if test="descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'numismatics.org')]">
-				<xsl:copy-of select="document(concat(descendant::nuds:findspotDesc/@xlink:href, '.rdf'))/rdf:RDF/*"/>
-			</xsl:if>
-			<xsl:if test="descendant::nuds:hoard[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'numismatics.org')]">
-				<xsl:copy-of select="document(concat(descendant::nuds:hoard/@xlink:href, '.rdf'))/rdf:RDF/*"/>
-			</xsl:if>
+			<xsl:for-each select="distinct-values(descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'numismatics.org')]/@xlink:href)">				
+				<xsl:copy-of select="document(concat(., '.rdf'))/rdf:RDF/*"/>
+			</xsl:for-each>
+			<xsl:for-each select="distinct-values(descendant::nuds:hoard[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'numismatics.org')]/@xlink:href)">				
+				<xsl:copy-of select="document(concat(., '.rdf'))/rdf:RDF/*"/>
+			</xsl:for-each>
 		</rdf:RDF>
 	</xsl:variable>
 
