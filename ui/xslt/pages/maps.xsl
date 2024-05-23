@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="https://github.com/ewg118/numishare"
+	exclude-result-prefixes="#all" version="2.0">
 	<!-- includes -->
 	<xsl:include href="../templates.xsl"/>
 	<xsl:include href="../functions.xsl"/>
 
 	<xsl:param name="pipeline">maps</xsl:param>
 	<xsl:variable name="display_path"/>
-	<xsl:variable name="include_path"
-		select="
+	<xsl:variable name="include_path" select="
 			if (string(//config/theme/themes_url)) then
 				concat(//config/theme/themes_url, //config/theme/orbeon_theme)
 			else
@@ -27,8 +26,7 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:param>
-	<xsl:variable name="request-uri"
-		select="
+	<xsl:variable name="request-uri" select="
 			concat('http://localhost:', if (//config/server-port castable as xs:integer) then
 				//config/server-port
 			else
@@ -50,8 +48,7 @@
 					<xsl:text>: </xsl:text>
 					<xsl:value-of select="numishare:normalizeLabel('header_maps', $lang)"/>
 				</title>
-				<link rel="shortcut icon" type="image/x-icon"
-					href="{$include_path}/images/{if (string(//config/favicon)) then //config/favicon else 'favicon.png'}"/>
+				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/{if (string(//config/favicon)) then //config/favicon else 'favicon.png'}"/>
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
 				<!-- jquery -->
@@ -115,8 +112,9 @@
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('header_maps', $lang)"/>
 					</h1>
-					<p>For usage instructions, see <a href="http://wiki.numismatics.org/numishare:maps">http://wiki.numismatics.org/numishare:maps</a>. View in
-							<a href="maps/fullscreen">fullscreen mode</a>.</p>
+					<p>For usage instructions, see <a href="http://wiki.numismatics.org/numishare:maps">http://wiki.numismatics.org/numishare:maps</a>. View in <a
+							href="maps/fullscreen{if (doc('input:request')/request/parameters/parameter[name = 'department']/value) then concat('?department=', doc('input:request')/request/parameters/parameter[name = 'department']/value) else ''}"
+							>fullscreen mode</a>.</p>
 				</div>
 			</div>
 			<xsl:choose>
@@ -220,7 +218,7 @@
 						<xsl:value-of select="numishare:normalize_fields('obverse', $lang)"/>
 					</h4>
 				</div>
-				
+
 				<xsl:apply-templates select="lst[contains(@name, 'symbol_obv') and number(int) &gt; 0]" mode="facet"/>
 			</div>
 
@@ -234,7 +232,7 @@
 						<xsl:value-of select="numishare:normalize_fields('reverse', $lang)"/>
 					</h4>
 				</div>
-				
+
 				<xsl:apply-templates select="lst[contains(@name, 'symbol_rev') and number(int) &gt; 0]" mode="facet"/>
 			</div>
 		</xsl:if>
