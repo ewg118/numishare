@@ -48,8 +48,8 @@ $(document).ready(function () {
                 options.each(function () {
                     var val = $(this).text();
                     //if there is an img in the label, then parse the HTML and display only the label
-                    if (val.indexOf('<img') >= 0){
-                        var el = $( '<div></div>' );
+                    if (val.indexOf('<img') >= 0) {
+                        var el = $('<div></div>');
                         el.html(val);
                         selected += el.text().trim() + ', ';
                     } else {
