@@ -462,19 +462,13 @@ button.multiselect{
     float: right;
     padding-right: 5px;
 }
-.category_level{
-    margin-left: 15px;
+.category_level,
+.findspot_level{
+    margin-left: 20px;
+    padding: 0;
 }
-.expand_category{
-    margin: 1px;
-}
-.category_level{
-    margin-left: 15px;
-}
-.expand_category{
-    margin: 1px;
-}
-#century_num-list{
+#century_num-list,
+.hier-list{
     max-height: 250px;
     width: 250px;
     overflow-y: auto;
@@ -482,8 +476,10 @@ button.multiselect{
     width: 100%;
     z-index: 3000;
 }
-.expand_century{
+.expand_century,
+.expand_category{
     cursor: pointer;
+    margin: 1px;
 }
 /*
   ***************************************
