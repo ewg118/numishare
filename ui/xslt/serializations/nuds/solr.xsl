@@ -8,16 +8,18 @@
 
 	<xsl:template name="nuds">
 		<!-- create default document -->
-		<xsl:apply-templates select="//nuds:nuds">
-			<xsl:with-param name="lang"/>
-		</xsl:apply-templates>
-
-		<!-- create documents for each additional activated language -->
-		<xsl:for-each select="//config/descendant::language[@enabled = 'true']">
+		<xsl:if test="descendant::nuds:publicationStatus = 'approved' or descendant::nuds:publicationStatus = 'approvedSubtype'">
 			<xsl:apply-templates select="//nuds:nuds">
-				<xsl:with-param name="lang" select="@code"/>
+				<xsl:with-param name="lang"/>
 			</xsl:apply-templates>
-		</xsl:for-each>
+			
+			<!-- create documents for each additional activated language -->
+			<xsl:for-each select="//config/descendant::language[@enabled = 'true']">
+				<xsl:apply-templates select="//nuds:nuds">
+					<xsl:with-param name="lang" select="@code"/>
+				</xsl:apply-templates>
+			</xsl:for-each>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="nuds:nuds">
