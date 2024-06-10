@@ -138,11 +138,7 @@
 			<xsl:apply-templates select="nuds:control/nuds:rightsStmt"/>
 
 			<!-- if there are any uncertain type attributions, flag this in a solr field -->
-			<xsl:if test="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)][@certainty]">
-				<field name="typeUncertain">true</field>
-			</xsl:if>
-			
-			<xsl:if test="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)][@variant]">
+			<xsl:if test="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)][@certainty] or descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)][@variant]">
 				<field name="typeUncertain">true</field>
 			</xsl:if>
 
