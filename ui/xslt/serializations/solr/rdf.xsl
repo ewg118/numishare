@@ -208,11 +208,12 @@
 						<dcterms:tableOfContents rdf:resource="{concat($url, 'id/', $id, '#contents')}"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:for-each select="arr[@name = 'coinType_uri']/str">
-							<xsl:if test="not(contains(., 'sc.2.'))">
+						
+						<xsl:if test="not(str[@name = 'typeUncertain'] = 'true')">
+							<xsl:for-each select="arr[@name = 'coinType_uri']/str">
 								<nmo:hasTypeSeriesItem rdf:resource="{.}"/>
-							</xsl:if>
-						</xsl:for-each>
+							</xsl:for-each>
+						</xsl:if>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:if>

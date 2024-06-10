@@ -141,11 +141,16 @@
 			<xsl:if test="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)][@certainty]">
 				<field name="typeUncertain">true</field>
 			</xsl:if>
+			
+			<xsl:if test="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)][@variant]">
+				<field name="typeUncertain">true</field>
+			</xsl:if>
 
 			<!-- insert coin type facets and URIs -->
 			<xsl:for-each
 				select="descendant::nuds:typeDesc[string(@xlink:href)] | descendant::nuds:undertypeDesc[string(@xlink:href)] | descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]">
 				<xsl:variable name="href" select="@xlink:href"/>
+				
 				<field name="coinType_uri">
 					<xsl:value-of select="$href"/>
 				</field>
