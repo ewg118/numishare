@@ -2160,7 +2160,7 @@
                     <xsl:when test="$label = 'thickness'">Thickness (in mm)</xsl:when>
                     <xsl:when test="$label = 'undertypeDesc'">Undertype Description</xsl:when>
                     <xsl:when test="$label = 'wear'">Wear</xsl:when>
-                    <xsl:when test="$label = 'weight'">Weight (in gr.)</xsl:when>
+                    <xsl:when test="$label = 'weight'">Weight (in g)</xsl:when>
                     <xsl:when test="$label = 'width'">Width</xsl:when>
                     <xsl:when test="$label = 'year'">Year</xsl:when>
                     <xsl:otherwise>
