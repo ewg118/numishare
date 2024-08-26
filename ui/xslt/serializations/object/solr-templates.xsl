@@ -523,7 +523,7 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template match="nuds:persname | nuds:corpname | *[local-name() = 'geogname'] | nuds:famname | nuds:periodname | nuds:authenticity | nuds:spatialContext">
+	<xsl:template match="nuds:persname | nuds:corpname | *[local-name() = 'geogname'] | nuds:famname | nuds:periodname | nuds:authenticity | nuds:spatialContext | nuds:signature">
 		<xsl:param name="lang"/>
 		<xsl:variable name="href" select="@xlink:href"/>
 		<xsl:variable name="role">
