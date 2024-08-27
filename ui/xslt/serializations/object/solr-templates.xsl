@@ -1347,7 +1347,7 @@
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:value-of select="numishare:normalizeDate($dates//date[1])"/>
-								<xsl:text> - </xsl:text>
+								<xsl:text>–</xsl:text>
 								<xsl:value-of select="numishare:normalizeDate($dates//date[last()])"/>
 							</xsl:otherwise>
 						</xsl:choose>
