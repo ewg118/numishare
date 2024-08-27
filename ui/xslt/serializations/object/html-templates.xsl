@@ -155,7 +155,7 @@
 				<xsl:text>: </xsl:text>
 			</b>
 
-			<xsl:value-of select="concat(nuds:fromDate, ' - ', nuds:toDate)"/>
+			<xsl:value-of select="concat(nuds:fromDate, '–', nuds:toDate)"/>
 		</li>
 	</xsl:template>
 
