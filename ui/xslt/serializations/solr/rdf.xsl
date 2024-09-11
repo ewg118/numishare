@@ -195,9 +195,13 @@
 			<dcterms:title xml:lang="{if (str[@name='lang']) then str[@name='lang'] else 'en'}">
 				<xsl:value-of select="str[@name = 'title_display']"/>
 			</dcterms:title>
-			<dcterms:identifier>
-				<xsl:value-of select="$id"/>
-			</dcterms:identifier>
+			
+			<xsl:if test="str[@name = 'identifier_display']">
+				<dcterms:identifier>
+					<xsl:value-of select="str[@name = 'identifier_display']"/>
+				</dcterms:identifier>
+			</xsl:if>
+			
 			<xsl:for-each select="arr[@name = 'collection_uri']/str">
 				<nmo:hasCollection rdf:resource="{.}"/>
 			</xsl:for-each>

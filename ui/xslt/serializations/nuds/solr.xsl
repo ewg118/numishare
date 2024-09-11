@@ -1025,6 +1025,9 @@
 		<field name="identifier_text">
 			<xsl:value-of select="normalize-space(.)"/>
 		</field>
+		<field name="identifier_display">
+			<xsl:value-of select="normalize-space(.)"/>
+		</field>
 	</xsl:template>
 
 	<xsl:template match="nuds:measurementsSet">
