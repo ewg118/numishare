@@ -13,7 +13,7 @@ PREFIX edm: <http://www.europeana.eu/schemas/edm/>
 SELECT DISTINCT ?object ?title (group_concat(?identifier; separator="||") as ?identifiers) ?findUri ?findspot ?hoard ?collection ?publisher ?dataset ?datasetTitle ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef ?obvManifest ?revManifest ?comManifest ?model WHERE {
 { ?object a nmo:NumismaticObject ;
  nmo:hasTypeSeriesItem <typeURI>}
-UNION { <typeURI> skos:exactMatch ?match .
+UNION { <typeURI> skos:exactMatch|^skos:exactMatch ?match .
 ?object nmo:hasTypeSeriesItem ?match ;
   a nmo:NumismaticObject }
 UNION { ?broader skos:broader+ <typeURI> .
