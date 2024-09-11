@@ -11,7 +11,7 @@ PREFIX geo:	<http://www.w3.org/2003/01/geo/wgs84_pos#>
 SELECT (count(?coin) as ?count) WHERE {
 { ?coin a nmo:NumismaticObject ;
  nmo:hasTypeSeriesItem <typeURI>}
-UNION { <typeURI> skos:exactMatch ?match .
+UNION { <typeURI> skos:exactMatch|^skos:exactMatch ?match .
 ?coin nmo:hasTypeSeriesItem ?match ;
   a nmo:NumismaticObject }
 UNION { ?broader skos:broader+ <typeURI> .
