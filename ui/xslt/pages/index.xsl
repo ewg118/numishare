@@ -212,7 +212,7 @@
 							<xsl:when test="$collection-name = 'lco'">
 								<p>
 									<a href="https://www.isf.org.il/">
-										<img src="{$include_path}/images/ISF_logo.png" style="max-width:100%"/>
+										<img src="{$include_path}/images/ISF_logo.png" style="height:120px;max-width:100%"/>
 									</a>
 								</p>
 								<p>Small blurb about ISF grant.</p>								
@@ -236,19 +236,19 @@
 							<div class="highlight">
 							<h3>Collaborators</h3>
 								<a href="https://numismatics.org/" title="American Numismatic Society">
-									<img src="{$include_path}/images/american_numismatics_society.svg" alt="American Numismatic Society logo"/>
+									<img src="{$include_path}/images/american-numismatic-society.svg" alt="American Numismatic Society logo" style="height:80px;padding:5px;"/>
 								</a>
 								<a href="https://www.imj.org.il/" title="Israel Museum, Jerusalem">
-									<img src="{$include_path}/images/IMJ_logo.jpg" alt="Israel Museum, Jerusalem logo"/>
+									<img src="{$include_path}/images/IMJ_logo.jpg" alt="Israel Museum, Jerusalem logo" style="height:80px;padding:5px;"/>
 								</a>
 								<a href="https://www.iaa.org.il/" title="Israel Antiquities Authority">
-									<img src="{$include_path}/images/Israel_Antiquities_Authority.png" alt="Israel Antiquities Authority logo"/>
+									<img src="{$include_path}/images/Israel_Antiquities_Authority.png" alt="Israel Antiquities Authority logo" style="height:80px;padding:5px;"/>
 								</a>
 								<a href="http://www.ins.org.il/" title="Israel Numismatics Society">
-									<img src="{$include_path}/images/ins_logo.png" alt="Israel Numismatic Society logo"/>
+									<img src="{$include_path}/images/ins_logo.png" alt="Israel Numismatic Society logo" style="height:80px;padding:5px;"/>
 								</a>
 								<a href="https://tau.ac.il/" title="Tel Aviv University">
-									<img src="{$include_path}/images/TAU_logo.png" alt="Tel Aviv University logo"/>
+									<img src="{$include_path}/images/TAU_logo.png" alt="Tel Aviv University logo" style="height:80px;padding:5px;"/>
 								</a>
 							</div>
 						</xsl:when>
@@ -262,11 +262,6 @@
 							</div>
 						</xsl:otherwise>
 					</xsl:choose>
-
-					
-					<!--<div class="highlight">
-						<h3>Collaborators</h3>
-					</div>-->
 				</div>
 			</div>
 		</div>
