@@ -183,20 +183,6 @@
 
 				</div>
 				<div class="col-md-4">
-					<!--<div class="highlight">
-						<h3>Share</h3>
-						<!-\- AddThis Button BEGIN -\->
-						<div class="addthis_toolbox addthis_default_style addthis_32x32_style">
-							<a class="addthis_button_preferred_1"/>
-							<a class="addthis_button_preferred_2"/>
-							<a class="addthis_button_preferred_3"/>
-							<a class="addthis_button_preferred_4"/>
-							<a class="addthis_button_compact"/>
-							<a class="addthis_counter addthis_bubble_style"/>
-						</div>
-						<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4ffc41710d8b692c"/>
-						<!-\- AddThis Button END -\->
-					</div>-->
 					<div class="highlight">
 						<h3>Support</h3>
 						
@@ -205,12 +191,12 @@
 								<div class="row">
 									<div class="col-md-6">
 										<a href="http://www.neh.gov/">
-											<img src="{$include_path}/images/NEH-Preferred-Seal.svg" style="max-width:100%"/>
+											<img src="{$include_path}/images/NEH-Preferred-Seal.svg" alt="NEH logo" style="max-width:100%"/>
 										</a>	
 									</div>
 									<div class="col-md-6">
 										<a href="https://www.ukri.org/councils/ahrc/">
-											<img src="{$include_path}/images/Arts_and_Humanities_Research_Council_logo.svg" style="max-width:100%"/>
+											<img src="{$include_path}/images/Arts_and_Humanities_Research_Council_logo.svg" alt="AHRC logo" style="max-width:100%"/>
 										</a>	
 									</div>
 									<div class="col-md-12">
@@ -223,10 +209,18 @@
 								</div>
 								
 							</xsl:when>
+							<xsl:when test="$collection-name = 'lco'">
+								<p>
+									<a href="https://www.isf.org.il/">
+										<img src="{$include_path}/images/ISF_logo.png" style="max-width:100%"/>
+									</a>
+								</p>
+								<p>Small blurb about ISF grant.</p>								
+							</xsl:when>
 							<xsl:otherwise>
 								<p>
 									<a href="http://www.neh.gov/">
-										<img src="{$include_path}/images/NEH-Preferred-Seal.svg" style="max-width:100%"/>
+										<img src="{$include_path}/images/NEH-Preferred-Seal.svg" alt="NEH logo" style="max-width:100%"/>
 									</a>
 								</p>
 								<p>In March 2017, the National Endowment for the Humanities awarded <xsl:value-of select="title"/> $262,000 as part of the the
@@ -237,13 +231,39 @@
 						</xsl:choose>
 					</div>
 
-					<div class="highlight">
-						<h3>Get Involved</h3>
-						<p> Please consider becoming a Member of the American Numismatic Society, the publisher of this resource. Your membership helps maintain
-							our free and open digital projects and data, as well as other educational outreach activities that broaden public access to
-							numismatics. Membership comes with other benefits, such as the ANS Magazine and weekly virtual lectures and discussions. See <a
-								href="http://numismatics.org/membership/">Membership</a> for more information.</p>
-					</div>
+					<xsl:choose>
+						<xsl:when test="$collection-name = 'lco'">
+							<div class="highlight">
+							<h3>Collaborators</h3>
+								<a href="https://numismatics.org/" title="American Numismatic Society">
+									<img src="{$include_path}/images/american_numismatics_society.svg" alt="American Numismatic Society logo"/>
+								</a>
+								<a href="https://www.imj.org.il/" title="Israel Museum, Jerusalem">
+									<img src="{$include_path}/images/IMJ_logo.jpg" alt="Israel Museum, Jerusalem logo"/>
+								</a>
+								<a href="https://www.iaa.org.il/" title="Israel Antiquities Authority">
+									<img src="{$include_path}/images/Israel_Antiquities_Authority.png" alt="Israel Antiquities Authority logo"/>
+								</a>
+								<a href="http://www.ins.org.il/" title="Israel Numismatics Society">
+									<img src="{$include_path}/images/ins_logo.png" alt="Israel Numismatic Society logo"/>
+								</a>
+								<a href="https://tau.ac.il/" title="Tel Aviv University">
+									<img src="{$include_path}/images/TAU_logo.png" alt="Tel Aviv University logo"/>
+								</a>
+							</div>
+						</xsl:when>
+						<xsl:otherwise>
+							<div class="highlight">
+								<h3>Get Involved</h3>
+								<p> Please consider becoming a Member of the American Numismatic Society, the publisher of this resource. Your membership helps maintain
+									our free and open digital projects and data, as well as other educational outreach activities that broaden public access to
+									numismatics. Membership comes with other benefits, such as the ANS Magazine and weekly virtual lectures and discussions. See <a
+										href="http://numismatics.org/membership/">Membership</a> for more information.</p>
+							</div>
+						</xsl:otherwise>
+					</xsl:choose>
+
+					
 					<!--<div class="highlight">
 						<h3>Collaborators</h3>
 					</div>-->
