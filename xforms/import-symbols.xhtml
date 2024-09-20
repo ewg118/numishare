@@ -93,6 +93,7 @@
 					<property label="Image License">image_license</property>
 					<property label="Image URI or Unicode Character">crm:P165i_is_incorporated_in</property>
 					<property label="Preferred Label">skos:prefLabel</property>
+					<property label="Replaced By">dcterms:isReplacedBy</property>
 					<property label="Scope Note">skos:scopeNote</property>
 					<property label="Source">dcterms:source</property>
 				</properties>
@@ -838,7 +839,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 														<!-- fields that can be any type of URI -->
 														<xforms:action
 															if="$mapping = 'contributor' or $mapping = 'image_creator' 
-															or $mapping = 'skos:exactMatch' or $mapping = 'image_license'">
+															or $mapping = 'skos:exactMatch' or $mapping = 'image_license' or $mapping = 'dcterms:isReplacedBy'">
 
 															<xforms:var name="isValid" select="matches($value, 'https?://(-\.)?([^\s/?\.#]+\.?)+(/[^\s]*)?$')"/>
 															<xforms:insert if="string-length($value) &gt; 0 and $isValid = false()"
@@ -1054,7 +1055,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 
 														<!-- URI properties -->
 														<xforms:action
-															if="$mapping = 'skos:exactMatch' or $mapping='dcterms:isPartOf' or $mapping='dcterms:source'">
+															if="$mapping = 'skos:exactMatch' or $mapping='dcterms:isPartOf' or $mapping='dcterms:source' or $mapping = 'dcterms:isReplacedBy'">
 
 															<xforms:insert context="instance('rdf')/*[1]" nodeset="./child::node()[last()]"
 																origin="xforms:element($mapping, (xforms:attribute('rdf:resource', $value)))"/>
