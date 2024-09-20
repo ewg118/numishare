@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dcterms="http://purl.org/dc/terms/"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:void="http://rdfs.org/ns/void#" xmlns:numishare="https://github.com/ewg118/numishare"
-	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
-	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:prov="http://www.w3.org/ns/prov#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"
-	xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig/" exclude-result-prefixes="#all" version="2.0">
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#" xmlns:res="http://www.w3.org/2005/sparql-results#"
+	xmlns:prov="http://www.w3.org/ns/prov#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig/" exclude-result-prefixes="#all"
+	version="2.0">
 
 	<xsl:include href="../../templates.xsl"/>
 	<xsl:include href="../../functions.xsl"/>
@@ -12,8 +12,7 @@
 
 	<!-- URL params -->
 	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
-	<xsl:variable name="request-uri"
-		select="
+	<xsl:variable name="request-uri" select="
 			concat('http://localhost:', if (//config/server-port castable as xs:integer) then
 				//config/server-port
 			else
@@ -32,8 +31,7 @@
 
 	<!-- paths -->
 	<xsl:variable name="display_path">../</xsl:variable>
-	<xsl:variable name="include_path"
-		select="
+	<xsl:variable name="include_path" select="
 			if (string(//config/theme/themes_url)) then
 				concat(//config/theme/themes_url, //config/theme/orbeon_theme)
 			else
@@ -160,8 +158,7 @@
 				<xsl:if test="descendant::crm:P165i_is_incorporated_in[@rdf:resource or child::crmdig:D1_Digital_Object]">
 					<div class="col-md-3">
 						<xsl:for-each select="descendant::crm:P165i_is_incorporated_in[@rdf:resource or child::crmdig:D1_Digital_Object]">
-							<xsl:variable name="uri"
-								select="
+							<xsl:variable name="uri" select="
 									if (@rdf:resource) then
 										@rdf:resource
 									else
@@ -182,8 +179,7 @@
 					<xsl:if test="doc('input:subsymbols')/descendant::*[name() = 'nmo:Monogram' or name() = 'crm:E37_Mark']">
 						<h3>Sub Symbols</h3>
 						<div class="row">
-							<xsl:apply-templates select="doc('input:subsymbols')/descendant::*[name() = 'nmo:Monogram' or name() = 'crm:E37_Mark']"
-								mode="subsymbol"/>
+							<xsl:apply-templates select="doc('input:subsymbols')/descendant::*[name() = 'nmo:Monogram' or name() = 'crm:E37_Mark']" mode="subsymbol"/>
 						</div>
 					</xsl:if>
 
@@ -237,8 +233,7 @@
 					<xsl:if test="count(doc('input:types')//res:result) &gt; 0">
 						<xsl:apply-templates select="doc('input:types')/res:sparql" mode="listTypes">
 							<xsl:with-param name="objectUri" select="$objectUri"/>
-							<xsl:with-param name="endpoint"
-								select="
+							<xsl:with-param name="endpoint" select="
 									if (contains(//config/sparql_endpoint, 'localhost')) then
 										'http://nomisma.org/query'
 									else
@@ -299,6 +294,30 @@
 				<xsl:attribute name="id" select="substring-after(@rdf:about, '#')"/>
 			</xsl:if>
 
+			<xsl:if test="dcterms:isReplacedBy">
+				<div class="alert alert-warning alert-box">
+					<p>
+						<span class="glyphicon glyphicon-warning-sign"/>
+						<strong>Attention! </strong>
+						<span>
+							<xsl:text>This symbol has been superseded by </xsl:text>
+							<xsl:for-each select="dcterms:isReplacedBy">
+								<xsl:if test="position() &gt; 1 and position() = last()">
+									<xsl:text> and</xsl:text>
+								</xsl:if>
+								<xsl:text> </xsl:text>
+								<a href="{@rdf:resource}">
+									<xsl:value-of select="@rdf:resource"/>
+								</a>
+								<xsl:if test="not(position() = last()) and (count(../crm:P106_is_composed_of) &gt; 2)">
+									<xsl:text>,</xsl:text>
+								</xsl:if>
+							</xsl:for-each>
+						</span>
+					</p>
+				</div>
+			</xsl:if>
+
 			<h2>
 				<xsl:value-of select="skos:prefLabel[@xml:lang = 'en']"/>
 				<small>
@@ -341,6 +360,10 @@
 				</xsl:apply-templates>
 
 				<xsl:apply-templates select="skos:broader" mode="list-item"/>
+
+				<xsl:apply-templates select="skos:exactMatch" mode="list-item"/>
+
+				<xsl:apply-templates select="dcterms:isReplacedBy" mode="list-item"/>
 
 				<!-- constituent letters -->
 				<xsl:if test="crm:P106_is_composed_of">
@@ -475,13 +498,11 @@
 		<div class="col-md-3 col-sm-6 col-lg-2 monogram" style="height:240px">
 			<div class="text-center">
 				<a href="{@rdf:about}">
-					<img
-						src="{
+					<img src="{
 						if (crm:P165i_is_incorporated_in[@rdf:resource]) then
 						crm:P165i_is_incorporated_in[@rdf:resource][1]/@rdf:resource
 						else
-						crm:P165i_is_incorporated_in//crmdig:D1_Digital_Object[@rdf:about][1]/@rdf:about}"
-						alt="Symbol image" style="max-height:200px;max-width:100%"/>
+						crm:P165i_is_incorporated_in//crmdig:D1_Digital_Object[@rdf:about][1]/@rdf:about}" alt="Symbol image" style="max-height:200px;max-width:100%"/>
 				</a>
 			</div>
 			<a href="{@rdf:about}">
