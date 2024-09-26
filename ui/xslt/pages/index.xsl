@@ -215,7 +215,7 @@
 										<img src="{$include_path}/images/ISF_logo.png" style="height:120px;max-width:100%"/>
 									</a>
 								</p>
-								<p>Small blurb about ISF grant.</p>								
+								<p>Funded by the <a href="https://www.isf.org.il/">Israel Science Foundation</a> Research Grant No. 2537/23.</p>								
 							</xsl:when>
 							<xsl:otherwise>
 								<p>
