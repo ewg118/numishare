@@ -242,7 +242,7 @@
 									<img src="{$include_path}/images/IMJ_logo.jpg" alt="Israel Museum, Jerusalem logo" style="height:80px;padding:5px;"/>
 								</a>
 								<a href="https://www.iaa.org.il/" title="Israel Antiquities Authority">
-									<img src="{$include_path}/images/Israel_Antiquities_Authority.png" alt="Israel Antiquities Authority logo" style="height:80px;padding:5px;"/>
+									<img src="https://www.iaa.org.il/images/Fittings/iaa/logo.svg" alt="Israel Antiquities Authority logo" style="height:80px;padding:5px;"/>
 								</a>
 								<a href="http://www.ins.org.il/" title="Israel Numismatics Society">
 									<img src="{$include_path}/images/ins_logo.png" alt="Israel Numismatic Society logo" style="height:80px;padding:5px;"/>
