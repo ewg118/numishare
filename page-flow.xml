@@ -40,6 +40,9 @@
 	<!-- AoD -->
 	<page path="/numishare/aod/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/aod/xpl/views/pages/index.xpl"/>
 
+	<!-- Coins of the Ostrogoths of Italy -->
+	<page path="/numishare/coi/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/coi/xpl/views/pages/index.xpl"/>
+
 	<!-- Fralin UVA -->
 	<page path="/numishare/fralin/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/fralin/xpl/views/pages/index.xpl"/>
 	<page path="/numishare/fralin/display-uva$" model="xpl/models/config.xpl" view="oxf:/numishare-projects/fralin/xpl/controllers/display-uva.xpl"/>
