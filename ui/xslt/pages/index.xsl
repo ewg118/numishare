@@ -79,10 +79,10 @@
 	</xsl:template>
 
 	<xsl:template name="index">
-		<div class="jumbotron">
+		<!--<div class="jumbotron">
 			<div class="container">
 				<div class="row">
-					<!-- display title and description in the jumbotron, including featured object, if available -->
+					<!-\- display title and description in the jumbotron, including featured object, if available -\->
 					<xsl:choose>
 						<xsl:when test="features_enabled = true() and count(doc('input:feature-model')//doc) = 1">
 							<div class="col-md-9">
@@ -104,13 +104,16 @@
 					</xsl:choose>
 				</div>
 			</div>
-		</div>	
-		<div class="container-fluid">
+		</div>-->	
+		
+		<img src="{$include_path}/images/banner.jpg" style="width:100%"/>
+		
+		<div class="container content">
 			<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 				<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
 			</xsl:if>
 			<div class="row">
-				<div class="col-md-9">					
+				<div class="col-md-12">					
 					<xsl:choose>
 						<xsl:when test="string($lang)">
 							<xsl:choose>
@@ -141,25 +144,41 @@
 							</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
-				</div>
-				<div class="col-md-3">
-					<div class="highlight data_options">
-						<h3>Linked Data</h3>
-						<a href="{$display_path}feed/?q=*:*">
-							<img src="{$include_path}/images/atom-large.png" title="Atom" alt="Atom"/>
-						</a>
-						<xsl:if test="pelagios_enabled=true()">
-							<a href="pelagios.void.rdf">
-								<img src="{$include_path}/images/pelagios_icon.png" title="Pelagios VOiD" alt="Pelagios VOiD"/>
+					
+					<div class="row">
+						<div class="col-md-6">
+							<h3>Collaborators</h3>
+							<p>
+								<a href="http://numismatics.org" title="American Numismatic Society" style="margin:0 10px;">
+									<img src="https://numismatics.org/wp-content/themes/numismatics/images/american-numismatic-society.svg" alt="ANS" style="width:120px"/>
+								</a>	
+								<a href="http://ww2.smb.museum/ikmk/" title="Münzkabinett Berlin" style="margin:0 10px;">
+									<img src="{$include_path}/images/logo_berlin.jpg" alt="Berlin"/>
+								</a>
+								<a href="https://www.spink.com/" title="Spink &amp; Son" style="margin:0 10px;">
+									<img src="{$include_path}/images/logo_spink.jpg" alt="Spink &amp; Son" style="width:260px;"/>
+								</a>
+							</p>
+							
+						</div>							
+						<div class="col-md-6 data_options">
+							<h3>Linked Data</h3>
+							<a href="{$display_path}feed/?q=*:*">
+								<img src="{$include_path}/images/atom-large.png" title="Atom" alt="Atom"/>
 							</a>
-						</xsl:if>
-						<xsl:if test="ctype_enabled=true()">
-							<a href="nomisma.void.rdf">
-								<img src="{$include_path}/images/nomisma.png" title="nomisma VOiD" alt="nomisma VOiD"/>
-							</a>
-						</xsl:if>
+							<xsl:if test="pelagios_enabled=true()">
+								<a href="pelagios.void.rdf">
+									<img src="{$include_path}/images/pelagios_icon.png" title="Pelagios VOiD" alt="Pelagios VOiD"/>
+								</a>
+							</xsl:if>
+							<xsl:if test="ctype_enabled=true()">
+								<a href="nomisma.void.rdf">
+									<img src="{$include_path}/images/nomisma.png" title="nomisma VOiD" alt="nomisma VOiD"/>
+								</a>
+							</xsl:if>
+						</div>
 					</div>
-				</div>
+				</div>				
 			</div>
 		</div>
 	</xsl:template>
