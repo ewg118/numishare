@@ -149,14 +149,14 @@
 						<div class="col-md-6">
 							<h3>Collaborators</h3>
 							<p>
-								<a href="http://numismatics.org" title="American Numismatic Society" style="margin:0 10px;">
-									<img src="https://numismatics.org/wp-content/themes/numismatics/images/american-numismatic-society.svg" alt="ANS" style="width:120px"/>
+								<a href="https://numismatics.org" title="American Numismatic Society" style="margin:0 10px;">
+									<img src="https://numismatics.org/wp-content/themes/numismatics/images/american-numismatic-society.svg" alt="ANS logo" style="max-width:120px"/>
 								</a>	
-								<a href="http://ww2.smb.museum/ikmk/" title="Münzkabinett Berlin" style="margin:0 10px;">
-									<img src="{$include_path}/images/logo_berlin.jpg" alt="Berlin"/>
+								<a href="https://ikmk.smb.museum/" title="Münzkabinett Berlin" style="margin:0 10px;">
+									<img src="{$include_path}/images/logo_berlin.png" alt="Berlin logo" style="max-width:240px; "/>
 								</a>
 								<a href="https://www.spink.com/" title="Spink &amp; Son" style="margin:0 10px;">
-									<img src="{$include_path}/images/logo_spink.jpg" alt="Spink &amp; Son" style="width:260px;"/>
+									<img src="{$include_path}/images/logo_spink.jpg" alt="Spink &amp; Son logo" style="max-width:240px;"/>
 								</a>
 							</p>
 							
