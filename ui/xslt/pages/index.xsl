@@ -137,22 +137,22 @@
 						<div class="col-md-4">
 							<h3>Collaborators</h3>
 							<p>
-								<a href="http://numismatics.org" title="American Numismatic Society" style="margin:0 10px;">
-									<img src="{$include_path}/images/logo_ans.jpg" alt="ANS"/>
+								<a href="https://numismatics.org" title="American Numismatic Society" style="margin:0 10px;">
+									<img src="https://numismatics.org/wp-content/themes/numismatics/images/american-numismatic-society.svg" alt="ANS logo" style="max-width:120px"/>
 								</a>
 								<a href="http://isaw.nyu.edu/" title="Institute for the Study of the Ancient World" style="margin:0 10px;">
-									<img src="{$include_path}/images/logo_isaw.jpg" alt="ISAW"/>
+									<img src="{$include_path}/images/logo_isaw.jpg" alt="ISAW logo"/>
 								</a>
 								<a href="http://www.dainst.org/" title="Deutsches Archäologisches Institut" style="margin:0 10px;">
-									<img src="{$include_path}/images/logo_dai.png" alt="DAI"/>
+									<img src="{$include_path}/images/logo_dai.png" alt="DAI logo"/>
 								</a>
 								<br/>
-								<a href="http://ww2.smb.museum/ikmk/" title="Münzkabinett Berlin" style="margin:0 10px;">
-									<img src="{$include_path}/images/logo_berlin.jpg" alt="Berlin"/>
+								<a href="https://ikmk.smb.museum/" title="Münzkabinett Berlin" style="margin:0 10px;">
+									<img src="{$include_path}/images/logo_berlin.png" alt="Berlin logo" style="max-width:240px; "/>
 								</a>
 								<br/>
 								<a href="https://www.spink.com/" title="Spink &amp; Son" style="margin:0 10px;">
-									<img src="{$include_path}/images/logo_spink.jpg" alt="Spink &amp; Son" style="width:260px;"/>
+									<img src="{$include_path}/images/logo_spink.jpg" alt="Spink &amp; Son logo" style="max-width:240px;"/>
 								</a>
 							</p>
 						</div>
