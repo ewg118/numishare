@@ -2041,6 +2041,7 @@
                     <xsl:when test="$label = 'acquisition'">Acquisition</xsl:when>
                     <xsl:when test="$label = 'acquiredFrom'">Acquired From</xsl:when>
                     <xsl:when test="$label = 'adminDesc'">Administrative History</xsl:when>
+                    <xsl:when test="$label = 'ancient_place'">Ancient Place</xsl:when>
                     <xsl:when test="$label = 'appraisal'">Appraisal</xsl:when>
                     <xsl:when test="$label = 'appraiser'">Appraiser</xsl:when>
                     <xsl:when test="$label = 'area'">Excavation Test / Area</xsl:when>
@@ -2090,6 +2091,7 @@
                     <xsl:when test="$label = 'era'">Era</xsl:when>
                     <xsl:when test="$label = 'finder'">Finder</xsl:when>
                     <xsl:when test="$label = 'findspot'">Findspot</xsl:when>
+                    <xsl:when test="$label = 'Findspot Type'">Spatial Context</xsl:when>
                     <xsl:when test="$label = 'findspotDesc'">Findspot Description</xsl:when>
                     <xsl:when test="$label = 'fromDate'">From Date</xsl:when>
                     <xsl:when test="$label = 'geographic'">Geographic</xsl:when>
