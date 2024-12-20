@@ -80,61 +80,70 @@
 			<xsl:if test="not(descendant::nh:deposit[nh:date or nh:dateRange]) and not(descendant::nh:closingDate[nh:date or nh:dateRange])">
 				<xsl:if test="$hasContents = true()">
 
-					<!-- derive dates from contents if the nh:deposit is not set -->
-					<xsl:variable name="all-dates" as="element()*">
-						<dates>
-							<xsl:for-each select="descendant::nuds:typeDesc">
-								<xsl:if test="index-of(//config/certainty_codes/code[@accept = 'true'], @certainty)">
-									<xsl:choose>
-										<xsl:when test="string(@xlink:href)">
-											<xsl:variable name="href" select="@xlink:href"/>
-											<xsl:for-each select="$nudsGroup//object[@xlink:href = $href]/descendant::*/@standardDate">
-												<xsl:if test="number(.)">
-													<date>
-														<xsl:value-of select="."/>
-													</date>
-												</xsl:if>
-											</xsl:for-each>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:for-each select="descendant::*/@standardDate">
-												<xsl:if test="number(.)">
-													<date>
-														<xsl:value-of select="."/>
-													</date>
-												</xsl:if>
-											</xsl:for-each>
-										</xsl:otherwise>
-									</xsl:choose>
-								</xsl:if>
-							</xsl:for-each>
-						</dates>
-					</xsl:variable>
-
-					<xsl:variable name="dates" as="element()*">
-						<dates>
-							<xsl:for-each select="distinct-values($all-dates//date)">
-								<xsl:sort data-type="number"/>
-								<date>
-									<xsl:value-of select="."/>
-								</date>
-							</xsl:for-each>
-						</dates>
-					</xsl:variable>
-
-
-					<field name="closing_date_display">
-						<xsl:value-of select="numishare:normalizeDate($dates/date[last()])"/>
-					</field>
-					<xsl:if test="count($dates/date) &gt; 0">
-						<field name="tpq_num">
-							<xsl:value-of select="number($dates/date[1])"/>
-						</field>
-						<field name="taq_num">
-							<xsl:value-of select="number($dates/date[last()])"/>
-						</field>
-					</xsl:if>
-
+					<xsl:variable name="hasDates" select="descendant::nuds:typeDesc/descendant::*/@standardDate or $nudsGroup//object/descendant::*/@standardDate" as="xs:boolean"/>
+					
+					<xsl:choose>
+						<xsl:when test="$hasDates = true()">
+							<!-- derive dates from contents if the nh:deposit is not set -->
+							<xsl:variable name="all-dates" as="element()*">
+								<dates>
+									<xsl:for-each select="descendant::nuds:typeDesc">
+										<xsl:if test="index-of(//config/certainty_codes/code[@accept = 'true'], @certainty)">
+											<xsl:choose>
+												<xsl:when test="string(@xlink:href)">
+													<xsl:variable name="href" select="@xlink:href"/>
+													<xsl:for-each select="$nudsGroup//object[@xlink:href = $href]/descendant::*/@standardDate">
+														<xsl:if test="number(.)">
+															<date>
+																<xsl:value-of select="."/>
+															</date>
+														</xsl:if>
+													</xsl:for-each>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:for-each select="descendant::*/@standardDate">
+														<xsl:if test="number(.)">
+															<date>
+																<xsl:value-of select="."/>
+															</date>
+														</xsl:if>
+													</xsl:for-each>
+												</xsl:otherwise>
+											</xsl:choose>
+										</xsl:if>
+									</xsl:for-each>
+								</dates>
+							</xsl:variable>
+							
+							<xsl:variable name="dates" as="element()*">
+								<dates>
+									<xsl:for-each select="distinct-values($all-dates//date)">
+										<xsl:sort data-type="number"/>
+										<date>
+											<xsl:value-of select="."/>
+										</date>
+									</xsl:for-each>
+								</dates>
+							</xsl:variable>
+							
+							
+							<field name="closing_date_display">
+								<xsl:value-of select="numishare:normalizeDate($dates/date[last()])"/>
+							</field>
+							<xsl:if test="count($dates/date) &gt; 0">
+								<field name="tpq_num">
+									<xsl:value-of select="number($dates/date[1])"/>
+								</field>
+								<field name="taq_num">
+									<xsl:value-of select="number($dates/date[last()])"/>
+								</field>
+							</xsl:if>
+						</xsl:when>
+						<xsl:otherwise>
+							<field name="closing_date_display">Unknown date</field>
+						</xsl:otherwise>
+					</xsl:choose>
+					
 				</xsl:if>
 			</xsl:if>
 
