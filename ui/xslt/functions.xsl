@@ -2091,7 +2091,7 @@
                     <xsl:when test="$label = 'era'">Era</xsl:when>
                     <xsl:when test="$label = 'finder'">Finder</xsl:when>
                     <xsl:when test="$label = 'findspot'">Findspot</xsl:when>
-                    <xsl:when test="$label = 'Findspot Type'">Spatial Context</xsl:when>
+                    <xsl:when test="$label = 'findspot_type'">Findspot Type</xsl:when>
                     <xsl:when test="$label = 'findspotDesc'">Findspot Description</xsl:when>
                     <xsl:when test="$label = 'fromDate'">From Date</xsl:when>
                     <xsl:when test="$label = 'geographic'">Geographic</xsl:when>
