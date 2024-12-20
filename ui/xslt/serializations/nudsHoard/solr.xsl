@@ -140,7 +140,7 @@
 							</xsl:if>
 						</xsl:when>
 						<xsl:otherwise>
-							<field name="closing_date_display">Unknown date</field>
+							<field name="deposit_display">Unknown Date</field>
 						</xsl:otherwise>
 					</xsl:choose>
 					
