@@ -663,10 +663,10 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:title" mode="discovery">
-		<field name="projectName_facet">
+		<field name="excavation_facet">
 			<xsl:value-of select="."/>
 		</field>
-		<field name="projectName_text">
+		<field name="excavation_text">
 			<xsl:value-of select="."/>
 		</field>
 	</xsl:template>

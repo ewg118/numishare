@@ -2088,6 +2088,7 @@
                     <xsl:when test="$label = 'editorResponsible'">Responsible Official</xsl:when>
                     <xsl:when test="$label = 'edge'">Edge</xsl:when>
                     <xsl:when test="$label = 'era'">Era</xsl:when>
+                    <xsl:when test="$label = 'excavation'">Excavation</xsl:when>
                     <xsl:when test="$label = 'finder'">Finder</xsl:when>
                     <xsl:when test="$label = 'findspot'">Findspot</xsl:when>
                     <xsl:when test="$label = 'findspotDesc'">Findspot Description</xsl:when>
@@ -2122,7 +2123,7 @@
                         Investigator</xsl:when>
                     <xsl:when test="$label = 'private'">Private</xsl:when>
                     <xsl:when test="$label = 'productionPlace'">Place of Production</xsl:when>
-                    <xsl:when test="$label = 'projectName'">Project Name</xsl:when>
+                    <xsl:when test="$label = 'projectName'">Excavation</xsl:when>
                     <xsl:when test="$label = 'provenance'">Provenance</xsl:when>
                     <xsl:when test="$label = 'public'">Public</xsl:when>
                     <xsl:when test="$label = 'publisher'">Publisher</xsl:when>

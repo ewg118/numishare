@@ -272,6 +272,10 @@
 			<xforms:instance id="reference-template" xxf:exclude-result-prefixes="#all">
 				<reference/>
 			</xforms:instance>
+			
+			<xforms:instance id="citation-template" xxf:exclude-result-prefixes="#all">
+				<citation/>
+			</xforms:instance>
 
 			<!-- adminDesc templates -->
 			<xforms:instance id="adminDesc-template" xxf:exclude-result-prefixes="#all">
@@ -296,6 +300,27 @@
 				<chronItem>
 					<previousColl/>
 				</chronItem>
+			</xforms:instance>
+			
+			<!-- findspotDesc templates -->
+			<xforms:instance id="findspotDesc-template" xxf:exclude-result-prefixes="#all">
+				<findspotDesc/>
+			</xforms:instance>
+			
+			<xforms:instance id="findspot-template" xxf:exclude-result-prefixes="#all">
+				<findspot>
+					<fallsWithin>
+						<geogname xlink:role="findspot" xlink:type="simple"/>
+					</fallsWithin>
+				</findspot>
+			</xforms:instance>
+			
+			<xforms:instance id="excavation-template" xxf:exclude-result-prefixes="#all">
+				<discovery>
+					<project>
+						<title></title>
+					</project>
+				</discovery>
 			</xforms:instance>
 			
 			<!-- digRep templates -->
@@ -325,6 +350,7 @@
 				<properties xmlns="">
 					<property label="Authority URI">auth_authority_uri</property>
 					<property label="Axis" constraint="object">axis</property>
+					<property label="Citation" constraint="object">citation</property>
 					<property label="Coin Type URI" constraint="object">coinType</property>
 					<property label="Collection URI" constraint="object">collection</property>
 					<property label="Date On Object">dateOnObject</property>
@@ -333,6 +359,9 @@
 					<property label="Date Certainty">dateCertainty</property>
 					<property label="End Date">toDate</property>
 					<property label="Exatch Match URI" constraint="cointype">exactMatch</property>
+					<property label="Excavation Name" constraint="object">excavation_name</property>
+					<property label="Findspot Location Name" constraint="object">findspot_name</property>
+					<property label="Findspot Location URI" constraint="object">findspot_uri</property>
 					<property label="Image: Obverse Thumbnail">image_thumbnail_obverse</property>
 					<property label="Image: Obverse Reference">image_reference_obverse</property>
 					<property label="Image: Obverse Archive">image_archive_obverse</property>
@@ -1471,7 +1500,7 @@
 
 																<!-- URI validation -->
 																<xforms:action if="ends-with($mapping, '_uri') or $mapping = 'collection'">
-																	<xforms:var name="isValid" select="starts-with($value, 'http://nomisma.org/id/')"/>
+																	<xforms:var name="isValid" select="if ($mapping = 'findspot_uri') then matches($value, '^https?://') else starts-with($value, 'http://nomisma.org/id/')"/>
 																	<xforms:insert if="string-length($value) &gt; 0 and $isValid = false()"
 																		context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
 																		origin="xforms:element('error', concat('Nomisma URI required for this field (', $mapping, '): ', $value))"> </xforms:insert>
@@ -1494,6 +1523,33 @@
 																		</xforms:action>
 																	</xforms:action>
 																</xforms:action>
+																
+																<!-- ***** PHYSICAL DESCRIPTION ***** -->
+																
+																<!-- measurements -->
+																<xforms:action if="$mapping = 'axis' and string-length($value) &gt; 0">
+																	<xforms:insert
+																		if="not($value castable as xs:integer) or ($value castable as xs:integer and (number($value) &gt; 12 or number($value) &lt; 1))"
+																		context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
+																		origin="xforms:element('error', 'The axis must be an integer between 1 and 12')"/>
+																</xforms:action>
+																
+																<xforms:action if="string-length($value) &gt; 0 and 
+																	($mapping = 'weight' or $mapping = 'height' or $mapping = 'width' or $mapping = 'diameter' or $mapping = 'thickness')">
+																	<!-- insert an error if the $value is not a decimal number -->
+																	<xforms:insert
+																		if="not($value castable as xs:decimal) or ($value castable as xs:decimal and number($value) &lt;= 0)"
+																		context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
+																		origin="xforms:element('error', concat('The ', $mapping, ' must be a decimal number greater than 0'))"/>
+																</xforms:action>
+																
+																<!-- ***** FINDSPOT DESCRIPTION ***** -->
+																<!--<xforms:action if="$mapping = 'findspot_name'">
+																	<xforms:insert
+																		if="not()"
+																		context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
+																		origin="xforms:element('error', 'The axis must be an integer between 1 and 12')"/>
+																</xforms:action>-->
 
 																<!-- ***** REFERENCES ***** -->
 																<!-- if the $mapping is a coin type URI, throw an error if the coin type URI and object type URI are blank -->
@@ -1576,25 +1632,6 @@
 																			(implied coin type URI) should be designated as an Exact Match URI. Otherwise, the URI should correspond to a Type Series and be used in conjunction with a Type Number (separated by the | character).')"
 																		/>
 																	</xforms:action>
-																</xforms:action>
-
-																<!-- ***** PHYSICAL DESCRIPTION ***** -->
-
-																<!-- measurements -->
-																<xforms:action if="$mapping = 'axis' and string-length($value) &gt; 0">
-																	<xforms:insert
-																		if="not($value castable as xs:integer) or ($value castable as xs:integer and (number($value) &gt; 12 or number($value) &lt; 1))"
-																		context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
-																		origin="xforms:element('error', 'The axis must be an integer between 1 and 12')"/>
-																</xforms:action>
-
-																<xforms:action if="string-length($value) &gt; 0 and 
-																	($mapping = 'weight' or $mapping = 'height' or $mapping = 'width' or $mapping = 'diameter' or $mapping = 'thickness')">
-																	<!-- insert an error if the $value is not a decimal number -->
-																	<xforms:insert
-																		if="not($value castable as xs:decimal) or ($value castable as xs:decimal and number($value) &lt;= 0)"
-																		context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
-																		origin="xforms:element('error', concat('The ', $mapping, ' must be a decimal number greater than 0'))"/>
 																</xforms:action>
 																
 																<!-- ***** DIGREP ***** -->
@@ -1702,7 +1739,7 @@
 											<xforms:setvalue ref="instance('control-instance')/position">0</xforms:setvalue>
 
 											<!-- begin processing the spreadsheet into NUDS -->
-											<xforms:action xxf:iterate="instance('sheet')/row">
+											<xforms:action xxf:iterate="instance('sheet')/row[1]">
 												<xforms:var name="id" select="normalize-space(data(context()/cell[@name=instance('mappings')/mapping[@to='id']/@from]))"/>
 												<xforms:var name="position" select="position()"/>
 
@@ -2123,15 +2160,45 @@
 															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:physDesc/nuds:measurementsSet/*[local-name()=$mapping]"
 																value="$value"/>
 														</xforms:action>
+														
+														<!-- ***** FINDSPOTDESC ***** -->
+														<xforms:action if="$mapping = 'findspot_uri' or $mapping = 'findspot_name'">
+															<xforms:insert if="not(instance('nuds')/nuds:descMeta/nuds:findspotDesc)" context="instance('nuds')/nuds:descMeta"
+																nodeset="./*[contains(name(), 'Desc')]/preceding::*[1]" origin="instance('findspotDesc-template')"/>
+															
+															<xforms:insert if="not(instance('nuds')/nuds:descMeta/nuds:findspotDesc/nuds:findspot)" context="instance('nuds')/nuds:descMeta/nuds:findspotDesc"
+																nodeset="./*[name() &lt;= $mapping]" origin="instance('findspot-template')"/>
+															
+															
+															<xforms:insert
+																context="instance('nuds')/nuds:descMeta/nuds:findspotDesc/nuds:findspot/nuds:fallsWithin/nuds:geogname"
+																origin="xforms:attribute(resolve-QName('xlink:href', self::node()), $value)" if="$mapping = 'findspot_uri'"/>
+															<xforms:setvalue
+																ref="instance('nuds')/nuds:descMeta/nuds:findspotDesc/nuds:findspot/nuds:fallsWithin/nuds:geogname"
+																value="$value" if="$mapping = 'findspot_name'"/>
+														</xforms:action>
+														
+														<xforms:action if="$mapping = 'excavation_name'">
+															<xforms:insert if="not(instance('nuds')/nuds:descMeta/nuds:findspotDesc)" context="instance('nuds')/nuds:descMeta"
+																nodeset="./*[contains(name(), 'Desc')]/preceding::*[1]" origin="instance('findspotDesc-template')"/>
+															
+															<xforms:insert if="not(instance('nuds')/nuds:descMeta/nuds:findspotDesc/nuds:discovery)" context="instance('nuds')/nuds:descMeta/nuds:findspotDesc"
+																nodeset="./*[name() &lt;= $mapping]" origin="instance('excavation-template')"/>
+															
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:findspotDesc/nuds:discovery/nuds:project/nuds:title" value="$value"/>
+														</xforms:action>
 
 														<!-- ***** REFDESC ***** -->
-														<xforms:action if="$mapping = 'reference'">
+														<xforms:action if="$mapping = 'reference' or $mapping = 'citation'">
 															<!-- insert refDesc if one does not exist -->
 															<xforms:insert context="instance('nuds')/nuds:descMeta" nodeset="./child::node()[last()]"
 																origin="instance('refDesc-template')" if="not(instance('nuds')/nuds:descMeta/nuds:refDesc)"/>
-
+	
 															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:refDesc" nodeset="./child::node()[last()]"
-																origin="instance('reference-template')"/>
+																origin="instance('reference-template')" if="$mapping = 'reference'"/>
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:refDesc" nodeset="./child::node()[last()]"
+																origin="instance('citation-template')" if="$mapping = 'citation'"/>
+															
 
 															<!-- if there is a | character, then split into title and idno in TEI -->
 															<xforms:action if="contains($value, '|')">
@@ -2139,42 +2206,42 @@
 
 																<!-- evaluate whether the bibliographic portion is a URI or literal -->
 																<xforms:action if="matches($pieces[1], '^https?://')">
-																	<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:refDesc/nuds:reference[last()]"
+																	<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:refDesc/*[last()]"
 																		origin="xforms:element(resolve-QName('tei:title', self::node()), (xforms:attribute('key', $pieces[1]), data(instance('rdf')/*[@rdf:about=$pieces[1]]/skos:prefLabel[@xml:lang='en'])))"
 																	/>
 																</xforms:action>
 																<xforms:action if="not(matches($pieces[1], '^https?://'))">
-																	<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:refDesc/nuds:reference[last()]"
+																	<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:refDesc/*[last()]"
 																		origin="xforms:element(resolve-QName('tei:title', self::node()), $pieces[1])"/>
 																</xforms:action>
 
 																<!-- insert the TEI identifier -->
-																<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:refDesc/nuds:reference[last()]"
+																<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:refDesc/*[last()]"
 																	nodeset="./child::node()[last()]" origin="xforms:element(resolve-QName('tei:idno', self::node()), $pieces[2])"/>
 															</xforms:action>
 
 															<!-- otherwise evaluate literal or URI -->
 															<xforms:action if="not(contains($value, '|'))">
 																<xforms:action if="matches($value, '^https?://')">
-																	<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:refDesc/nuds:reference[last()]"
+																	<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:refDesc/*[last()]"
 																		origin="xforms:attribute(resolve-QName('xlink:type', self::node()), 'simple')"/>
-																	<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:refDesc/nuds:reference[last()]"
+																	<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:refDesc/*[last()]"
 																		origin="xforms:attribute(resolve-QName('xlink:href', self::node()), $value)"/>
 
 																	<!-- set label: use preferred label if the URI is a nmo:TypeSeriesItem, otherwise use the URI -->
 																	<xforms:setvalue if="instance('rdf')/nmo:TypeSeriesItem[@rdf:about = $value]"
-																		ref="instance('nuds')/nuds:descMeta/nuds:refDesc/nuds:reference[last()]"
+																		ref="instance('nuds')/nuds:descMeta/nuds:refDesc/*[last()]"
 																		value="instance('rdf')/nmo:TypeSeriesItem[@rdf:about=$value]/skos:prefLabel[@xml:lang='en']"/>
 																	<xforms:setvalue if="not(instance('rdf')/nmo:TypeSeriesItem[@rdf:about = $value])"
-																		ref="instance('nuds')/nuds:descMeta/nuds:refDesc/nuds:reference[last()]" value="$value"/>
+																		ref="instance('nuds')/nuds:descMeta/nuds:refDesc/*[last()]" value="$value"/>
 
 																	<!-- insert an arcrole if the URI is an nmo:TypeSeriesItem -->
 																	<xforms:insert if="instance('rdf')/nmo:TypeSeriesItem[@rdf:about = $value]"
-																		context="instance('nuds')/nuds:descMeta/nuds:refDesc/nuds:reference[last()]"
+																		context="instance('nuds')/nuds:descMeta/nuds:refDesc/*[last()]"
 																		origin="xforms:attribute(resolve-QName('xlink:arcrole', self::node()), 'nmo:hasTypeSeriesItem')"/>
 																</xforms:action>
 																<xforms:action if="not(matches($value, '^https?://'))">
-																	<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:refDesc/nuds:reference[last()]" value="$value"/>
+																	<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:refDesc/*[last()]" value="$value"/>
 																</xforms:action>
 															</xforms:action>
 														</xforms:action>
@@ -2298,7 +2365,7 @@
 							<p>The process has been completed successfully. Click the link above to return to the Admin panel.</p>
 						</xforms:case>
 					</xforms:switch>
-					<!--<fr:xforms-inspector/>-->
+					<fr:xforms-inspector/>
 				</div>
 			</div>
 		</div>
