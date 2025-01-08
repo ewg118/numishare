@@ -19,6 +19,7 @@ while [ $retry_count -lt $max_retries ]; do
         break
     else
         echo "Restarting Apache"
+        echo $(date --utc +%FT%T.%3NZ) "Restarted Apache" >> /var/log/$service/restart.log
         service apache2 stop
         service apache2 start
     fi
@@ -34,6 +35,7 @@ done
 
 if [ $retry_count -eq $max_retries ]; then
   echo "Restarting Tomcat"
+  echo $(date --utc +%FT%T.%3NZ) "Restarted Tomcat" >> /var/log/$service/restart.log
   service $service stop
   service $service start
 fi
