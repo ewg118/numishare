@@ -1,5 +1,7 @@
 #!/bin/sh
 
+#restarts tomcat after a timeout. the script should be run in cron as root
+
 service=tomcat10
 max_retries=3
 retry_count=0
