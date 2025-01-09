@@ -516,7 +516,8 @@
 										<xsl:value-of select="doc('input:die-frequencies-query')"/>
 									</span>
 								</xsl:if>
-
+								
+								
 
 								<!-- IIIF -->
 								<span id="hasFindspots">
@@ -1775,76 +1776,30 @@
 
 	<!-- ***** CHARTS TEMPLATES ***** -->
 	<xsl:template name="charts">
-
-		<!-- if the SPARQL endpoint is Nomisma.org, use the Nomisma measurement APIs, otherwise query the locally-defined SPARQL endpoint -->
-		<xsl:variable name="measurements" as="element()*">
-			<measurements>
-				<xsl:choose>
-					<xsl:when test="//config/sparql_endpoint = 'http://nomisma.org/query'">
-						<axis>
-							<xsl:value-of select="document(concat('http://nomisma.org/apis/avgAxis?type=', encode-for-uri($objectUri)))"/>
-						</axis>
-						<diameter>
-							<xsl:value-of select="document(concat('http://nomisma.org/apis/avgDiameter?type=', encode-for-uri($objectUri)))"/>
-						</diameter>
-						<weight>
-							<xsl:value-of select="document(concat('http://nomisma.org/apis/avgWeight?type=', encode-for-uri($objectUri)))"/>
-						</weight>
-					</xsl:when>
-					<xsl:otherwise>
-						<axis>
-							<xsl:value-of
-								select="document(concat($url, 'apis/getMetrical?format=xml&amp;measurement=nmo:hasAxis&amp;compare=', encode-for-uri(concat('nmo:hasTypeSeriesItem &lt;', $objectUri, '&gt;'))))//res:binding[@name='average']/res:literal"
-							/>
-						</axis>
-						<diameter>
-							<xsl:value-of
-								select="document(concat($url, 'apis/getMetrical?format=xml&amp;measurement=nmo:hasDiameter&amp;compare=', encode-for-uri(concat('nmo:hasTypeSeriesItem &lt;', $objectUri, '&gt;'))))//res:binding[@name='average']/res:literal"
-							/>
-						</diameter>
-						<weight>
-							<xsl:value-of
-								select="document(concat($url, 'apis/getMetrical?format=xml&amp;measurement=nmo:hasWeight&amp;compare=', encode-for-uri(concat('nmo:hasTypeSeriesItem &lt;', $objectUri, '&gt;'))))//res:binding[@name='average']/res:literal"
-							/>
-						</weight>
-					</xsl:otherwise>
-				</xsl:choose>
-			</measurements>
-		</xsl:variable>
-
+		<!-- measurements only generated on button click to prevent bot overload of SPARQL -->
+		
 		<h3>
 			<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
 		</h3>
+		
+		<p>Average measurements for this coin type:</p>
+		
+		<button class="btn btn-primary" id="get-measurements">Generate</button>
 
-		<xsl:if test="number($measurements//axis) &gt; 0 or number($measurements//diameter) &gt; 0 or number($measurements//weight) &gt; 0">
-			<p>Average measurements for this coin type:</p>
-			<dl class=" {if(//config/languages/language[@code = $lang]/@rtl = true()) then 'dl-horizontal dl-rtl' else 'dl-horizontal'}">
-				<xsl:if test="number($measurements//axis) &gt; 0">
-					<dt>
-						<xsl:value-of select="numishare:regularize_node('axis', $lang)"/>
-					</dt>
-					<dd>
-						<xsl:value-of select="format-number($measurements//axis, '##.##')"/>
-					</dd>
-				</xsl:if>
-				<xsl:if test="number($measurements//diameter) &gt; 0">
-					<dt>
-						<xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>
-					</dt>
-					<dd>
-						<xsl:value-of select="format-number($measurements//diameter, '##.##')"/>
-					</dd>
-				</xsl:if>
-				<xsl:if test="number($measurements//weight) &gt; 0">
-					<dt>
-						<xsl:value-of select="numishare:regularize_node('weight', $lang)"/>
-					</dt>
-					<dd>
-						<xsl:value-of select="format-number($measurements//weight, '##.##')"/>
-					</dd>
-				</xsl:if>
-			</dl>
-		</xsl:if>
+		<dl class=" {if(//config/languages/language[@code = $lang]/@rtl = true()) then 'dl-horizontal dl-rtl' else 'dl-horizontal'} hidden" id="measurements-container">
+			<dt>
+				<xsl:value-of select="numishare:regularize_node('axis', $lang)"/>
+			</dt>
+			<dd id="avg-axis"/>
+			<dt>
+				<xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>
+			</dt>
+			<dd id="avg-diameter"/>
+			<dt>
+				<xsl:value-of select="numishare:regularize_node('weight', $lang)"/>
+			</dt>
+			<dd id="avg-weight"/>
+		</dl>
 
 		<xsl:call-template name="metrical-form">
 			<xsl:with-param name="mode">record</xsl:with-param>
