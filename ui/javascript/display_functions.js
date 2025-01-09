@@ -1,7 +1,7 @@
 /************************************
  VISUALIZATION FUNCTIONS
  Written by Ethan Gruber, gruber@numismatics.org
- Date: May 2020
+ Date: January 2025
  Library: jQuery
  Description: Display functions for coin type records. Extended 2020 for displaying images of physical coins connected to hoards
  ************************************/
