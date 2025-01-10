@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 	Author: Ethan Gruber
-	Date Modified: April 2019
+	Date Modified: January 2025
 	Function: Serialize the Solr query for the ajax results on the maps pages into HTML, calling the numishareResults pipelines for
 		coin type corpora, if applicable
 -->

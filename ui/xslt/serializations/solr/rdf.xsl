@@ -196,11 +196,19 @@
 				<xsl:value-of select="str[@name = 'title_display']"/>
 			</dcterms:title>
 			
-			<xsl:if test="str[@name = 'identifier_display']">
-				<dcterms:identifier>
-					<xsl:value-of select="str[@name = 'identifier_display']"/>
-				</dcterms:identifier>
-			</xsl:if>
+			<xsl:choose>
+				<xsl:when test="str[@name = 'identifier_display']">
+					<dcterms:identifier>
+						<xsl:value-of select="str[@name = 'identifier_display']"/>
+					</dcterms:identifier>
+				</xsl:when>
+				<xsl:otherwise>
+					<dcterms:identifier>
+						<xsl:value-of select="$id"/>
+					</dcterms:identifier>
+				</xsl:otherwise>
+			</xsl:choose>
+			
 			
 			<xsl:for-each select="arr[@name = 'collection_uri']/str">
 				<nmo:hasCollection rdf:resource="{.}"/>
