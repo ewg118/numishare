@@ -1739,7 +1739,7 @@
 											<xforms:setvalue ref="instance('control-instance')/position">0</xforms:setvalue>
 
 											<!-- begin processing the spreadsheet into NUDS -->
-											<xforms:action xxf:iterate="instance('sheet')/row[1]">
+											<xforms:action xxf:iterate="instance('sheet')/row">
 												<xforms:var name="id" select="normalize-space(data(context()/cell[@name=instance('mappings')/mapping[@to='id']/@from]))"/>
 												<xforms:var name="position" select="position()"/>
 
