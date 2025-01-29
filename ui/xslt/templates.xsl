@@ -288,7 +288,24 @@
 
 	<xsl:template name="footer">
 		<div id="footer" class="container-fluid">
-			<xsl:copy-of select="//config/footer/*"/>
+			
+			<!-- if a multilingual footer is present -->
+			<xsl:choose>
+				<xsl:when test="//config/footer/content">
+					<xsl:choose>
+						<xsl:when test="//config/footer/content[@lang = $lang]">
+							<xsl:copy-of select="//config/footer/content[@lang = $lang]/*"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:copy-of select="//config/footer/content[@lang = 'en']/*"/>
+						</xsl:otherwise>
+					</xsl:choose>
+					
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:copy-of select="//config/footer/*"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</div>
 	</xsl:template>
 </xsl:stylesheet>
