@@ -147,7 +147,12 @@
 					
 					<div class="row">
 						<div class="col-md-6">
-							<h3>Collaborators</h3>
+							<h3>
+								<xsl:choose>
+									<xsl:when test="$lang = 'de'">Kooperationspartner</xsl:when>
+									<xsl:otherwise>Collaborators</xsl:otherwise>
+								</xsl:choose>
+							</h3>
 							<p>
 								<a href="https://numismatics.org" title="American Numismatic Society" style="margin:0 10px;">
 									<img src="https://numismatics.org/wp-content/themes/numismatics/images/american-numismatic-society.svg" alt="ANS logo" style="max-width:120px"/>

@@ -2391,7 +2391,7 @@
                     <xsl:when test="$label = 'header_search'">Suchen</xsl:when>
                     <xsl:when test="$label = 'header_maps'">Karten</xsl:when>
                     <xsl:when test="$label = 'header_compare'">Vergleichen</xsl:when>
-                    <xsl:when test="$label = 'header_contributors'">Beitragende</xsl:when>
+                    <xsl:when test="$label = 'header_contributors'">Beiträger</xsl:when>
                     <xsl:when test="$label = 'header_language'">Sprache</xsl:when>
                     <xsl:when test="$label = 'header_analyze'">Hortfunde analysieren</xsl:when>
                     <xsl:when test="$label = 'header_visualize'">Anfragen visualisieren</xsl:when>
