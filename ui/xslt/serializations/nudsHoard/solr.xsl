@@ -193,6 +193,15 @@
 					<xsl:value-of select="$nudsGroup//object[@xlink:href = $href]/descendant::nuds:title"/>
 				</field>
 			</xsl:for-each>
+			
+			<xsl:for-each select="descendant::nuds:reference[string(@xlink:href) and @xlink:arcrole='nmo:hasTypeSeriesItem']">
+				<field name="coinType_uri">
+					<xsl:value-of select="@xlink:href"/>
+				</field>
+				<field name="coinType_facet">
+					<xsl:value-of select="."/>
+				</field>
+			</xsl:for-each>
 
 			<!-- get sortable fields: distinct values in $nudsGroup -->
 			<xsl:call-template name="get_hoard_sort_fields">

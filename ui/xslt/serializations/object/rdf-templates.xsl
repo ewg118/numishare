@@ -921,7 +921,7 @@
 						rdf:about="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}#contents">
 
 						<xsl:for-each
-							select="descendant::nuds:typeDesc/@xlink:href | descendant::nuds:undertypeDesc/@xlink:href">
+							select="descendant::nuds:typeDesc/@xlink:href | descendant::nuds:undertypeDesc/@xlink:href | descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem']/@xlink:href">
 							<nmo:hasTypeSeriesItem rdf:resource="{.}"/>
 						</xsl:for-each>
 
@@ -929,7 +929,7 @@
 							<nodes>
 								<xsl:for-each select="
 										descendant::nuds:material[@xlink:href] | descendant::nuds:denomination[@xlink:href] | descendant::nuds:manufacture[@xlink:href] |
-										descendant::nuds:geogname[@xlink:href] | descendant::nuds:persname[@xlink:href] | descendant::nuds:corpname[@xlink:href]">
+										descendant::nuds:geogname[@xlink:href] | descendant::nuds:persname[@xlink:href] | descendant::nuds:corpname[@xlink:href] | descendant::nuds:famname[@xlink:href]">
 									<xsl:sort select="@xlink:href"/>
 
 									<xsl:copy-of select="."/>
