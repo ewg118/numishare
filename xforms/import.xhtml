@@ -2164,7 +2164,7 @@
 														<!-- ***** FINDSPOTDESC ***** -->
 														<xforms:action if="$mapping = 'findspot_uri' or $mapping = 'findspot_name'">
 															<xforms:insert if="not(instance('nuds')/nuds:descMeta/nuds:findspotDesc)" context="instance('nuds')/nuds:descMeta"
-																nodeset="./*[contains(name(), 'Desc')]/preceding::*[1]" origin="instance('findspotDesc-template')"/>
+																nodeset="./child::node()[last()]" origin="instance('findspotDesc-template')"/>
 															
 															<xforms:insert if="not(instance('nuds')/nuds:descMeta/nuds:findspotDesc/nuds:findspot)" context="instance('nuds')/nuds:descMeta/nuds:findspotDesc"
 																nodeset="./*[name() &lt;= $mapping]" origin="instance('findspot-template')"/>
@@ -2180,7 +2180,7 @@
 														
 														<xforms:action if="$mapping = 'excavation_name'">
 															<xforms:insert if="not(instance('nuds')/nuds:descMeta/nuds:findspotDesc)" context="instance('nuds')/nuds:descMeta"
-																nodeset="./*[contains(name(), 'Desc')]/preceding::*[1]" origin="instance('findspotDesc-template')"/>
+																nodeset="./child::node()[last()]" origin="instance('findspotDesc-template')"/>
 															
 															<xforms:insert if="not(instance('nuds')/nuds:descMeta/nuds:findspotDesc/nuds:discovery)" context="instance('nuds')/nuds:descMeta/nuds:findspotDesc"
 																nodeset="./*[name() &lt;= $mapping]" origin="instance('excavation-template')"/>
