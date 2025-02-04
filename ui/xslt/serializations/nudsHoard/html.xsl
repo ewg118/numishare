@@ -643,7 +643,7 @@
 			<xsl:apply-templates select="nh:discovery | nh:disposition"/>
 
 			<!-- add description derived from contents -->
-			<xsl:if test="$hasContents = true()">
+			<xsl:if test="$hasContents = true() and not(parent::node()/nh:contentsDesc/nh:contents/nh:description)">
 				<xsl:variable name="contents" as="element()*">
 					<xsl:copy-of select="parent::node()/nh:contentsDesc/nh:contents"/>
 				</xsl:variable>
