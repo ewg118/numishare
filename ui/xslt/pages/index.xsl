@@ -6,7 +6,14 @@
 
 	<!-- URL params -->
 	<xsl:param name="pipeline">display</xsl:param>
-	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
+	<xsl:variable name="collection-name">
+		<xsl:choose>
+			<xsl:when test="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/') = 'coinhoards'">igch</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>	
 	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
 	<xsl:param name="lang">
 		<xsl:choose>
@@ -67,7 +74,7 @@
 				<meta name="twitter:card" content="summary_large_image"/>
 
 				<xsl:if
-					test="$collection-name = 'pella' or $collection-name = 'sco' or $collection-name = 'pco' or $collection-name = 'hrc' or $collection-name = 'igch' or $collection-name = 'agco' or $collection-name = 'bigr'">
+					test="$collection-name = 'pella' or $collection-name = 'sco' or $collection-name = 'pco' or $collection-name = 'hrc' or $collection-name = 'igch' or $collection-name = 'agco' or $collection-name = 'bigr' or $collection-name = 'lco'">
 					<meta property="og:image" content="{$include_path}/images/{$collection-name}-banner.jpg"/>
 					<meta property="twitter:image" content="{$include_path}/images/{$collection-name}-banner.jpg"/>
 				</xsl:if>
