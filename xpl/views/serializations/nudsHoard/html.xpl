@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 	Author: Ethan Gruber
-	Last modified: May 2020
-	Function: HTML view for NUDSHoard -->
+	Last modified: February 2025
+	Function: HTML view for NUDSHoard. -->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:res="http://www.w3.org/2005/sparql-results#">
 	<p:param type="input" name="data"/>
 	<p:param type="output" name="data"/>
@@ -32,18 +32,6 @@
 		<p:input name="data" href="#get_hoards-model"/>
 		<p:input name="config" href="../../../../ui/xslt/ajax/get_hoards.xsl"/>
 		<p:output name="data" id="hoards-list"/>
-	</p:processor>
-
-	<!-- get certainty codes from the eXist-db collection and serialize into a list -->
-	<p:processor name="oxf:pipeline">
-		<p:input name="config" href="../../../models/xquery/get_certainty_codes.xpl"/>
-		<p:output name="data" id="codes-model"/>
-	</p:processor>
-
-	<p:processor name="oxf:pipeline">
-		<p:input name="data" href="#codes-model"/>
-		<p:input name="config" href="../../../views/ajax/get_certainty_codes.xpl"/>
-		<p:output name="data" id="codes-view"/>
 	</p:processor>
 	
 	<!-- load SPARQL query from disk -->
@@ -132,7 +120,7 @@ ASK {?s oa:hasBody <URI>}]]>
 								<p:input name="hoards-list" href="#hoards-list"/>
 								<p:input name="query" href="#hoard-examples-query-document"/>
 								<p:input name="specimenCount" href="#specimenCount"/>
-								<p:input name="data" href="aggregate('content', #data, #config, #codes-view)"/>
+								<p:input name="data" href="aggregate('content', #data, #config)"/>
 								<p:input name="config" href="../../../../ui/xslt/serializations/nudsHoard/html.xsl"/>
 								<p:output name="data" id="model"/>
 							</p:processor>
@@ -150,7 +138,7 @@ ASK {?s oa:hasBody <URI>}]]>
 								<p:input name="query" href="#hoard-examples-query-document"/>
 								<p:input name="specimens" href="#specimens"/>
 								<p:input name="specimenCount" href="#specimenCount"/>
-								<p:input name="data" href="aggregate('content', #data, #config, #codes-view)"/>
+								<p:input name="data" href="aggregate('content', #data, #config)"/>
 								<p:input name="config" href="../../../../ui/xslt/serializations/nudsHoard/html.xsl"/>
 								<p:output name="data" id="model"/>
 							</p:processor>
@@ -173,7 +161,7 @@ ASK {?s oa:hasBody <URI>}]]>
 								<p:input name="hoards-list" href="#hoards-list"/>
 								<p:input name="query" href="#hoard-examples-query-document"/>
 								<p:input name="specimenCount" href="#specimenCount"/>
-								<p:input name="data" href="aggregate('content', #data, #config, #codes-view)"/>
+								<p:input name="data" href="aggregate('content', #data, #config)"/>
 								<p:input name="config" href="../../../../ui/xslt/serializations/nudsHoard/html.xsl"/>
 								<p:output name="data" id="model"/>
 							</p:processor>
@@ -192,7 +180,7 @@ ASK {?s oa:hasBody <URI>}]]>
 								<p:input name="query" href="#hoard-examples-query-document"/>
 								<p:input name="specimens" href="#specimens"/>
 								<p:input name="specimenCount" href="#specimenCount"/>
-								<p:input name="data" href="aggregate('content', #data, #config, #codes-view)"/>
+								<p:input name="data" href="aggregate('content', #data, #config)"/>
 								<p:input name="config" href="../../../../ui/xslt/serializations/nudsHoard/html.xsl"/>
 								<p:output name="data" id="model"/>
 							</p:processor>
@@ -210,7 +198,7 @@ ASK {?s oa:hasBody <URI>}]]>
 						<p:input name="hoards-list" href="#hoards-list"/>
 						<p:input name="query" href="#hoard-examples-query-document"/>
 						<p:input name="specimenCount" href="#specimenCount"/>
-						<p:input name="data" href="aggregate('content', #data, #config, #codes-view)"/>
+						<p:input name="data" href="aggregate('content', #data, #config)"/>
 						<p:input name="config" href="../../../../ui/xslt/serializations/nudsHoard/html.xsl"/>
 						<p:output name="data" id="model"/>
 					</p:processor>
@@ -228,7 +216,7 @@ ASK {?s oa:hasBody <URI>}]]>
 						<p:input name="query" href="#hoard-examples-query-document"/>
 						<p:input name="specimens" href="#specimens"/>
 						<p:input name="specimenCount" href="#specimenCount"/>
-						<p:input name="data" href="aggregate('content', #data, #config, #codes-view)"/>
+						<p:input name="data" href="aggregate('content', #data, #config)"/>
 						<p:input name="config" href="../../../../ui/xslt/serializations/nudsHoard/html.xsl"/>
 						<p:output name="data" id="model"/>
 					</p:processor>
