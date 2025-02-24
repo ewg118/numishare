@@ -130,16 +130,9 @@
 				<properties>
 					<_object>
 						<name>
-							<xsl:value-of select="$value"/>
+							<xsl:value-of select="str[@name='title_display']"/>							
 						</name>
 						<uri>
-							<xsl:value-of select="$uri"/>
-						</uri>
-						<type>hoard</type>
-						<objectTitle>
-							<xsl:value-of select="str[@name='title_display']"/>
-						</objectTitle>
-						<objectURI>
 							<xsl:value-of
 								select="
 								if (//config/uri_space) then
@@ -147,7 +140,14 @@
 								else
 								concat($url, 'id/', str[@name = 'recordId'])"
 							/>
-						</objectURI>
+						</uri>
+						<toponym>
+							<xsl:value-of select="$value"/>
+						</toponym>
+						<gazetteer_uri>
+							<xsl:value-of select="$uri"/>
+						</gazetteer_uri>
+						<type>hoard</type>						
 						<xsl:if test="str[@name = 'closing_date_display']">
 							<closing_date>
 								<xsl:value-of select="str[@name = 'closing_date_display']"/>
