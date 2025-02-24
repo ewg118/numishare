@@ -1358,31 +1358,60 @@
 		<xsl:variable name="all-dates" as="element()*">
 			<dates>
 				<xsl:for-each select="descendant::nuds:typeDesc">
-					<xsl:if
-						test="index-of(//config/certainty_codes/code[@accept = 'true'], @certainty)">
-						<xsl:choose>
-							<xsl:when test="string(@xlink:href)">
-								<xsl:variable name="href" select="@xlink:href"/>
-								<xsl:for-each
-									select="$nudsGroup//object[@xlink:href = $href]/descendant::*/@standardDate">
-									<xsl:if test="number(.)">
-										<date>
-											<xsl:value-of select="number(.)"/>
-										</date>
-									</xsl:if>
-								</xsl:for-each>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:for-each select="descendant::*/@standardDate">
-									<xsl:if test="number(.)">
-										<date>
-											<xsl:value-of select="number(.)"/>
-										</date>
-									</xsl:if>
-								</xsl:for-each>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:if>
+					<xsl:choose>
+						<xsl:when test="@certainty">
+							<xsl:if
+								test="index-of(//config/certainty_codes/code[@accept = 'true'], @certainty)">
+								<xsl:choose>
+									<xsl:when test="string(@xlink:href)">
+										<xsl:variable name="href" select="@xlink:href"/>
+										<xsl:for-each
+											select="$nudsGroup//object[@xlink:href = $href]/descendant::*/@standardDate">
+											<xsl:if test="number(.)">
+												<date>
+													<xsl:value-of select="number(.)"/>
+												</date>
+											</xsl:if>
+										</xsl:for-each>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:for-each select="descendant::*/@standardDate">
+											<xsl:if test="number(.)">
+												<date>
+													<xsl:value-of select="number(.)"/>
+												</date>
+											</xsl:if>
+										</xsl:for-each>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:if>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:choose>
+								<xsl:when test="string(@xlink:href)">
+									<xsl:variable name="href" select="@xlink:href"/>
+									<xsl:for-each
+										select="$nudsGroup//object[@xlink:href = $href]/descendant::*/@standardDate">
+										<xsl:if test="number(.)">
+											<date>
+												<xsl:value-of select="number(.)"/>
+											</date>
+										</xsl:if>
+									</xsl:for-each>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:for-each select="descendant::*/@standardDate">
+										<xsl:if test="number(.)">
+											<date>
+												<xsl:value-of select="number(.)"/>
+											</date>
+										</xsl:if>
+									</xsl:for-each>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>
+					
 				</xsl:for-each>
 			</dates>
 		</xsl:variable>
