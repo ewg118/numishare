@@ -133,6 +133,7 @@ $(document).ready(function () {
             var fillColor;
             switch (feature.properties.type) {
                 case 'mint':
+                case 'productionPlace':
                 fillColor = '#6992fd';
                 break;
                 case 'hoard':
@@ -157,25 +158,46 @@ $(document).ready(function () {
         
         function onEachFeature (feature, layer) {
             var label = feature.properties.name;
-            if (feature.properties.type == 'subject') {
-                var facet = 'subjectPlace';
+            var collection_type = $('#collection_type').text();
+            str = '';
+            
+            //link directly to hoards in the result map functions for hoard databases
+            if (collection_type == 'hoard' && feature.properties.type == 'hoard') {
+                str += '<a href="' + feature.properties.uri + '">' + label + '</a>';
+                if (feature.properties.hasOwnProperty('gazetteer_uri') == true) {
+                    str += '<br/><b>Findspot: </b>';
+                    str += '<a href="' + feature.properties.gazetteer_uri + '">' + feature.properties.toponym + '</a>';
+                }
+                if (feature.properties.hasOwnProperty('closing_date') == true) {
+                    str += '<br/><b>Closing Date: </b>' + feature.properties.closing_date;
+                }
+                if (feature.properties.hasOwnProperty('deposit') == true) {
+                    str += '<br/><b>Deposit: </b>' + feature.properties.deposit;
+                }
             } else {
-                var facet = feature.properties.type;
+                if (feature.properties.type == 'subject') {
+                    var facet = 'subjectPlace';
+                } else {
+                    var facet = feature.properties.type;
+                }
+                
+                if (q.length > 0) {
+                    var query = q + ' AND ' + facet + '_facet:"' + label + '"';
+                } else {
+                    var query = facet + '_facet:"' + label + '"';
+                }
+                
+                if (q.indexOf('mint_facet') !== -1) {
+                    var str = label;
+                } else {
+                    var str = "<a href='results?q=" + query + "'>" + label + '</a>';
+                }
+                if (feature.properties.hasOwnProperty('uri')) {
+                    str += ' <a href="' + feature.properties.uri + '" target="_blank"><span class="glyphicon glyphicon-new-window"/></a>';
+                }
             }
             
-            if (q.length > 0) {
-                var query = q + ' AND ' + facet + '_facet:"' + label + '"';
-            } else {
-                var query = facet + '_facet:"' + label + '"';
-            }
             
-            if (q.indexOf('mint_facet') !== -1) {
-                var str = label;
-            } else {
-                var str = "<a href='results?q=" + query + "'>" + label + '</a>';
-            }
-            
-            str += ' <a href="' + feature.properties.uri + '" target="_blank"><span class="glyphicon glyphicon-new-window"/></a>';
             layer.bindPopup(str);
         }
     }
