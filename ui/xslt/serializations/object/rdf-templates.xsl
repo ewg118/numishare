@@ -1046,7 +1046,7 @@
 	</xsl:template>
 
 	<xsl:template match="nh:fallsWithin">
-		<xsl:apply-templates select="nh:geogname[@xlink:href]" mode="fallsWithin"/>
+		<xsl:apply-templates select="nh:geogname[@xlink:href][@xlink:role = 'findspot']" mode="fallsWithin"/>
 	</xsl:template>
 
 	<xsl:template match="nh:geogname" mode="fallsWithin">
