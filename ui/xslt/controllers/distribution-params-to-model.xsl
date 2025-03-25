@@ -43,9 +43,22 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:if test="matches(/config/type_series, '^https?://')">
-						<triple s="?coinType" p="dcterms:source">
-							<xsl:attribute name="o" select="concat('&lt;', /config/type_series, '&gt;')"/>
-						</triple>
+						<xsl:choose>
+							<xsl:when test="contains(/config/type_series, '|')">
+								<union>
+									<xsl:for-each select="tokenize(/config/type_series, '\|')">
+										<triple s="?coinType" p="dcterms:source">
+											<xsl:attribute name="o" select="concat('&lt;', ., '&gt;')"/>
+										</triple>
+									</xsl:for-each>
+								</union>								
+							</xsl:when>
+							<xsl:otherwise>
+								<triple s="?coinType" p="dcterms:source">
+									<xsl:attribute name="o" select="concat('&lt;', /config/type_series, '&gt;')"/>
+								</triple>
+							</xsl:otherwise>
+						</xsl:choose>
 					</xsl:if>
 				</xsl:otherwise>
 			</xsl:choose>

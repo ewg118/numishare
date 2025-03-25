@@ -62,17 +62,46 @@
 							<xsl:otherwise>
 								<xsl:if test="matches(/config/type_series, '^https?://')">
 									<union>
-										<group>
-											<triple s="?coinType" p="dcterms:source">
-												<xsl:attribute name="o" select="concat('&lt;', /config/type_series, '&gt;')"/>
-											</triple>
-										</group>
-										<group>
-											<triple s="?types" p="dcterms:source">
-												<xsl:attribute name="o" select="concat('&lt;', /config/type_series, '&gt;')"/>
-											</triple>
-											<triple s="?types" p="skos:exactMatch" o="?coinType"/>
-										</group>
+										<xsl:choose>
+											<xsl:when test="contains(/config/type_series, '|')">
+												<xsl:for-each select="tokenize(/config/type_series, '\|')">
+													<group>
+														<triple s="?coinType" p="dcterms:source">
+															<xsl:attribute name="o" select="concat('&lt;', ., '&gt;')"/>
+														</triple>
+													</group>													
+												</xsl:for-each>								
+											</xsl:when>
+											<xsl:otherwise>
+												<group>
+													<triple s="?coinType" p="dcterms:source">
+														<xsl:attribute name="o" select="concat('&lt;', /config/type_series, '&gt;')"/>
+													</triple>
+												</group>												
+											</xsl:otherwise>
+										</xsl:choose>
+										
+										<!-- union with exactMatches -->
+										<xsl:choose>
+											<xsl:when test="contains(/config/type_series, '|')">
+												<xsl:for-each select="tokenize(/config/type_series, '\|')">
+													<group>
+														<triple s="?types" p="dcterms:source">
+															<xsl:attribute name="o" select="concat('&lt;', ., '&gt;')"/>
+														</triple>
+														<triple s="?types" p="skos:exactMatch" o="?coinType"/>
+													</group>													
+												</xsl:for-each>								
+											</xsl:when>
+											<xsl:otherwise>
+												<group>
+													<triple s="?types" p="dcterms:source">
+														<xsl:attribute name="o" select="concat('&lt;', /config/type_series, '&gt;')"/>
+													</triple>
+													<triple s="?types" p="skos:exactMatch" o="?coinType"/>
+												</group>												
+											</xsl:otherwise>
+										</xsl:choose>
 									</union>
 									<triple s="?object" p="nmo:hasTypeSeriesItem" o="?coinType"/>
 								</xsl:if>
