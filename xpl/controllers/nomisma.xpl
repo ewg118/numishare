@@ -35,15 +35,28 @@
 	<p:choose href="#collection-type-config">
 		<p:when test="collection-type='cointype'">
 			<!-- get symbols RDF from XQuery -->
-			<p:processor name="oxf:pipeline">
+			<!--<p:processor name="oxf:pipeline">
 				<p:input name="config" href="../models/xquery/aggregate-symbols.xpl"/>
 				<p:output name="data" id="symbols"/>
+			</p:processor>-->
+			
+			<!-- temporarily bypass symbol XQuery -->
+			<!-- aggregate all NUDS documents and pipe through XSLT into RDF -->
+			<p:processor name="oxf:pipeline">
+				<p:input name="config" href="../models/xquery/aggregate-all.xpl"/>
+				<p:output name="data" id="model"/>
+			</p:processor>
+			
+			<p:processor name="oxf:pipeline">
+				<p:input name="config" href="../views/serializations/object/rdf.xpl"/>
+				<p:input name="data" href="#model"/>
+				<p:output name="data" ref="data"/>
 			</p:processor>
 
 			<!-- only aggregate symbols with types when there are symbol URIs -->
-			<p:choose href="#symbols">
+			<!--<p:choose href="#symbols">
 				<p:when test="count(descendant::rdf:RDF/*) &gt; 0">
-					<!-- aggregate all NUDS documents and pipe through XSLT into RDF -->
+					<!-\- aggregate all NUDS documents and pipe through XSLT into RDF -\->
 					<p:processor name="oxf:pipeline">
 						<p:input name="config" href="../models/xquery/aggregate-all.xpl"/>
 						<p:output name="data" id="nuds"/>
@@ -99,7 +112,7 @@
 					</p:processor>
 				</p:when>
 				<p:otherwise>
-					<!-- aggregate all NUDS documents and pipe through XSLT into RDF -->
+					<!-\- aggregate all NUDS documents and pipe through XSLT into RDF -\->
 					<p:processor name="oxf:pipeline">
 						<p:input name="config" href="../models/xquery/aggregate-all.xpl"/>
 						<p:output name="data" id="model"/>
@@ -111,7 +124,7 @@
 						<p:output name="data" ref="data"/>
 					</p:processor>
 				</p:otherwise>
-			</p:choose>
+			</p:choose>-->
 		</p:when>
 		<p:when test="collection-type='die'">
 			<!-- transform the aggregated NUDS into RDF -->
