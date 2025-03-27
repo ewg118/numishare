@@ -611,6 +611,18 @@
 											</h4>
 											<ul>
 												<xsl:apply-templates mode="descMeta"/>
+												
+												<!-- if $hasDies is true for a physical collection, then display the die link(s) in the appropriate obverse/reverse section -->
+												<xsl:if test="$collection_type = 'object' and $hasDies = true()">
+													<xsl:choose>
+														<xsl:when test="self::nuds:obverse">
+															<xsl:apply-templates select="doc('input:dies')//res:sparql[1]/descendant::res:binding[@name = 'die']" mode="coin-die"/>
+														</xsl:when>
+														<xsl:when test="self::nuds:reverse">
+															<xsl:apply-templates select="doc('input:dies')//res:sparql[2]/descendant::res:binding[@name = 'die']" mode="coin-die"/>
+														</xsl:when>
+													</xsl:choose>
+												</xsl:if>
 											</ul>
 										</li>
 									</xsl:when>
@@ -623,6 +635,18 @@
 												</h4>
 												<ul>
 													<xsl:apply-templates select="*[not(local-name() = 'type' or local-name() = 'legend')]" mode="descMeta"/>
+													
+													<!-- if $hasDies is true for a physical collection, then display the die link(s) in the appropriate obverse/reverse section -->
+													<xsl:if test="$collection_type = 'object' and $hasDies = true()">
+														<xsl:choose>
+															<xsl:when test="self::nuds:obverse">
+																<xsl:apply-templates select="doc('input:dies')//res:sparql[1]/descendant::res:binding[@name = 'die']" mode="coin-die"/>
+															</xsl:when>
+															<xsl:when test="self::nuds:reverse">
+																<xsl:apply-templates select="doc('input:dies')//res:sparql[2]/descendant::res:binding[@name = 'die']" mode="coin-die"/>
+															</xsl:when>
+														</xsl:choose>
+													</xsl:if>
 
 													<!-- display symbols from the first coin type URI NUDS if there are none -->
 
@@ -636,7 +660,8 @@
 											</li>
 										</xsl:if>
 									</xsl:otherwise>
-								</xsl:choose>
+								</xsl:choose>								
+								
 							</xsl:when>
 							<xsl:otherwise>
 								<li>
@@ -663,18 +688,6 @@
 												<xsl:apply-templates mode="descMeta"/>
 											</xsl:otherwise>
 										</xsl:choose>
-
-										<!-- if $hasDies is true for a physical collection, then display the die link(s) in the appropriate obverse/reverse section -->
-										<xsl:if test="$collection_type = 'object' and $hasDies = true()">
-											<xsl:choose>
-												<xsl:when test="local-name() = 'obverse' and parent::nuds:typeDesc">
-													<xsl:apply-templates select="doc('input:dies')//query/res:sparql[1]/descendant::res:binding[@name = 'die']" mode="coin-die"/>
-												</xsl:when>
-												<xsl:when test="local-name() = 'reverse' and parent::nuds:typeDesc">
-													<xsl:apply-templates select="doc('input:dies')//query/res:sparql[2]/descendant::res:binding[@name = 'die']" mode="coin-die"/>
-												</xsl:when>
-											</xsl:choose>
-										</xsl:if>
 									</ul>
 								</li>
 							</xsl:otherwise>
