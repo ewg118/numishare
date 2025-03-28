@@ -375,7 +375,7 @@
 							<xsl:value-of select="float[@name = 'weight_num']"/>
 						</dd>
 					</xsl:if>
-					<xsl:if test="arr[@name = 'reference_facet']">
+					<xsl:if test="arr[@name = 'reference_facet'] and not($collection-name = 'lco')">
 						<dt>
 							<xsl:value-of select="numishare:regularize_node('reference', $lang)"/>
 						</dt>
