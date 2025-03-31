@@ -50,7 +50,7 @@
 	</p:processor>
 
 	<p:choose href="#collection_type">
-		<p:when test="collection_type='cointype' and string(collection_type/@sparql_endpoint)">
+		<p:when test="(collection_type='cointype' or collection_type='die') and string(collection_type/@sparql_endpoint)">
 			<!-- evaluate the SPARQL endpoint URL to use a Nomisma API or internal one -->
 			<p:choose href="#collection_type">
 				<p:when test="collection_type/@sparql_endpoint='http://nomisma.org/query'">
@@ -147,6 +147,7 @@
 				</p:otherwise>
 			</p:choose>
 		</p:when>
+		
 		<p:when test="collection_type='cointype' and not(string(collection_type/@sparql_endpoint))">
 			<p:processor name="oxf:unsafe-xslt">
 				<p:input name="request" href="#request"/>

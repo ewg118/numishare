@@ -551,7 +551,7 @@
 					
 					
 				</xsl:when>
-				<xsl:when test="$collection_type = 'cointype' and matches(/content/config/sparql_endpoint, '^https?://')">
+				<xsl:when test="($collection_type = 'cointype' or $collection_type = 'die') and matches(/content/config/sparql_endpoint, '^https?://')">
 					<xsl:variable name="id" select="str[@name = 'recordId']"/>
 					<xsl:apply-templates select="doc('input:numishareResults')//group[@id = $id]" mode="results"/>
 				</xsl:when>

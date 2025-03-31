@@ -1,0 +1,26 @@
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX nm: <http://nomisma.org/id/>
+PREFIX nmo: <http://nomisma.org/ontology#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX void:	<http://rdfs.org/ns/void#>
+PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
+
+SELECT DISTINCT ?object ?identifier ?collection ?datasetTitle ?obvThumb ?revThumb ?obvRef ?revRef WHERE {  	
+    GRAPH <%graphURI%> {
+      {?object nmo:hasObverse/nmo:hasDie/rdf:value <%dieURI%>}
+      UNION {?object nmo:hasReverse/nmo:hasDie/rdf:value <%dieURI%>}
+    }
+    OPTIONAL { ?object dcterms:identifier ?identifier }
+    OPTIONAL { ?object nmo:hasCollection ?colUri .
+    ?colUri skos:prefLabel ?collection FILTER(langMatches(lang(?collection), "EN"))}
+    ?object void:inDataset ?dataset .
+    ?dataset dcterms:title ?datasetTitle FILTER (lang(?datasetTitle) = "" || langMatches(lang(?datasetTitle), "en")) .
+    OPTIONAL { ?object foaf:thumbnail ?comThumb }
+    OPTIONAL { ?object foaf:depiction ?comRef }
+    OPTIONAL { ?object nmo:hasObverse/foaf:thumbnail ?obvThumb }
+    OPTIONAL { ?object nmo:hasObverse/foaf:depiction ?obvRef }
+    OPTIONAL { ?object nmo:hasReverse/foaf:thumbnail ?revThumb }
+    OPTIONAL { ?object nmo:hasReverse/foaf:depiction ?revRef }
+} HAVING (isURI(?comThumb) || isURI(?comRef) || isURI(?obvThumb) || isURI(?obvRef) || isURI(?revThumb) || isURI(?revRef)) ORDER BY ASC(?datasetTitle) LIMIT 1
