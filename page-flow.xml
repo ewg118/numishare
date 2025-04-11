@@ -68,9 +68,7 @@
 
 	<!-- MANTIS -->
 	<page path="/numishare/mantis/department/[^\/]+" model="oxf:/numishare-projects/mantis/xpl/models/solr/department.xpl"
-		view="oxf:/numishare-projects/mantis/xpl/views/pages/department.xpl"/>
-	<page path="/numishare/mantis/maps" model="oxf:/numishare-projects/mantis/xpl/models/solr/maps.xpl" view="xpl/views/pages/maps.xpl"/>
-	<page path="/numishare/mantis/maps/fullscreen" model="oxf:/numishare-projects/mantis/xpl/models/solr/maps.xpl" view="xpl/views/pages/maps_fullscreen.xpl"/>
+		view="oxf:/numishare-projects/mantis/xpl/views/pages/department.xpl"/>	
 	<page path="/numishare/mantis/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/mantis/xpl/views/pages/index.xpl"/>
 
 	<!-- serializations -->

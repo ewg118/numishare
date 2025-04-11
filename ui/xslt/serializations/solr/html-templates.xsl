@@ -824,14 +824,7 @@
 					</xsl:choose>
 				</xsl:variable>
 
-				<xsl:variable name="mincount" as="xs:integer">
-					<xsl:choose>
-						<xsl:when test="$numFound &gt; 200000">
-							<xsl:value-of select="ceiling($numFound div 200000)"/>
-						</xsl:when>
-						<xsl:otherwise>1</xsl:otherwise>
-					</xsl:choose>
-				</xsl:variable>
+				<xsl:variable name="mincount" as="xs:integer">1</xsl:variable>
 				<xsl:variable name="select_new_query">
 					<xsl:choose>
 						<xsl:when test="string($new_query)">

@@ -77,6 +77,21 @@ function getQuery() {
         }
     });
     
+    if ($('#keyword').length > 0) {
+        if ($('#keyword').val().length > 0) { 
+            query.push('fulltext:' + $('#keyword').val());
+        }
+    }
+    
+    $('.text-search').each(function() {
+       var val = $(this).val();
+       var field = $(this).attr('id').replace('_search', '');
+       
+       if (val != null && val.length > 0) {
+           query.push(field + ':' + val);
+       }
+    });
+    
     //date range search
     if ($('#from_date').length > 0 || $('#to_date').length > 0) {
         if ($('#from_date').val().length > 0 || $('#to_date').val().length > 0) {

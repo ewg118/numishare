@@ -399,6 +399,7 @@ select[name = "interval"],
 }
 button.multiselect{
     margin-bottom: 10px;
+    margin-right:5px;
 }
 .get_facets,
 .hide_facets{

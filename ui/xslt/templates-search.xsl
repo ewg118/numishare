@@ -21,8 +21,8 @@
 					</div>
 				</div>
 				<input name="q" id="q_input" type="hidden"/>
-				<xsl:if test="string($langParam)">
-					<input name="lang" type="hidden" value="{$langParam}"/>
+				<xsl:if test="string($lang)">
+					<input name="lang" type="hidden" value="{$lang}"/>
 				</xsl:if>
 				<xsl:choose>
 					<xsl:when test="$pipeline='analyze'">

@@ -108,12 +108,6 @@ $(document).ready(function () {
         });
     });
     
-    /***** SEARCH *****/
-    $('#search_button').click(function () {
-        var q = getQuery();
-        $('#facet_form_query').attr('value', q);
-    });
-    
     /***************** DRILLDOWN HIERARCHICAL FACETS ********************/
     
     $('.hier-close').click(function () {
