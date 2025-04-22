@@ -2041,6 +2041,7 @@
                     <xsl:when test="$label = 'acquisition'">Acquisition</xsl:when>
                     <xsl:when test="$label = 'acquiredFrom'">Acquired From</xsl:when>
                     <xsl:when test="$label = 'adminDesc'">Administrative History</xsl:when>
+                    <xsl:when test="$label = 'ah'">Hijra</xsl:when>
                     <xsl:when test="$label = 'ancient_place'">Ancient Place</xsl:when>
                     <xsl:when test="$label = 'appraisal'">Appraisal</xsl:when>
                     <xsl:when test="$label = 'appraiser'">Appraiser</xsl:when>
@@ -2149,6 +2150,10 @@
                     <xsl:when test="$label = 'statedAuthority'">Stated Authority</xsl:when>
                     <xsl:when test="$label = 'stratigraphicUnit'">Stratigraphic Unit</xsl:when>
                     <xsl:when test="$label = 'subject'">Subject</xsl:when>
+                    <xsl:when test="$label = 'subjectEvent'">Subject: Event</xsl:when>
+                    <xsl:when test="$label = 'subjectIssuer'">Subject: Issuer</xsl:when>
+                    <xsl:when test="$label = 'subjectPerson'">Subject: Person</xsl:when>
+                    <xsl:when test="$label = 'subjectPlace'">Subject: Place</xsl:when>
                     <xsl:when test="$label = 'subjectSet'">Subjects</xsl:when>
                     <xsl:when test="$label = 'symbol'">Symbol</xsl:when>
                     <xsl:when test="$label = 'taq'">Terminus Ante Quem</xsl:when>

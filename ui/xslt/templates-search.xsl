@@ -58,6 +58,92 @@
 			</a>
 		</div>
 	</xsl:template>
+	
+	<xsl:template name="text-search-templates">
+		<div class="form-group" id="entity-search">							
+			<input type="text" class="form-control text-search"/>
+			<select class="category_list form-control">
+				<xsl:for-each select="//config/facets/facet[@role = 'entity' and @type = 'text']">												
+					<option value="{.}">
+						<xsl:value-of select="numishare:normalize_fields(., $lang)"/>
+					</option>
+				</xsl:for-each>
+			</select>										
+			<a class="removeBtn hidden" href="#">
+				<span class="glyphicon glyphicon-remove"/>
+			</a>
+		</div>
+		
+		<div class="form-group" id="place-search">							
+			<input type="text" class="form-control text-search"/>
+			<select class="category_list form-control">
+				<xsl:for-each select="//config/facets/facet[@role = 'place' and @type = 'text']">												
+					<option value="{.}">
+						<xsl:value-of select="numishare:normalize_fields(., $lang)"/>
+					</option>
+				</xsl:for-each>
+			</select>										
+			<a class="removeBtn hidden" href="#">
+				<span class="glyphicon glyphicon-remove"/>
+			</a>
+		</div>
+		
+		<div class="form-group" id="provenance-search">							
+			<input type="text" class="form-control text-search"/>
+			<select class="category_list form-control">
+				<xsl:for-each select="//config/facets/facet[@role = 'provenance' and @type = 'text']">												
+					<option value="{.}">
+						<xsl:value-of select="numishare:normalize_fields(., $lang)"/>
+					</option>
+				</xsl:for-each>
+			</select>										
+			<a class="removeBtn hidden" href="#">
+				<span class="glyphicon glyphicon-remove"/>
+			</a>
+		</div>
+		
+		<div class="form-group" id="subject-search">							
+			<input type="text" class="form-control text-search"/>
+			<select class="category_list form-control">
+				<xsl:for-each select="//config/facets/facet[@role = 'subject' and @type = 'text']">												
+					<option value="{.}">
+						<xsl:value-of select="numishare:normalize_fields(., $lang)"/>
+					</option>
+				</xsl:for-each>
+			</select>										
+			<a class="removeBtn hidden" href="#">
+				<span class="glyphicon glyphicon-remove"/>
+			</a>
+		</div>
+		
+		<div class="form-group" id="reference-search">							
+			<input type="text" class="form-control text-search"/>
+			<select class="category_list form-control">
+				<xsl:for-each select="//config/facets/facet[@role = 'reference' and @type = 'text']">												
+					<option value="{.}">
+						<xsl:value-of select="numishare:normalize_fields(., $lang)"/>
+					</option>
+				</xsl:for-each>
+			</select>										
+			<a class="removeBtn hidden" href="#">
+				<span class="glyphicon glyphicon-remove"/>
+			</a>
+		</div>
+		
+		<div class="form-group" id="typology-search">							
+			<input type="text" class="form-control text-search"/>
+			<select class="category_list form-control">
+				<xsl:for-each select="//config/facets/facet[@role = 'typology' and @type = 'text']">												
+					<option value="{.}">
+						<xsl:value-of select="numishare:normalize_fields(., $lang)"/>
+					</option>
+				</xsl:for-each>
+			</select>										
+			<a class="removeBtn hidden" href="#">
+				<span class="glyphicon glyphicon-remove"/>
+			</a>
+		</div>
+	</xsl:template>
 
 	<!-- ************** SEARCH DROP-DOWN MENUS ************** -->
 	<xsl:template name="search_options">

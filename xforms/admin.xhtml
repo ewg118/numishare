@@ -35,6 +35,7 @@
 					<query_sent/>
 					<interface/>
 					<create-collection-trigger>false</create-collection-trigger>
+					<save-trigger>false</save-trigger>
 					<username/>
 				</controls>
 			</xforms:instance>
@@ -48,7 +49,7 @@
 			</xforms:instance>
 
 			<xforms:instance id="config-template" xxf:exclude-result-prefixes="#all">
-				<config xmlns="" version="20.11" release="1.0">
+				<config xmlns="" version="25.04" release="1.0">
 					<title>Numishare</title>
 					<description>A short description of the collection.</description>
 					<logo/>
@@ -127,30 +128,27 @@
 					<positions/>
 					<localTypes/>
 					<facets>
-						<facet>artist_facet</facet>
-						<facet>authority_facet</facet>
-						<facet>citation_facet</facet>
-						<facet>coinType_facet</facet>
-						<facet>collection_facet</facet>
-						<facet>degree_facet</facet>
-						<facet>deity_facet</facet>
-						<facet>denomination_facet</facet>
-						<facet>department_facet</facet>
-						<facet>engraver_facet</facet>
-						<facet>era_facet</facet>
-						<facet>findspot_facet</facet>
-						<facet>issuer_facet</facet>
-						<facet>maker_facet</facet>
-						<facet>manufacture_facet</facet>
-						<facet>material_facet</facet>
-						<facet>mint_facet</facet>
-						<facet>objectType_facet</facet>
-						<facet>portrait_facet</facet>
-						<facet>reference_facet</facet>
-						<facet>region_facet</facet>
-						<facet>script_facet</facet>
-						<facet>state_facet</facet>
-						<facet>subject_facet</facet>
+						<facet type="text" role="entity">artist_facet</facet>
+						<facet type="text" role="entity">authority_facet</facet>
+						<facet type="list" role="typology">coinType_facet</facet>
+						<facet type="list" role="provenance">collection_facet</facet>
+						<facet type="text" role="entity">deity_facet</facet>
+						<facet type="list" role="typology">denomination_facet</facet>
+						<facet type="list" role="department">department_facet</facet>
+						<facet type="text" role="entity">engraver_facet</facet>
+						<facet type="list" role="provenance">findspot_facet</facet>
+						<facet type="text" role="entity">issuer_facet</facet>
+						<facet type="text" role="entity">maker_facet</facet>
+						<facet type="list" role="typology">manufacture_facet</facet>
+						<facet type="list" role="typology">material_facet</facet>
+						<facet type="list" role="place">mint_facet</facet>
+						<facet type="list" role="typology">objectType_facet</facet>
+						<facet type="text" role="entity">portrait_facet</facet>
+						<facet type="text" role="reference">reference_facet</facet>
+						<facet type="list" role="place">region_facet</facet>
+						<facet type="list" role="typology">script_facet</facet>
+						<facet type="text" role="entity">state_facet</facet>
+						<facet type="text" role="subject">subject_facet</facet>
 					</facets>
 					<hoard_options>
 						<display_stub>authority,mint,date</display_stub>
@@ -472,6 +470,7 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 			<!-- ************************* BINDINGS ************************** -->
 			<xforms:bind nodeset="instance('control-instance')">
 				<xforms:bind id="create-collection-trigger" nodeset="create-collection-trigger" type="xs:boolean" readonly=". != true()"/>
+				<xforms:bind id="save-trigger" nodeset="save-trigger" type="xs:boolean" readonly=". != true()"/>
 			</xforms:bind>
 
 			<xforms:bind nodeset="instance('collections-list')"
@@ -496,11 +495,16 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 					<xforms:bind nodeset="license" required="true()"/>
 					<xforms:bind nodeset="rights" required="true()"/>
 				</xforms:bind>
+				
 			</xforms:bind>
 
 			<xforms:bind nodeset="instance('config')">
 				<xforms:bind nodeset="union_type_catalog">
 					<xforms:bind nodeset="@enabled" type="xs:boolean"/>
+				</xforms:bind>
+				<xforms:bind nodeset="facets/facet">
+					<xforms:bind nodeset="@role" required="true()"/>
+					<xforms:bind nodeset="@type" required="true()"/>
 				</xforms:bind>
 			</xforms:bind>
 
@@ -527,6 +531,14 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 			<xforms:action ev:event="xxforms-valid" ev:observer="config-template">
 				<xforms:setvalue ref="instance('control-instance')/create-collection-trigger" value="true()"
 					if="xxf:valid(instance('collections-list'), true())"/>
+			</xforms:action>
+			
+			<xforms:action ev:event="xxforms-invalid" ev:observer="config">
+				<xforms:setvalue ref="instance('control-instance')/save-trigger" value="false()"/>
+			</xforms:action>
+			
+			<xforms:action ev:event="xxforms-valid" ev:observer="config">
+				<xforms:setvalue ref="instance('control-instance')/save-trigger" value="true()"/>
 			</xforms:action>
 
 			<!-- ************************* SUBMISSIONS ************************** -->
@@ -606,6 +618,18 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 						<xforms:send submission="xquery-pagination"/>
 						
 						<xforms:toggle case="collection-interface"/>
+						
+						<!-- show the facet classification popup if there are no classifications -->
+						<xforms:action if="not(instance('config')/facets/facet[@type])">
+							
+							<!-- insert required attribute into facets -->
+							<xforms:action xxf:iterate="instance('config')/facets/facet">
+								<xforms:insert context="context()" origin="xforms:attribute('role', '')" if="not(@role)"/> 
+								<xforms:insert context="context()" origin="xforms:attribute('type', '')" if="not(@type)"/>
+							</xforms:action>
+						
+							<xxf:show dialog="facet-class-dialog"/>
+						</xforms:action>
 					</xforms:action>
 				</xforms:action>
 				<!-- if config.xml doesn't exist, then create the exist collection with necessary files -->
@@ -777,6 +801,8 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 			<xforms:action ev:event="xforms-ready">
 				<xforms:toggle case="{instance('control-instance')/interface}"/>
 			</xforms:action>
+			
+			
 		</xforms:model>
 	</head>
 	<body>
@@ -795,7 +821,7 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 								a new collection for the associated Tomcat role.</p>
 						</xforms:case>
 						<xforms:case id="numishare-admin">
-							<div id="form">
+							<div>
 								<xforms:group
 									ref=".[count(distinct-values(instance('collections-list')/collection/@name)) != count(instance('collections-list')/collection/@name)]">
 									<div class="alert alert-box alert-danger">
@@ -871,6 +897,7 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 																				origin="xxf:set-session-attribute('collection-name', string(instance('control-instance')/collection-name))"/>
 																				<!-- load the associated config and display the Numishare editor interface -->
 																				<xforms:send submission="load-config"/>
+																				
 																				<xforms:toggle case="numishare-editor"/>
 																			</xforms:action>
 																		</xforms:trigger>
@@ -1088,7 +1115,7 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 							</div>
 						</xforms:case>
 						<xforms:case id="numishare-editor">
-							<div id="form">
+							<div>
 								
 								<xforms:group ref=".[xxf:is-user-in-role('numishare-admin')]">
 									<div>
@@ -1453,6 +1480,106 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 				</xforms:action>
 			</fr:positive-choice>
 		</fr:alert-dialog>
+		
+		<xxf:dialog id="facet-class-dialog">
+			<xforms:label>Assign facet classicifications for search page</xforms:label>
+			
+			<h3>Facets</h3>
+			<p>Entity facets are people, dynasties, or organizations. Places correspond to places of production or issue. <br/>
+				Typology includes other typological classifications (denomination, etc.)<br/>
+				Provenance includes previous collections, including discovery in hoards or single finds.</p>
+			<p>Search categories can be text-searchable (recommended for entities) to facet lists.</p>
+			
+			<table>
+				<thead>
+					<tr>
+						<th>Field</th>
+						<th>Broad Category</th>
+						<th>Search Type</th>
+					</tr>
+				</thead>
+				<tbody>
+					<xforms:repeat nodeset="instance('config')/facets/facet">
+						<tr>
+							<td><xforms:output ref="."/></td>
+							<td>
+								<xforms:select1 ref="@role">
+									<xforms:alert>Required</xforms:alert>
+									<xforms:item>
+										<xforms:label>Select...</xforms:label>
+										<xforms:value/>
+									</xforms:item>
+									<xforms:item>
+										<xforms:label>Department</xforms:label>
+										<xforms:value>department</xforms:value>
+									</xforms:item>
+									<xforms:item>
+										<xforms:label>Entity</xforms:label>
+										<xforms:value>entity</xforms:value>
+									</xforms:item>
+									<xforms:item>
+										<xforms:label>Physical Attribute</xforms:label>
+										<xforms:value>physical</xforms:value>
+									</xforms:item>
+									<xforms:item>
+										<xforms:label>Place</xforms:label>
+										<xforms:value>place</xforms:value>
+									</xforms:item>
+									<xforms:item>
+										<xforms:label>Provenance</xforms:label>
+										<xforms:value>provenance</xforms:value>
+									</xforms:item>
+									<xforms:item>
+										<xforms:label>Reference</xforms:label>
+										<xforms:value>reference</xforms:value>
+									</xforms:item>
+									<xforms:item>
+										<xforms:label>Subject</xforms:label>
+										<xforms:value>subject</xforms:value>
+									</xforms:item>
+									<xforms:item>
+										<xforms:label>Symbol</xforms:label>
+										<xforms:value>symbol</xforms:value>
+									</xforms:item>
+									<xforms:item>
+										<xforms:label>Typology</xforms:label>
+										<xforms:value>typology</xforms:value>
+									</xforms:item>
+								</xforms:select1>
+							</td>
+							<td>
+								<xforms:select1 ref="@type">
+									<xforms:alert>Required</xforms:alert>
+									<xforms:item>
+										<xforms:label>Select...</xforms:label>
+										<xforms:value/>
+									</xforms:item>
+									<xforms:item>
+										<xforms:label>Facet List</xforms:label>
+										<xforms:value>list</xforms:value>
+									</xforms:item>
+									<xforms:item>
+										<xforms:label>Text Search</xforms:label>
+										<xforms:value>text</xforms:value>
+									</xforms:item>
+								</xforms:select1>
+							</td>
+						</tr>
+					</xforms:repeat>
+				</tbody>
+			</table>
+			
+			
+			<xforms:trigger bind="save-trigger">
+				<xforms:label>Save</xforms:label>
+				<xforms:action ev:event="DOMActivate">
+					<xforms:send submission="save-config"/>
+					<xxf:hide dialog="facet-class-dialog"/>
+				</xforms:action>
+			</xforms:trigger>
+			
+		</xxf:dialog>
+		
 		<!-- ********* NUMISHARE-EDITOR ********* -->
 		<fr:alert-dialog id="delete">
 			<fr:label>Delete</fr:label>

@@ -1660,6 +1660,12 @@
 	<xsl:template match="nuds:editors" mode="descMeta">
 		<xsl:apply-templates mode="descMeta"/>
 	</xsl:template>
+	
+	<xsl:template match="nuds:measurementsSet" mode="descMeta">
+		<xsl:apply-templates select="*" mode="descMeta">
+			<xsl:sort order="ascending" select="local-name()"/>
+		</xsl:apply-templates>
+	</xsl:template>
 
 	<!-- *********** IMAGE TEMPLATES FOR PHYSICAL OBJECTS ********** -->
 	<xsl:template name="image">

@@ -3,8 +3,8 @@
 	Date last modified: May 2021
 	Function: Generic templates for serializing Solr documents for browse, ajax_results, and the compare section into HTML.
 		Inludes templates for serializing the numishareResults XML document into HTML for example specimens for coin type corpora -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="#all" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="https://github.com/ewg118/numishare"
+	xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="#all" version="2.0">
 
 	<!-- ****** STRUCTURE FOR SOLR DOC ****** -->
 	<!-- default document display mode; metadata with images in table-like layout -->
@@ -93,8 +93,8 @@
 			</h4>
 
 			<xsl:choose>
-				<xsl:when test="str[@name = 'recordType'] = 'physical'">					
-					
+				<xsl:when test="str[@name = 'recordType'] = 'physical'">
+
 					<xsl:choose>
 						<!-- display obverse and reverse images, if available -->
 						<xsl:when test="string(str[@name = 'thumbnail_obv']) or string(str[@name = 'thumbnail_rev'])">
@@ -113,7 +113,7 @@
 								</a>
 							</xsl:if>
 						</xsl:when>
-						
+
 						<!-- otherwise, display combined images, if available -->
 						<xsl:when test="string(str[@name = 'thumbnail_com'])">
 							<a class="thumbImage" href="{str[@name='reference_com']}" title="Reverse of {str[@name='title_display']}"
@@ -122,10 +122,10 @@
 								<img src="{str[@name='thumbnail_com']}" alt="Thumbnail Image" class="side-thumbnail"/>
 							</a>
 						</xsl:when>
-						
+
 					</xsl:choose>
-					
-					
+
+
 				</xsl:when>
 				<xsl:when test="$collection_type = 'cointype' and matches(/content/config/sparql_endpoint, '^https?://')">
 					<xsl:variable name="id" select="str[@name = 'recordId']"/>
@@ -154,10 +154,8 @@
 						<xsl:attribute name="style">direction: ltr; text-align:right</xsl:attribute>
 					</xsl:if>
 
-					<a
-						href="{$object-path}{str[@name='recordId']}?mode=compare&amp;q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}{if (string($langParam)) then
-						concat('&amp;lang=', $langParam) else ''}"
-						class="compare">
+					<a href="{$object-path}{str[@name='recordId']}?mode=compare&amp;q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}{if (string($langParam)) then
+						concat('&amp;lang=', $langParam) else ''}" class="compare">
 						<xsl:value-of select="str[@name = 'title_display']"/>
 					</a>
 				</h4>
@@ -270,7 +268,7 @@
 							</xsl:for-each>
 						</dd>
 					</xsl:if>
-					
+
 					<!-- display productionPlace instead of mint, if applicable -->
 					<xsl:choose>
 						<xsl:when test="string(arr[@name = 'productionPlace_facet']/str[1])">
@@ -299,8 +297,8 @@
 								</xsl:for-each>
 							</dd>
 						</xsl:when>
-					</xsl:choose>					
-					
+					</xsl:choose>
+
 					<xsl:if test="string(str[@name = 'obv_leg_display']) or string(str[@name = 'obv_type_display'])">
 						<dt>
 							<xsl:value-of select="numishare:regularize_node('obverse', $lang)"/>
@@ -403,7 +401,7 @@
 							</xsl:for-each>
 						</dd>
 					</xsl:if>
-					
+
 					<!-- additional die fields -->
 					<xsl:if test="$collection_type = 'die'">
 						<xsl:if test="arr[@name = 'relatedType_facet']">
@@ -413,18 +411,18 @@
 							<dd>
 								<xsl:for-each select="arr[@name = 'relatedType_facet']/str">
 									<xsl:variable name="pieces" select="tokenize(., '\|')"/>
-									
+
 									<a href="{$pieces[1]}">
 										<xsl:value-of select="$pieces[2]"/>
 									</a>
-									
+
 									<xsl:if test="not(position() = last())">
 										<xsl:text>, </xsl:text>
 									</xsl:if>
 								</xsl:for-each>
 							</dd>
 						</xsl:if>
-						
+
 						<xsl:if test="arr[@name = 'symbol_facet']">
 							<dt>
 								<xsl:value-of select="numishare:regularize_node('symbol', $lang)"/>
@@ -438,12 +436,11 @@
 								</xsl:for-each>
 							</dd>
 						</xsl:if>
-					</xsl:if>					
+					</xsl:if>
 				</xsl:otherwise>
 			</xsl:choose>
 			<!-- display appropriate sort category if it isn't one of the default display fields -->
-			<xsl:if
-				test="
+			<xsl:if test="
 					string($sort) and not(contains($sort_category, 'year')) and not(contains($sort_category, 'department_facet')) and not(contains($sort_category, 'weight_num')) and
 					not(contains($sort_category, 'dimensions_display'))">
 				<xsl:choose>
@@ -548,8 +545,8 @@
 							</xsl:if>
 						</xsl:otherwise>
 					</xsl:choose>
-					
-					
+
+
 				</xsl:when>
 				<xsl:when test="($collection_type = 'cointype' or $collection_type = 'die') and matches(/content/config/sparql_endpoint, '^https?://')">
 					<xsl:variable name="id" select="str[@name = 'recordId']"/>
@@ -564,24 +561,33 @@
 		<!-- ignore mint_geo-->
 		<xsl:choose>
 			<xsl:when test="$collection_type = 'hoard'">
-				<h4>
-					<xsl:value-of select="numishare:normalize_fields('hoard', $lang)"/>
-				</h4>
-				<xsl:apply-templates
-					select="lst[(@name = 'taq_num' or @name = 'reference_facet' or @name = 'findspot_hier' or @name = 'ancient_place_facet' or @name = 'findspot_type_facet') and number(int) &gt; 0]"
-					mode="facet"/>
+				<xsl:if test="//config/facets/facet[@role = 'context']">
+					<h4>
+						<xsl:value-of select="numishare:normalize_fields('context', $lang)"/>
+					</h4>
+					
+					<xsl:for-each select="//config/facets/facet[@role = 'context' and @type = 'list']">
+						<xsl:variable name="field" select="."/>
+						
+						<xsl:apply-templates select="//lst[@name = $field and number(int) &gt; 0]" mode="facet"/>
+					</xsl:for-each>
+				</xsl:if>
+				
 				<h4>
 					<xsl:value-of select="numishare:normalize_fields('contents', $lang)"/>
 				</h4>
-				<xsl:apply-templates
-					select="
-						lst[((ends-with(@name, '_facet') and not(@name = 'reference_facet' or @name = 'findspot_type_facet' or @name = 'ancient_place_facet')) or @name = 'region_hier') and number(int) &gt;
-						0]"
-					mode="facet"/>
+				
+				<xsl:for-each select="//config/facets/facet[not(@role = 'context') and @type = 'list']">
+					<xsl:variable name="field" select="."/>
+					
+					<xsl:apply-templates select="//lst[@name = $field and number(int) &gt; 0]" mode="facet"/>
+				</xsl:for-each>
+				
 			</xsl:when>
 			<xsl:when test="$collection_type = 'cointype' or $collection_type = 'die'">
-				<xsl:apply-templates select="lst[not(contains(@name, '_geo')) and not(matches(@name, '^symbol_[obv|rev]')) and not(ends-with(@name, '_num')) and number(int) &gt; 0]" mode="facet"/>
-				
+				<xsl:apply-templates
+					select="lst[not(contains(@name, '_geo')) and not(matches(@name, '^symbol_[obv|rev]')) and not(ends-with(@name, '_num')) and number(int) &gt; 0]" mode="facet"/>
+
 				<!-- display symbol facets in separate section -->
 				<xsl:if test="lst[matches(@name, '^symbol_[obv|rev]')]">
 					<h4>
@@ -612,11 +618,12 @@
 				</xsl:if>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:apply-templates select="lst[not(contains(@name, '_geo')) and not(matches(@name, '^symbol_[obv|rev]')) and not(@name = 'year_num') and number(int) &gt; 0]" mode="facet"/>
-				
+				<xsl:apply-templates select="lst[not(contains(@name, '_geo')) and not(matches(@name, '^symbol_[obv|rev]')) and not(@name = 'year_num') and number(int) &gt; 0]"
+					mode="facet"/>
+
 				<!-- separate findspot related facets -->
-								
-				
+
+
 			</xsl:otherwise>
 		</xsl:choose>
 
@@ -636,8 +643,8 @@
 				<h4>
 					<xsl:value-of select="numishare:normalize_fields('typeNumber', $lang)"/>
 				</h4>
-				<p><a href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html#Wildcard%20Searches">Wildcards</a><xsl:text> </xsl:text><b>*</b> and
-						<b>?</b> are supported.</p>
+				<p><a href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html#Wildcard%20Searches">Wildcards</a><xsl:text> </xsl:text><b>*</b> and <b>?</b> are
+					supported.</p>
 				<input type="text" id="typeNumber" class="form-control">
 					<xsl:if test="$tokenized_q[contains(., 'typeNumber')]">
 						<xsl:attribute name="value" select="substring-after($tokenized_q[contains(., 'typeNumber')][1], ':')"/>
@@ -657,17 +664,21 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</h4>
-				
+
 				<!-- if AH date range searching is enabled, then display that form first -->
 				<xsl:if test="/content/config/ah_enabled = 'true'">
 					<div class="form-group" id="ah_dateRange">
-						<label>Hijra </label>
-						<input type="text" id="ah_fromDate" class="form-control" placeholder="{numishare:normalize_fields('fromDate', $lang)}"/>
+						<div>
+							<label>
+								<xsl:value-of select="numishare:normalize_fields('ah', $lang)"/>
+							</label>
+						</div>
+						<input type="number" id="ah_fromDate" class="form-control" placeholder="{numishare:normalize_fields('fromDate', $lang)}"/>
 						<span> - </span>
-						<input type="text" id="ah_toDate" class="form-control" placeholder="{numishare:normalize_fields('toDate', $lang)}"/>
+						<input type="number" id="ah_toDate" class="form-control" placeholder="{numishare:normalize_fields('toDate', $lang)}"/>
 					</div>
 				</xsl:if>
-				
+
 				<!-- CE DATES -->
 				<div class="form-group">
 					<div>
@@ -675,7 +686,7 @@
 							<xsl:value-of select="numishare:normalize_fields('fromDate', $lang)"/>
 						</label>
 					</div>
-					<input type="text" id="from_date" class="form-control"/>
+					<input type="number" id="from_date" class="form-control"/>
 					<select id="from_era" class="form-control">
 						<option value="minus">BCE</option>
 						<option value="" selected="selected">CE</option>
@@ -687,24 +698,14 @@
 							<xsl:value-of select="numishare:normalize_fields('toDate', $lang)"/>
 						</label>
 					</div>
-					<input type="text" id="to_date" class="form-control"/>
+					<input type="number" id="to_date" class="form-control"/>
 					<select id="to_era" class="form-control">
 						<option value="minus">BCE</option>
 						<option value="" selected="selected">CE</option>
 					</select>
 				</div>
-				
-				<!-- ANS MANTIS specific: if the Lucene query is specific to the Islamic department  -->
-				<xsl:if test="$collection-name = 'mantis' and contains($q, 'department_facet:&#x022;Islamic&#x022;')">
-					<div class="form-group" id="ah_dateRange">
-						<label>Hijra </label>
-						<input type="text" id="ah_fromDate" class="form-control" placeholder="{numishare:normalize_fields('fromDate', $lang)}"/>
-						<span> - </span>
-						<input type="text" id="ah_toDate" class="form-control" placeholder="{numishare:normalize_fields('toDate', $lang)}"/>
-					</div>
-				</xsl:if>
 			</xsl:if>
-			
+
 
 			<!-- hidden params -->
 			<input type="hidden" name="q" id="facet_form_query" value="{if (string($imageavailable_stripped)) then $imageavailable_stripped else '*:*'}"/>
@@ -748,8 +749,8 @@
 				<xsl:variable name="title" select="numishare:regularize_node(substring-before(@name, '_'), $lang)"/>
 
 				<div class="btn-group">
-					<button class="dropdown-toggle btn btn-default hierarchical-facet" type="button" style="width:250px;margin-bottom:10px;" title="{$title}"
-						id="{@name}-btn" label="{$q}">
+					<button class="dropdown-toggle btn btn-default hierarchical-facet" type="button" title="{$title}" id="{@name}-btn"
+						label="{$q}">
 						<span>
 							<xsl:value-of select="$title"/>
 						</span>
@@ -763,16 +764,15 @@
 						<xsl:if test="contains($q, @name)">
 							<xsl:copy-of
 								select="document(concat($request-uri, 'get_hier?q=', encode-for-uri($q), '&amp;fq=*&amp;prefix=L1&amp;link=&amp;field=', substring-before(@name,
-								'_hier')))//ul[@id='root']/li"
-							/>
+								'_hier')))//ul[@id='root']/li"/>
 						</xsl:if>
 					</ul>
 				</div>
 			</xsl:when>
 			<xsl:when test="@name = 'century_num'">
 				<div class="btn-group">
-					<button class="dropdown-toggle btn btn-default" type="button" style="width:250px;margin-bottom:10px;"
-						title="{numishare:regularize_node('date', $lang)}" id="{@name}_link" label="{$q}">
+					<button class="dropdown-toggle btn btn-default hierarchical-facet" type="button" title="{numishare:regularize_node('date', $lang)}"
+						id="{@name}_link" label="{$q}">
 						<xsl:value-of select="numishare:regularize_node('date', $lang)"/>
 						<xsl:text> </xsl:text>
 						<b class="caret"/>
@@ -813,7 +813,8 @@
 											<xsl:value-of select="concat(upper-case(substring($position, 1, 1)), substring($position, 2))"/>
 										</xsl:otherwise>
 									</xsl:choose>
-								</xsl:when>																<xsl:otherwise>
+								</xsl:when>
+								<xsl:otherwise>
 									<xsl:value-of select="numishare:normalizeLabel('position_any', $lang)"/>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -835,14 +836,12 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-				<select id="{@name}-select" multiple="multiple" class="multiselect {@name}-button" title="{$title}" q="{$q}" mincount="{$mincount}"
-					new_query="{if
+				<select id="{@name}-select" multiple="multiple" class="multiselect {@name}-button" title="{$title}" q="{$q}" mincount="{$mincount}" new_query="{if
 					(contains($q, @name)) then $select_new_query else ''}">
 					<xsl:if test="contains($q, @name)">
 						<xsl:copy-of
 							select="document(concat($request-uri, 'get_facet_options?q=', encode-for-uri($q), '&amp;category=', @name, '&amp;pipeline=', $pipeline, '&amp;lang=', $lang,
-							'&amp;mincount=', $mincount))//option"
-						/>
+							'&amp;mincount=', $mincount))//option"/>
 					</xsl:if>
 				</select>
 			</xsl:otherwise>
@@ -850,18 +849,19 @@
 	</xsl:template>
 
 	<!-- suppress the geographic coordinates as a facet -->
-	<xsl:template match="lst[@name = 'mint_geo']|lst[@name = 'productionPlace_geo']" mode="facet"/>
+	<xsl:template match="lst[@name = 'mint_geo'] | lst[@name = 'productionPlace_geo']" mode="facet"/>
 
 	<!-- ****** REMOVING INDIVIDUAL QUERY COMPONENTS (DISPLAY ABOVE RESULT LIST) ****** -->
 	<xsl:template name="remove_facets">
 		<xsl:variable name="rtl" select="//config/languages/language[@code = $lang]/@rtl = true()" as="xs:boolean"/>
-		
+
 		<div class="row">
 			<xsl:choose>
 				<xsl:when test="$q = '*:*' or not(string($q))">
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('results_all-terms', $lang)"/>
-						<xsl:if test="count(//lst[@name = 'mint_geo']/int) &gt; 0 or count(//lst[@name = 'findspot_geo']/int) &gt; 0 or count(//lst[@name = 'productionPlace_geo']/int) &gt; 0 or count(//lst[@name = 'hoard_geo']/int) &gt; 0">
+						<xsl:if
+							test="count(//lst[@name = 'mint_geo']/int) &gt; 0 or count(//lst[@name = 'findspot_geo']/int) &gt; 0 or count(//lst[@name = 'productionPlace_geo']/int) &gt; 0 or count(//lst[@name = 'hoard_geo']/int) &gt; 0">
 							<small>
 								<a href="#resultMap" id="map_results">
 									<xsl:value-of select="numishare:normalizeLabel('results_map-results', $lang)"/>
@@ -873,7 +873,8 @@
 				<xsl:otherwise>
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('results_filters', $lang)"/>
-						<xsl:if test="count(//lst[@name = 'mint_geo']/int) &gt; 0 or count(//lst[@name = 'findspot_geo']/int) &gt; 0 or count(//lst[@name = 'productionPlace_geo']/int) &gt; 0 or count(//lst[@name = 'hoard_geo']/int) &gt; 0">
+						<xsl:if
+							test="count(//lst[@name = 'mint_geo']/int) &gt; 0 or count(//lst[@name = 'findspot_geo']/int) &gt; 0 or count(//lst[@name = 'productionPlace_geo']/int) &gt; 0 or count(//lst[@name = 'hoard_geo']/int) &gt; 0">
 							<small>
 								<a href="#resultMap" id="map_results">
 									<xsl:value-of select="numishare:normalizeLabel('results_map-results', $lang)"/>
@@ -962,8 +963,7 @@
 					<div class="stacked_term alert alert-info row">
 						<xsl:if test="$rtl = true()">
 							<div class="col-md-2 left">
-								<a
-									href="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
+								<a href="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
 									<span class="glyphicon glyphicon-remove"/>
 								</a>
 							</div>
@@ -981,8 +981,7 @@
 						</div>
 						<xsl:if test="not($rtl = true())">
 							<div class="col-md-2 right">
-								<a
-									href="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
+								<a href="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
 									<span class="glyphicon glyphicon-remove"/>
 								</a>
 							</div>
@@ -992,14 +991,17 @@
 				</xsl:when>
 				<!-- if the token contains a parenthisis, then it was probably sent from the search widget and the token must be broken down further to remove other facets -->
 				<xsl:when test="substring(., 1, 1) = '('">
-					<xsl:variable name="delimiter" select="if (contains(., ' OR ')) then ' OR ' else ' '"/>
-					
+					<xsl:variable name="delimiter" select="
+							if (contains(., ' OR ')) then
+								' OR '
+							else
+								' '"/>
+
 					<xsl:variable name="tokenized-fragments" select="tokenize(., $delimiter)"/>
 					<div class="stacked_term alert alert-info row">
 						<xsl:if test="$rtl = true()">
 							<div class="col-md-2 left">
-								<a
-									href="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
+								<a href="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
 									<span class="glyphicon glyphicon-remove"/>
 								</a>
 							</div>
@@ -1027,12 +1029,15 @@
 													</xsl:matching-substring>
 												</xsl:analyze-string>
 											</xsl:when>
-											<xsl:otherwise>
+											<xsl:when test="matches($after-colon, '^[0-9]+')">
 												<xsl:analyze-string select="$after-colon" regex="([0-9]+)">
 													<xsl:matching-substring>
 														<xsl:value-of select="regex-group(1)"/>
 													</xsl:matching-substring>
 												</xsl:analyze-string>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="translate($after-colon, '()', '')"/>
 											</xsl:otherwise>
 										</xsl:choose>
 									</xsl:variable>
@@ -1054,12 +1059,15 @@
 													</xsl:matching-substring>
 												</xsl:analyze-string>
 											</xsl:when>
-											<xsl:otherwise>
+											<xsl:when test="matches($after-colon, '^[0-9]+')">
 												<xsl:analyze-string select="$after-colon" regex="([0-9]+)">
 													<xsl:matching-substring>
 														<xsl:value-of select="regex-group(1)"/>
 													</xsl:matching-substring>
 												</xsl:analyze-string>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="translate($after-colon, '()', '')"/>
 											</xsl:otherwise>
 										</xsl:choose>
 									</xsl:variable>
@@ -1087,12 +1095,15 @@
 															</xsl:matching-substring>
 														</xsl:analyze-string>
 													</xsl:when>
-													<xsl:otherwise>
+													<xsl:when test="matches($after-colon, '^[0-9]+')">
 														<xsl:analyze-string select="$after-colon" regex="([0-9]+)">
 															<xsl:matching-substring>
 																<xsl:value-of select="regex-group(1)"/>
 															</xsl:matching-substring>
 														</xsl:analyze-string>
+													</xsl:when>
+													<xsl:otherwise>
+														<xsl:value-of select="translate($after-colon, '()', '')"/>
 													</xsl:otherwise>
 												</xsl:choose>
 											</xsl:variable>
@@ -1134,8 +1145,7 @@
 													</xsl:when>
 													<xsl:otherwise>
 														<xsl:value-of
-															select="concat(numishare:normalize_fields('symbol', $lang), ', ', numishare:normalize_fields('reverse', $lang))"
-														/>
+															select="concat(numishare:normalize_fields('symbol', $lang), ', ', numishare:normalize_fields('reverse', $lang))"/>
 													</xsl:otherwise>
 												</xsl:choose>
 											</xsl:when>
@@ -1168,8 +1178,7 @@
 						</div>
 						<xsl:if test="not($rtl = true())">
 							<div class="col-md-2 right">
-								<a
-									href="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
+								<a href="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
 									<span class="glyphicon glyphicon-remove"/>
 								</a>
 							</div>
@@ -1298,10 +1307,10 @@
 			</xsl:when>
 			<xsl:when test="contains($field, '_hier')">
 				<xsl:variable name="tokens" select="tokenize(substring($term, 2, string-length($term) - 2), '\+')"/>
-				
+
 				<xsl:choose>
-					<xsl:when test="$field = 'category_hier'">				
-						<xsl:for-each select="$tokens[position() &gt; 1]">				
+					<xsl:when test="$field = 'category_hier'">
+						<xsl:for-each select="$tokens[position() &gt; 1]">
 							<xsl:value-of select="normalize-space(substring-after(substring-before(., '/'), '|'))"/>
 							<xsl:if test="not(position() = last())">
 								<xsl:text>--</xsl:text>
@@ -1309,8 +1318,8 @@
 						</xsl:for-each>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:for-each select="$tokens[position() &gt; 1]">					
-							<xsl:sort select="position()" order="descending"/>					
+						<xsl:for-each select="$tokens[position() &gt; 1]">
+							<xsl:sort select="position()" order="descending"/>
 							<xsl:value-of select="normalize-space(substring-after(substring-before(., '/'), '|'))"/>
 							<xsl:if test="not(position() = last())">
 								<xsl:text>--</xsl:text>
@@ -1528,8 +1537,7 @@
 		<xsl:param name="class"/>
 		<xsl:param name="params"/>
 
-		<a class="btn btn-default {$class}" role="button" title="First"
-			href="{if($pipeline='results') then 'results' else ''}?{string-join($params//param, '&amp;')}">
+		<a class="btn btn-default {$class}" role="button" title="First" href="{if($pipeline='results') then 'results' else ''}?{string-join($params//param, '&amp;')}">
 			<span class="glyphicon glyphicon-fast-{if (//config/languages/language[@code = $lang]/@rtl = true()) then 'forward' else 'backward'}"/>
 		</a>
 	</xsl:template>
@@ -1753,16 +1761,13 @@
 			<div class="col-md-10">
 				<span>
 					<b>Category: </b>
-					<xsl:value-of
-						select="
+					<xsl:value-of select="
 							numishare:recompile_category($category_fragment, tokenize(substring-after(replace(replace(replace($category_fragment, '\)', ''), '\(', ''), '\+', ''),
-							'category_facet:'), ' '), 1)"
-					/>
+							'category_facet:'), ' '), 1)"/>
 				</span>
 			</div>
 			<div class="col-md-2 right">
-				<a class="remove_filter"
-					href="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
+				<a class="remove_filter" href="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
 					<span class="glyphicon glyphicon-remove"/>
 				</a>
 			</div>
