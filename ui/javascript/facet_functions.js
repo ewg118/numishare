@@ -1,9 +1,9 @@
 /*******************
-AUTHOR: Ethan Gruber
-DATE: June 2020
-FUNCTIONS USED IN FACET-BASED PAGES: BROWSE, COLLECTION, AND MAPS
+ AUTHOR: Ethan Gruber
+ DATE: June 2020
+ FUNCTIONS USED IN FACET-BASED PAGES: BROWSE, COLLECTION, AND MAPS
  ********************/
- 
+
 function getQuery() {
     //get categories
     query = new Array();
@@ -76,6 +76,70 @@ function getQuery() {
             }
         }
     });
+    
+    $('form .text-search').each(function () {
+        var val = $(this).val();
+        var id = $(this).attr('id');
+        
+        if (val != null && val.length > 0) {
+            if (typeof id !== 'undefined' && id !== false) {
+                if (id == 'place_text') {
+                    var fields = $(this).attr('fields').split(';');
+                    var segments = new Array();
+                    
+                    for (var i = 0; i < fields.length; i++) {
+                        var facet = fields[i].replace('_facet', '_text');
+                        segments.push(facet + ':' + val);
+                    }
+                    
+                    query.push('(' + segments.join(' OR ') + ')');
+                } else {
+                    var field = id;
+                    query.push(field + ':' + val);
+                }
+            } else {
+                var field = $(this).siblings('.category_list').val().replace('_facet', '_text');
+                query.push(field + ':' + val);
+            }
+        }
+    });
+    
+    //measurements
+    if ($('#weight_min').length > 0 && $('#weight_max').length > 0) {
+        if ($('#weight_min').val().length > 0 || $('#weight_max').val().length > 0) {
+            if ($('#weight_min').val().length > 0) {
+                var min = $('#weight_min').val();
+            } else {
+                var min = '*';
+            }
+            
+            if ($('#weight_max').val().length > 0) {
+                var max = $('#weight_max').val();
+            } else {
+                var max = '*';
+            }
+            
+            query.push('weight_num:[' + min + ' TO ' + max + ']');
+        }
+    }
+    
+    if ($('#diameter_min').length > 0 && $('#diameter_max').length > 0) {
+        if ($('#diameter_min').val().length > 0 || $('#diameter_max').val().length > 0) {
+            if ($('#diameter_min').val().length > 0) {
+                var min = $('#diameter_min').val();
+            } else {
+                var min = '*';
+            }
+            
+            if ($('#diameter_max').val().length > 0) {
+                var max = $('#diameter_max').val();
+            } else {
+                var max = '*';
+            }
+            
+            query.push('diameter_num:[' + min + ' TO ' + max + ']');
+        }
+    }
     
     //date range search
     if ($('#from_date').length > 0 || $('#to_date').length > 0) {
