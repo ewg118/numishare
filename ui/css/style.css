@@ -125,91 +125,91 @@ dl.dl-rtl dd{
   DISPLAY CONTENT
   ***************************************
  */
-.hidden{
+.hidden {
     display: none;
 }
-.thumbnail_container{
+.thumbnail_container {
     margin-top: 25px;
 }
-.display_thumb{
+.display_thumb {
     width: 80px;
     padding: 2px;
     cursor: pointer;
 }
-.metadata_section{
+.metadata_section {
     margin-bottom: 20px;
 }
-.submenu{
+.submenu {
     width: 100%;
     vertical-align: bottom;
     display: table;
     text-align: right;
     margin-top: 3px;
 }
-.icons{
+.icons {
     margin: 5px 0;
 }
-.reference_image{
+.reference_image {
     margin-bottom: 20px;
     text-align: center;
 }
-.reference_image img{
+.reference_image img {
     max-width: 100%;
 }
-.external_link{
+.external_link {
     margin: 0 5px;
 }
-.legend-icon{
+.legend-icon {
     width: 40px;
 }
-.calculate{
+.calculate {
     display: none;
     margin-top: 20px;
 }
-.iiif-window{
+.iiif-window {
     width: 100%;
     height: 100%;
 }
-.image-container{
+.image-container {
     margin-bottom: 20px;
 }
-.image-container img{
+.image-container img {
     max-width: 100%;
 }
-.iiif-container{
+.iiif-container {
     width: 100%;
     padding-top: 100%;
     background-color: white;
 }
-.iiif-zoom-glyph{
+.iiif-zoom-glyph {
     position: absolute;
     right: 0;
     bottom: 0;
     font-size: 120%
 }
-.model-window{
+.model-window {
     width: 640px;
     height: 480px;
 }
-.obj-container{
+.obj-container {
     z-index: 1;
     /*cursor:pointer;*/
     color: #c94f2a;
 }
-a.fancybox{
+a.fancybox {
     height: 100%;
     width: 100%;
     display: block;
 }
 /*Die Study pages*/
-.die-image{
+.die-image {
     height: 325px;
 }
-.die-image img{
+.die-image img {
     max-width: 100%;
     max-height: 300px;
 }
-.die-title{
+.die-title {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -219,20 +219,20 @@ a.fancybox{
   SEARCH/COMPARE/VISUALIZATION FORMS
   ***************************************
  */
-.compare_image{
+.compare_image {
     margin-bottom: 20px;
     padding: 10px;
     border-bottom: 1px dashed #696969;
 }
-.option_container{
+.option_container {
     width: 200px;
     vertical-align: bottom;
 }
 .option_container select,
-.option_container input{
+.option_container input {
     display: inline;
 }
-.compare-select{
+.compare-select {
     width: 400px;
 }
 .category_list,
@@ -240,18 +240,31 @@ a.fancybox{
 select[name = "interval"],
 #stacking,
 #image,
-.certainty-select{
+.certainty-select {
     width: 175px;
     display: inline;
 }
 .sortForm_categories,
-.sortForm_order{
+.sortForm_order {
     width: 175px;
     margin-left: 0px;
     margin-right: 10px;
     display: inline;
 }
-.search_text{
+.form-group label {
+    width: 175px;
+}
+.text-search {
+    width: 400px;
+    margin-right: 5px;
+    display: inline;
+}
+.technical-input {
+    width: 80px;
+    margin-right:5px;
+    display:inline;
+}
+.search_text {
     width: 200px;
     margin-left: 15px;
     margin-right: 5px;
@@ -260,14 +273,14 @@ select[name = "interval"],
 .from_date,
 .to_date,
 #from_date,
-#to_date{
-    width: 75px;
+#to_date {
+    width: 100px;
     margin-left: 0px;
     margin-right: 5px;
     display: inline;
 }
 #ah_fromDate,
-#ah_toDate{
+#ah_toDate {
     width: 100px;
     margin-left: 0px;
     margin-right: 5px;
@@ -276,7 +289,7 @@ select[name = "interval"],
 .from_era,
 .to_era,
 #from_era,
-#to_era{
+#to_era {
     width: 100px;
     margin-left: 0px;
     margin-right: 5px;
@@ -284,31 +297,31 @@ select[name = "interval"],
 }
 .year_range,
 .weight_range,
-.dimensions_range{
+.dimensions_range {
     margin-left: 15px;
     margin-right: 5px;
     width: 150px;
 }
 .weight_int,
-.dimensions_int{
+.dimensions_int {
     width: 30px;
     margin-left: 0px;
     margin-right: 5px;
 }
 #searchItemTemplate,
-#sparqlItemTemplate{
+#sparqlItemTemplate {
     display: none;
 }
-.searchItemTemplate{
+.searchItemTemplate {
     padding-top: 5px;
     padding-bottom: 5px;
 }
-.compare_options{
+.compare_options {
     margin-bottom: 10px;
     text-align: center;
 }
 #search1,
-#search2{
+#search2 {
     margin-top: 20px;
 }
 /*
@@ -316,33 +329,33 @@ select[name = "interval"],
   VISUALIZATION FORM
   ***************************************
 */
-.quant-form{
+.quant-form {
     margin-bottom: 20px;
 }
 .quant-form input[type = text],
-.quant-form select{
+.quant-form select {
     width: 20em;
 }
-.quant-form select.era{
+.quant-form select.era {
     width: 5em;
     margin-left: 10px;
 }
 .quant-form input.year,
-.quant-form select.interval{
+.quant-form select.interval {
     width: 10em;
 }
-.control-container{
+.control-container {
     display: inline;
     width: 20px;
 }
-.control-row .btn{
+.control-row .btn {
     margin: 0 5px;
 }
-.query-pair{
+.query-pair {
     display: block;
     margin-bottom: 15px;
 }
-.prop-container{
+.prop-container {
     display: inline;
     margin-left: 10px;
     margin-right: 10px;
@@ -352,17 +365,17 @@ select[name = "interval"],
   IDENTIFY PAGE
   ***************************************
  */
-.portrait{
+.portrait {
     z-index: 1
 }
-.image-spacer{
+.image-spacer {
     height: 280px;
     z-index: 100;
     vertical-align: bottom;
     align-items: flex-end;
     display: flex;
 }
-.image-spacer img{
+.image-spacer img {
     max-width: 100%;
     max-height: 100%;
     cursor: pointer;
@@ -370,18 +383,18 @@ select[name = "interval"],
     margin-left: auto;
     margin-right: auto;
 }
-.name-container{
+.name-container {
     background-color: gray;
     color: white;
     opacity: 0.5;
     border: 1px solid black;
     border-radius: 5px;
 }
-.name-container-empty{
+.name-container-empty {
     display: block;
     border: 1px solid white;
 }
-.paginate-images{
+.paginate-images {
     z-index: 1000
 }
 /*
@@ -389,62 +402,62 @@ select[name = "interval"],
   RESULTS PAGES
   ***************************************
  */
-.result-doc{
+.result-doc {
     margin-top: 10px;
     border-bottom: 1px solid #E7E7E7;
 }
-#map_results{
+#map_results {
     margin-left: 20px;
 }
-.grid-doc{
+.grid-doc {
     height: 240px;
 }
-.grid-doc img{
+.grid-doc img {
     max-height: 120px;
 }
 .thumbImage,
-.iiif-image{
+.iiif-image {
     margin: 5px;
 }
-.side-thumbnail{
+.side-thumbnail {
     max-width: 120px;
 }
-.combined-thumbnail{
+.combined-thumbnail {
     max-width: 240px;
 }
-.quick_search{
+.quick_search {
     width: 250px;
     padding: 10px 0;
 }
-.stacked_term{
+.stacked_term {
     padding: 2px;
     margin-bottom: 5px;
     vertical-align: middle;
 }
-.remove_segment{
+.remove_segment {
     margin-left: 2px;
 }
-.remove_segment:hover{
+.remove_segment:hover {
     text-decoration: underline;
 }
-#imagesavailable{
+#imagesavailable {
     margin-left: 10px;
 }
-.data_options img{
+.data_options img {
     padding: 2px;
 }
-.left{
+.left {
     vertical-align: middle;
     text-align: left;
 }
-.right{
+.right {
     text-align: right;
     vertical-align: middle;
 }
-.sort_div{
+.sort_div {
     margin-bottom: 20px;
 }
-#typeNumber{
+#typeNumber {
     width: 250px;
 }
 /*
@@ -452,28 +465,31 @@ select[name = "interval"],
   FACET STYLING: RESULTS AND MAPS
   ***************************************
  */
-.category-multiselect-checkboxes{
+.category-multiselect-checkboxes {
     overflow-y: scroll;
     position: relative;
 }
-.multiselect{
-    width: 200px;
+span.multiselect-native-select, .hierarchical-facet {
+    margin-right:10px;
 }
-button.multiselect{
+.multiselect, .hierarchical-facet {
+    width: 250px;
+}
+button.multiselect, button.hierarchical-facet {
     margin-bottom: 10px;
 }
 .get_facets,
-.hide_facets{
+.hide_facets {
     float: right;
     padding-right: 5px;
 }
 .category_level,
-.findspot_level{
+.findspot_level {
     margin-left: 20px;
     padding: 0;
 }
 #century_num-list,
-.hier-list{
+.hier-list {
     max-height: 250px;
     width: 250px;
     overflow-y: auto;
@@ -482,7 +498,7 @@ button.multiselect{
     z-index: 3000;
 }
 .expand_century,
-.expand_category{
+.expand_category {
     cursor: pointer;
     margin: 1px;
 }
@@ -491,43 +507,43 @@ button.multiselect{
   MAPS
   ***************************************
  */
-#resultMap{
+#resultMap {
     width: 600px;
     height: 400px;
 }
-#clear_all{
+#clear_all {
     font-size: 80%;
     margin-left: 25px;
 }
-.departments{
+.departments {
     margin: 10px 0px;
 }
-.departments > input{
+.departments > input {
     vertical-align: bottom;
 }
-.legend{
+.legend {
     margin: 25px 0;
 }
-.legend td{
+.legend td {
     border: 0;
 }
-.legend th{
+.legend th {
     background-color: white;
     border: 0;
 }
-.olLayerGooglePoweredBy{
+.olLayerGooglePoweredBy {
     display: none;
 }
-.g_doc{
+.g_doc {
     height: 325px;
 }
 /* gallery image container */
-.gi_c{
+.gi_c {
     margin: 5px 0;
     text-align: center;
 }
 /* gallery image */
-.gi{
+.gi {
     padding: 0px 5px;
 }
 /*
@@ -535,16 +551,16 @@ button.multiselect{
   PAGINATION
   ***************************************
  */
-.paging_div{
+.paging_div {
     padding: 10px 0;
     vertical-align: baseline;
 }
-.pagination{
+.pagination {
     margin: 0;
     padding: 0;
 }
 .pagination a,
-.pagination button{
+.pagination button {
     height: 32px;
 }
 /*
@@ -552,21 +568,21 @@ button.multiselect{
   Leaflet Map and Timeline
   ***************************************
  */
-div#mapcontainer{
+div#mapcontainer {
     width: 100%;
     height: 400px;
 }
 
-.maps-page #mapcontainer{
+.maps-page #mapcontainer {
     height: 500px;
     width: 100%;
 }
 
-.leaflet-bottom.leaflet-left{
+.leaflet-bottom.leaflet-left {
     width: 100%;
 }
 
-.leaflet-control-container .leaflet-timeline-controls{
+.leaflet-control-container .leaflet-timeline-controls {
     box-sizing: border-box;
     width: 100%;
     margin: 0;
@@ -580,21 +596,21 @@ div#mapcontainer{
  */
 /* Used for date (century/decade) facet */
 .date-div,
-.hierarchical-div{
+.hierarchical-div {
     margin-top: -10px;
 }
-.hierarchical-list{
+.hierarchical-list {
     display: table;
 }
-.century-multiselect-checkboxes{
+.century-multiselect-checkboxes {
     display: table;
     width: 100%;
 }
-.decades-list{
+.decades-list {
     margin: 0 0 0 25px;
 }
 /* background */
-#backgroundPopup{
+#backgroundPopup {
     display: none;
     position: fixed;
     _position: absolute;
@@ -611,41 +627,41 @@ div#mapcontainer{
   ***************************************
  */
 #filterHoards,
-#searchBox{
+#searchBox {
     width: 600px;
     text-align: left;
 }
-#customQueryDiv{
+#customQueryDiv {
     width: 100%;
     display: table;
 }
 .filter-div,
 .customQuery,
-.compareQuery{
+.compareQuery {
     padding: 10px 0;
 }
 .filter-div span,
 .customQuery span,
-.compareQuery span{
+.compareQuery span {
     padding: 0 5px;
 }
 .removeFilter,
-.removeQuery{
+.removeQuery {
     font-size: 80%;
     margin-left: 10px;
 }
 /* **SPARQL QUERY*** */
-.popupQuery{
+.popupQuery {
     width: 700px;
     padding: 2px;
 }
-#dateTemplate{
+#dateTemplate {
     display: none;
 }
-.measurementTable{
+.measurementTable {
     display: none;
 }
-.mr{
+.mr {
     display: none;
 }
 /*
@@ -653,15 +669,15 @@ div#mapcontainer{
   SYMBOL PAGE
   ***************************************
  */
-#symbol-container{
+#symbol-container {
     margin: 10px 0;
 }
-#form-container form{
+#form-container form {
     display: inline;
 }
-#symbol-form input{
+#symbol-form input {
     margin-right: 5px;
 }
-.letter-button{
+.letter-button {
     margin-right: 5px;
 }
