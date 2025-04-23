@@ -67,12 +67,7 @@
 	<page path="/numishare/oscar/search" model="xpl/models/solr/search.xpl" view="oxf:/numishare-projects/oscar/xpl/views/pages/search.xpl"/>
 
 	<!-- MANTIS -->
-	<page path="/numishare/mantis/department/[^\/]+" model="oxf:/numishare-projects/mantis/xpl/models/solr/department.xpl"
-		view="oxf:/numishare-projects/mantis/xpl/views/pages/department.xpl"/>	
 	<page path="/numishare/mantis/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/mantis/xpl/views/pages/index.xpl"/>
-
-	<!-- serializations -->
-	<page path="/numishare/mantis/feed/" model="xpl/models/solr/feed.xpl" view="oxf:/numishare-projects/mantis/xpl/views/serializations/solr/atom.xpl"/>
 
 	<!-- id -->
 	<page path="/numishare/mantis/id/(.*)\.xml" view="oxf:/numishare-projects/mantis/xpl/models/object/get-id.xpl"/>
