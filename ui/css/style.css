@@ -4,59 +4,113 @@
   GLOBAL
   ***************************************
  */
-html {
-    background-color: #F8F8F8;
+html{
+    background-color: #fafafa;
 }
-.navbar {
+body{
+    font-family: "Roboto", sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    color: #262626;
+}
+.banner{
+    border-bottom: 4px solid black;
+    color: white;
+    background-image: url("https://numismatics.org/themes/mantis/images/jumbotron.jpg");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    margin-bottom: 15px;
+}
+.banner-background{
+    margin: 20px 0;
+    color: white;
+    background-color: black;
+    border-radius: 20px;
+    padding: 20px 0;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+.banner-background img{
+    max-height: 150px;
+
+}
+.banner-background h1{
+    font-size: 72px;
+}
+.banner-background h1,
+.banner-background h2,
+.banner-background h3{
+    margin-top: 0;
+    color: white;
+}
+.navbar-brand {
+    font-weight:bold;
+}
+.navbar{
     margin-bottom: 0;
+    font-family: warnock-pro, serif;
+    border-bottom: 4px solid black;
 }
-a > img {
+a > img{
     border: none;
 }
-ul li {
+ul li{
     list-style-type: none;
 }
-ol li {
+ol li{
     list-style-type: normal
 }
-.highlight {
+.highlight{
     background-color: #F8F8F8;
     border: 1px solid #E7E7E7;
     border-radius: 4px;
     margin-bottom: 14px;
     padding: 9px 14px;
 }
-.rtl {
-    direction: rtl;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6{
+    color: #dca153;
+    font-family: warnock-pro, serif;
 }
-dl.dl-rtl dt {
-    float: right;
-    text-align: left;
+a{
+    color: #dca153;
+    text-decoration: none;
 }
-dl.dl-rtl dd {
-    margin-right: 180px;
-    margin-left: 0;
+a:hover,
+a:focus{
+    color: #eed0a9;
+    text-decoration: underline
 }
-.alert-box {
+.alert-box{
     width: 50%;
     margin: 20px auto;
 }
-#feedback-frame {
-    width: 100%;
-    border: none;
-    height: 600px;
+.rtl{
+    direction: rtl;
+}
+dl.dl-rtl dt{
+    float: right;
+    text-align: left;
+}
+dl.dl-rtl dd{
+    margin-right: 180px;
+    margin-left: 0;
 }
 /*
   ***************************************
   FOOTER
   ***************************************
  */
-#footer {
-    background-color: #F8F8F8;
-    border-top: 1px solid #E7E7E7;
+#footer{
+    background-color: #fafafa;
     padding-top: 10px;
     padding-bottom: 10px;
-    text-align: center;
+    color: #262626;
+    font-weight: 300;
+    font-size: 15px;
 }
 /*
   ***************************************

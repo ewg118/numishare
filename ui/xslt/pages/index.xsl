@@ -17,15 +17,15 @@
 	</xsl:param>
 	<xsl:variable name="display_path"/>
 	<xsl:variable name="include_path" select="if (string(//config/theme/themes_url)) then concat(//config/theme/themes_url, //config/theme/orbeon_theme) else concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
-	
+
 	<!-- URI space for featured items -->	
 	<xsl:variable name="uri_space">
 		<xsl:choose>
-			<xsl:when test="string(//config/uri_space)">
+			<xsl:when test="//config/uri_space">
 				<xsl:value-of select="//config/uri_space"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:text>id/</xsl:text>
+				<xsl:value-of select="concat(//config/url, 'id/')"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
@@ -36,13 +36,12 @@
 				<title>
 					<xsl:value-of select="title"/>
 				</title>
-				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/{if (string(//config/favicon)) then //config/favicon else 'favicon.png'}"/>
+				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"/>
-				
 				<!-- bootstrap -->
-				<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-				<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"/>
+				<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+				<script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
 				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
 				
 				<xsl:for-each select="includes/include">
@@ -61,14 +60,6 @@
 						<xsl:value-of select="google_analytics"/>
 					</script>
 				</xsl:if>
-				
-				<!-- open graph/twitter metadata -->
-				<meta property="og:url" content="{url}"/>
-				<meta property="og:type" content="article"/>
-				<meta property="og:title" content="{title}"/>
-				<meta property="twitter:url" content="{url}"/>
-				<meta property="twitter:title" content="{title}"/>
-				<meta name="twitter:card" content="summary_large_image"/>
 			</head>
 			<body>
 				<xsl:call-template name="header"/>
@@ -79,70 +70,95 @@
 	</xsl:template>
 
 	<xsl:template name="index">
-		<div class="jumbotron">
+		<!--<img src="{$include_path}/images/jumbotron.jpg" style="width:100%;border-bottom:4px solid black; margin-bottom:15px;"/>-->
+		<div class="jumbotron visible-xs visible-sm  visible-md">
 			<div class="container">
 				<div class="row">
-					<!-- display title and description in the jumbotron, including featured object, if available -->
-					<xsl:choose>
-						<xsl:when test="features_enabled = true() and count(doc('input:feature-model')//doc) = 1">
-							<div class="col-md-9">
-								<h1><xsl:value-of select="title"/></h1>
-								<p><xsl:value-of select="description"/></p>
-							</div>
-							<div class="col-md-3">
-								<div id="feature" class="highlight text-center">
-									<xsl:apply-templates select="doc('input:feature-model')//doc"/>
-								</div>
-							</div>
-						</xsl:when>
-						<xsl:otherwise>
-							<div class="col-md-12">
-								<h1><xsl:value-of select="title"/></h1>
-								<p><xsl:value-of select="description"/></p>
-							</div>
-						</xsl:otherwise>
-					</xsl:choose>
+					<div class="col-md-4 text-center">
+						<img src="{$include_path}/images/ans_large.png" alt="logo" style="max-height:150px;"/>
+					</div>
+					<div class="col-md-8">
+						<h1>MANTIS</h1>
+						<h3>A Numismatic Technologies Integration Service</h3>
+					</div>
 				</div>
 			</div>
-		</div>	
-		<div class="container-fluid">
-			<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
-				<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
-			</xsl:if>
+		</div>
+		<div class="container-fluid banner hidden-xs hidden-sm hidden-md">			
 			<div class="row">
-				<div class="col-md-9">					
-					<xsl:choose>
-						<xsl:when test="string($lang)">
-							<xsl:choose>
-								<xsl:when test="string(//pages/index/content[@xml:lang=$lang])">
-									<xsl:copy-of select="//pages/index/content[@xml:lang=$lang]/*"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:choose>
-										<xsl:when test="count(//pages/index/content) &gt; 0">
-											<xsl:copy-of select="//pages/index/content[1]/*"/>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:copy-of select="//pages/index/*"/>
-										</xsl:otherwise>
-									</xsl:choose>
-									
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:when>
-						<xsl:otherwise>							
-							<xsl:choose>
-								<xsl:when test="count(//pages/index/content) &gt; 0">
-									<xsl:copy-of select="//pages/index/content[1]/*"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:copy-of select="//pages/index/*"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:otherwise>
-					</xsl:choose>
+				<div class="col-md-6 col-md-offset-6">
+					<div class="row banner-background">
+						<div class="col-lg-4 col-md-12 text-center">
+							<img src="{$include_path}/images/ans_large.png" alt="logo"/>
+						</div>
+						<div class="col-lg-8 col-md-12">
+							<h1>MANTIS</h1>
+							<h3>A Numismatic Technologies Integration Service</h3>
+						</div>
+					</div>					
 				</div>
-				<div class="col-md-3">
+			</div>
+		</div>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-3 col-lg-2 hidden-xs hidden-sm">
+					<div class="highlight">
+						<h3>Navigation</h3>
+						<xsl:call-template name="navigation"/>
+					</div>
+				</div>
+				<div class="col-md-6 col-lg-7 col-sm-9">
+					<!-- index -->
+					<!--<h2>
+						<xsl:value-of select="description"/>
+					</h2>-->
+					<p>The ANS collections database contains information on more than 600,000 objects in the Society’s collections. These include coins, paper money, tokens, ‘primitive’ money, medals
+						and decorations, from all parts of the world, and all periods in which such objects have been produced. </p>
+					<p>Use the menu at the top of the page to navigate the site or click on the links below for customized departmental search pages.</p>
+					<h3>Departments <small><a href="{$display_path}results?q=*:*">Browse All</a></small></h3>
+					<div class="row text-center" id="departments">
+						<div class="col-sm-6 col-lg-3">
+							<a href="department/Greek">
+								<img title="Greek" alt="Greek" src="{$include_path}/images/greek.jpg"/><br/>Greek</a>
+						</div>
+						<div class="col-sm-6 col-lg-3">
+							<a href="department/Roman"><img title="Roman" alt="Roman" src="{$include_path}/images/roman.jpg"/><br/>Roman</a>
+						</div>
+						<div class="col-sm-6 col-lg-3">
+							<a href="department/Byzantine"><img title="Byzantine" alt="Byzantine" src="{$include_path}/images/byzantine.jpg"/><br/>Byzantine</a>
+						</div>
+						<div class="col-sm-6 col-lg-3">
+							<a href="department/Islamic"><img title="Islamic" alt="Islamic" src="{$include_path}/images/islamic.jpg"/><br/>Islamic</a>
+						</div>
+						<div class="col-sm-6 col-lg-3">
+							<a href="department/EastAsian"><img title="East Asian" alt="East Asian" src="{$include_path}/images/east_asian.jpg"/><br/>East Asian</a>
+						</div>
+						<div class="col-sm-6 col-lg-3">
+							<a href="department/SouthAsian"><img title="South Asian" alt="South Asian" src="{$include_path}/images/south_asian.jpg"/><br/>South Asian</a>
+						</div>
+						<div class="col-sm-6 col-lg-3">
+							<a href="department/Medieval"><img title="Medieval" alt="Medieval" src="{$include_path}/images/medieval.jpg"/><br/>Medieval</a>
+						</div>
+						<div class="col-sm-6 col-lg-3">
+							<a href="department/Modern"><img title="Modern" alt="Modern" src="{$include_path}/images/modern.jpg"/><br/>Modern</a>
+						</div>
+						<div class="col-sm-6 col-lg-3">
+							<a href="department/NorthAmerican"><img title="North American" alt="North American" src="{$include_path}/images/united_states.jpg"/><br/>North American</a>
+						</div>
+						<div class="col-sm-6 col-lg-3">
+							<a href="department/LatinAmerican"><img title="Latin American" alt="Latin American" src="{$include_path}/images/latin_american.jpg"/><br/>Latin American</a>
+						</div>
+						<div class="col-sm-6 col-lg-3">
+							<a href="department/MedalsAndDecorations"><img title="Medals And Decorations" alt="Medals And Decorations" src="{$include_path}/images/medal.jpg"/><br/>Medals And
+								Decorations</a>
+						</div>
+					</div>
+					<p>ANS policies on the acquisition and deacquisition of numismatic items are available <a href="http://numismatics.org/governance/collections-management-policy/">online</a>. </p>
+				</div>
+				<div class="col-md-3 col-lg-3 col-sm-3">
+					<div id="feature" class="highlight text-center">
+						<xsl:apply-templates select="doc('input:feature-model')//doc"/>
+					</div>
 					<div class="highlight data_options">
 						<h3>Linked Data</h3>
 						<a href="{$display_path}feed/?q=*:*">
@@ -159,40 +175,114 @@
 							</a>
 						</xsl:if>
 					</div>
+					<div class="highlight">
+						<h3>Get Involved</h3>
+						<p> Please consider becoming a Member of the American Numismatic Society, the publisher of this resource. Your membership helps
+							maintain our free and open digital projects and data, as well as other educational outreach activities that broaden public
+							access to numismatics. Membership comes with other benefits, such as the ANS Magazine and weekly virtual lectures and
+							discussions. See <a href="http://numismatics.org/membership/">Membership</a> for more information.</p>
+					</div>
 				</div>
 			</div>
 		</div>
 	</xsl:template>
+
+	<xsl:template name="navigation">
+		<ul class="navigation-ul">
+			<li>
+				<a href="https://numismatics.org/">Home</a>
+			</li>
+			<li>
+				<a href="https://numismatics.org/about-us/">About the ANS</a>
+			</li>
+			<li>
+				<a href="http://numismatics.org/search/">Collections</a>
+				<ul>					
+					<li>
+						<a href="https://numismatics.org/collections/photography-permissions/">Photography</a>
+					</li>
+					<li>
+						<i>Departments</i>
+						<ul>
+							<li>
+								<a href="https://numismatics.org/collections/greek/">Greek</a>
+							</li>
+							<li>
+								<a href="https://numismatics.org/collections/roman/">Roman</a>
+							</li>
+							<li>
+								<a href="https://numismatics.org/exhibitions-uc/byzantine/">Byzantine</a>
+							</li>
+							<li>
+								<a href="https://numismatics.org/collections/islamic/">Islamic</a>
+							</li>
+							<li>
+								<a href="https://numismatics.org/collections/east-asian/">East Asian</a>
+							</li>
+							<li>
+								<a href="https://numismatics.org/collections/south-asian/">South Asian</a>
+							</li>
+							<li>
+								<a href="https://numismatics.org/collections/medieval/">Medieval</a>
+							</li>
+							<li>
+								<a href="https://numismatics.org/collections/modern/">Modern</a>
+							</li>
+							<li>
+								<a href="https://numismatics.org/collections/united-states/">North American</a>
+							</li>
+							<li>
+								<a href="https://numismatics.org/collections/latin-america/">Latin American</a>
+							</li>							
+							<li>
+								<a href="https://numismatics.org/collections/medals-and-decorations/">Medals and Decorations</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="https://numismatics.org/basslibrary/">Library</a>
+			</li>
+			<li>
+				<a href="http://numismatics.org/archives/">Archives</a>
+			</li>
+			<li>
+				<a href="https://numismatics.org/about-us/publications/">Publications</a>
+			</li>
+			<li>
+				<a href="https://numismatics.org/membership/">Membership</a>
+			</li>
+			<li>
+				<a href="https://numismatics.org/exhibitions-uc/">Events and Exhibitions</a>
+			</li>
+			<li>
+				<a href="https://numismatics.org/about-us/education/">Education</a>
+			</li>
+			<li>
+				<a href="https://numismatics.org/resources/">Online Resources</a>
+			</li>
+			<li>
+				<a href="https://numismatics.org/giving/">Support the ANS</a>
+			</li>
+			<li>
+				<a href="https://numismatics.org/contact-us/">Contact</a>
+			</li>
+			<li>
+				<a href="https://numismatics.org/pocketchange-type/magazine/">ANS Magazine</a>
+			</li>
+			<li>
+				<a href="https://numismatics.org/store/">The ANS Store</a>
+			</li>
+		</ul>
+	</xsl:template>
 	
 	<!-- featured object -->
-	<xsl:template match="doc">	
-		<xsl:variable name="image_url">
-			<xsl:choose>
-				<xsl:when test="str[@name='thumbnail_obv']">
-					<xsl:value-of select="str[@name='thumbnail_obv']"/>
-				</xsl:when>
-				<xsl:when test="str[@name='iiif_obv']">
-					<xsl:value-of select="concat(str[@name='iiif_obv'], '/full/120,/0/default.jpg')"/>
-				</xsl:when>
-				<xsl:when test="str[@name='reference_obv']">
-					<xsl:value-of select="str[@name='reference_obv']"/>
-				</xsl:when>
-				<xsl:when test="str[@name='thumbnail_com']">
-					<xsl:value-of select="str[@name='thumbnail_com']"/>
-				</xsl:when>
-				<xsl:when test="str[@name='iiif_com']">
-					<xsl:value-of select="concat(str[@name='iiif_obv'], '/full/240,/0/default.jpg')"/>
-				</xsl:when>
-				<xsl:when test="str[@name='reference_com']">
-					<xsl:value-of select="str[@name='reference_com']"/>
-				</xsl:when>				
-			</xsl:choose>
-		</xsl:variable>
-		
+	<xsl:template match="doc">		
 		<h3>Featured Object</h3>
 		<div>
 			<a href="{$uri_space}{str[@name='recordId']}{if(string($langParam)) then concat('?lang=', $langParam) else ''}">
-				<img src="{$image_url}" alt="Featured Object Image" style="max-width:240px"/>
+				<img src="{str[@name='thumbnail_obv']}"/>
 			</a>
 			<br/>
 			<a href="{$uri_space}{str[@name='recordId']}{if(string($langParam)) then concat('?lang=', $langParam) else ''}">
