@@ -148,15 +148,15 @@
 							<input type="text" class="form-control text-search" id="fulltext" placeholder="Search" autofocus="autofocus"/>
 							<span class="text-info">These terms will search all fields in the database.</span>
 						</div>
-						
+
 						<xsl:if test="//config/facets/facet[@role = 'department']">
 							<xsl:for-each select="//config/facets/facet[@role = 'department' and @type = 'list']">
 								<xsl:variable name="field" select="."/>
-								
+
 								<xsl:apply-templates select="//lst[@name = $field and number(int) &gt; 0]" mode="facet"/>
 							</xsl:for-each>
 						</xsl:if>
-						
+
 						<xsl:if test="$collection_type = 'object'">
 							<div class="form-group">
 								<label for="imagesavailable">
@@ -190,7 +190,7 @@
 										</xsl:for-each>
 									</xsl:if>
 								</xsl:if>
-								
+
 								<xsl:if test="$collection_type = 'hoard'">
 									<h2>Contents</h2>
 								</xsl:if>
@@ -321,12 +321,12 @@
 									</label>
 									<input type="text" class="form-control text-search" id="rev_type_text"/>
 								</div>
-								
+
 								<xsl:if test="//config/facets/facet[@role = 'symbol']">
 									<h3>
 										<xsl:value-of select="numishare:normalize_fields('symbol', $lang)"/>
 									</h3>
-									
+
 									<xsl:if test="//lst[contains(@name, 'symbol_obv_') and number(int) &gt; 0]">
 										<h5>
 											<xsl:value-of select="numishare:normalize_fields('obverse', $lang)"/>
@@ -339,8 +339,8 @@
 										</h5>
 										<xsl:apply-templates select="//lst[contains(@name, 'symbol_rev') and number(int) &gt; 0]" mode="facet"/>
 									</xsl:if>
-									
-									
+
+
 								</xsl:if>
 
 								<!-- physical attributes are only visible in specimen collections -->
@@ -421,7 +421,7 @@
 									</xsl:for-each>
 								</xsl:if>
 							</xsl:otherwise>
-						</xsl:choose>	
+						</xsl:choose>
 
 						<!-- hidden params -->
 						<input type="hidden" name="q" id="facet_form_query" value="*:*"/>
@@ -431,7 +431,8 @@
 						</xsl:if>
 
 						<br/>
-						<input type="submit" value="{numishare:normalizeLabel('header_search', $lang)}" id="search_button" class="btn btn-default"/>
+						<button type="submit" id="search_button" class="btn btn-default">
+							<i class="glyphicon glyphicon-search"/> Search </button>
 					</form>
 
 				</div>
