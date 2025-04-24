@@ -133,48 +133,7 @@
 							</small>
 						</div>
 					</form>
-
-
-					<!--<h3>Departments <small><a href="{$display_path}results?q=*:*">Browse All</a></small></h3>
-					<div class="row text-center" id="departments">
-						<div class="col-sm-6 col-lg-3">
-							<a href="department/Greek">
-								<img title="Greek" alt="Greek" src="{$include_path}/images/greek.jpg"/><br/>Greek</a>
-						</div>
-						<div class="col-sm-6 col-lg-3">
-							<a href="department/Roman"><img title="Roman" alt="Roman" src="{$include_path}/images/roman.jpg"/><br/>Roman</a>
-						</div>
-						<div class="col-sm-6 col-lg-3">
-							<a href="department/Byzantine"><img title="Byzantine" alt="Byzantine" src="{$include_path}/images/byzantine.jpg"/><br/>Byzantine</a>
-						</div>
-						<div class="col-sm-6 col-lg-3">
-							<a href="department/Islamic"><img title="Islamic" alt="Islamic" src="{$include_path}/images/islamic.jpg"/><br/>Islamic</a>
-						</div>
-						<div class="col-sm-6 col-lg-3">
-							<a href="department/EastAsian"><img title="East Asian" alt="East Asian" src="{$include_path}/images/east_asian.jpg"/><br/>East Asian</a>
-						</div>
-						<div class="col-sm-6 col-lg-3">
-							<a href="department/SouthAsian"><img title="South Asian" alt="South Asian" src="{$include_path}/images/south_asian.jpg"/><br/>South Asian</a>
-						</div>
-						<div class="col-sm-6 col-lg-3">
-							<a href="department/Medieval"><img title="Medieval" alt="Medieval" src="{$include_path}/images/medieval.jpg"/><br/>Medieval</a>
-						</div>
-						<div class="col-sm-6 col-lg-3">
-							<a href="department/Modern"><img title="Modern" alt="Modern" src="{$include_path}/images/modern.jpg"/><br/>Modern</a>
-						</div>
-						<div class="col-sm-6 col-lg-3">
-							<a href="department/NorthAmerican"><img title="North American" alt="North American" src="{$include_path}/images/united_states.jpg"/><br/>North American</a>
-						</div>
-						<div class="col-sm-6 col-lg-3">
-							<a href="department/LatinAmerican"><img title="Latin American" alt="Latin American" src="{$include_path}/images/latin_american.jpg"/><br/>Latin American</a>
-						</div>
-						<div class="col-sm-6 col-lg-3">
-							<a href="department/MedalsAndDecorations"><img title="Medals And Decorations" alt="Medals And Decorations" src="{$include_path}/images/medal.jpg"/><br/>Medals And
-								Decorations</a>
-						</div>
-					</div>-->
-
-
+					
 					<p>ANS policies on the acquisition and deacquisition of numismatic items are available <a
 							href="http://numismatics.org/governance/collections-management-policy/">online</a>. </p>
 				</div>
