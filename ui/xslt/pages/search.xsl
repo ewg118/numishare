@@ -145,9 +145,17 @@
 
 						<div class="form-group">
 							<label>Keyword</label>
-							<input type="text" class="form-control text-search" id="fulltext" placeholder="Search"/>
+							<input type="text" class="form-control text-search" id="fulltext" placeholder="Search" autofocus="autofocus"/>
 							<span class="text-info">These terms will search all fields in the database.</span>
 						</div>
+						
+						<xsl:if test="//config/facets/facet[@role = 'department']">
+							<xsl:for-each select="//config/facets/facet[@role = 'department' and @type = 'list']">
+								<xsl:variable name="field" select="."/>
+								
+								<xsl:apply-templates select="//lst[@name = $field and number(int) &gt; 0]" mode="facet"/>
+							</xsl:for-each>
+						</xsl:if>
 						
 						<xsl:if test="$collection_type = 'object'">
 							<div class="form-group">
@@ -423,7 +431,7 @@
 						</xsl:if>
 
 						<br/>
-						<input type="submit" value="{numishare:normalizeLabel('results_refine-search', $lang)}" id="search_button" class="btn btn-default"/>
+						<input type="submit" value="{numishare:normalizeLabel('header_search', $lang)}" id="search_button" class="btn btn-default"/>
 					</form>
 
 				</div>
