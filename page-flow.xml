@@ -87,10 +87,6 @@
 
 	<!-- apis -->
 	<page path="/numishare/mantis/apis/get" model="oxf:/numishare-projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/apis/get.xpl"/>
-	<page path="/numishare/mantis/apis/search" model="xpl/models/solr/feed.xpl" view="oxf:/numishare-projects/mantis/xpl/views/apis/search.xpl"/>
-
-	<!-- results ajax -->
-	<page path="/numishare/mantis/results_ajax" model="xpl/models/solr/results_ajax.xpl" view="oxf:/numishare-projects/mantis/xpl/views/ajax/results_ajax.xpl"/>
 
 	<!-- ************** GENERIC NUMISHARE PAGES *************-->
 	<!-- **** SERIALIZATIONS **** -->
