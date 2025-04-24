@@ -146,6 +146,9 @@
 						<div class="form-group">
 							<label>Keyword</label>
 							<input type="text" class="form-control text-search" id="fulltext" placeholder="Search" autofocus="autofocus"/>
+							<button class="btn btn-default" type="submit">
+								<i class="glyphicon glyphicon-search"/>
+							</button>
 							<span class="text-info">These terms will search all fields in the database.</span>
 						</div>
 
