@@ -13,7 +13,7 @@
 						<scale>1</scale>
 						<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
 						<Icon>
-							<href>http://maps.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png</href>
+							<href>https://maps.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png</href>
 						</Icon>
 					</IconStyle>
 				</Style>
@@ -22,7 +22,7 @@
 						<scale>1</scale>
 						<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
 						<Icon>
-							<href>http://maps.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png</href>
+							<href>https://maps.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png</href>
 						</Icon>
 					</IconStyle>
 				</Style>
@@ -31,7 +31,7 @@
 						<scale>1</scale>
 						<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
 						<Icon>
-							<href>http://maps.google.com/intl/en_us/mapfiles/ms/micons/green-dot.png</href>
+							<href>https://maps.google.com/intl/en_us/mapfiles/ms/micons/green-dot.png</href>
 						</Icon>
 					</IconStyle>
 				</Style>
