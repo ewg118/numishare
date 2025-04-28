@@ -308,4 +308,21 @@
 			</xsl:choose>
 		</div>
 	</xsl:template>
+	
+	<!-- new format for Google Analytics API -->
+	<xsl:template name="google_analytics">
+		<xsl:param name="id"/>
+		
+		<xsl:if test="starts-with($id, 'G-')">
+			<!-- Google tag (gtag.js) -->
+			<script async="async" src="https://www.googletagmanager.com/gtag/js?id={$id}"/>
+			<script>
+				window.dataLayer = window.dataLayer || [];
+				function gtag(){dataLayer.push(arguments);}
+				gtag('js', new Date());
+				
+				gtag('config', '<xsl:value-of select="$id"/>');
+			</script>
+		</xsl:if>
+	</xsl:template>
 </xsl:stylesheet>
