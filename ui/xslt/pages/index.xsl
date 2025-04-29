@@ -59,11 +59,9 @@
 					</xsl:choose>
 				</xsl:for-each>
 
-				<xsl:if test="string(google_analytics)">
-					<script type="text/javascript">
-						<xsl:value-of select="google_analytics"/>
-					</script>
-				</xsl:if>
+				<xsl:call-template name="google_analytics">
+					<xsl:with-param name="id" select="//config/google_analytics_tag"/>
+				</xsl:call-template>
 			</head>
 			<body>
 				<xsl:call-template name="header"/>
