@@ -145,11 +145,9 @@
 		<script type="text/javascript" src="{$include_path}/javascript/network_functions.js"/>
 
 		<!-- google analytics -->
-		<xsl:if test="string(//config/google_analytics)">
-			<script type="text/javascript">
-				<xsl:value-of select="//config/google_analytics"/>
-			</script>
-		</xsl:if>
+		<xsl:call-template name="google_analytics">
+			<xsl:with-param name="id" select="//config/google_analytics_tag"/>
+		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template name="body">

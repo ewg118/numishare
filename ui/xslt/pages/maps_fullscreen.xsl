@@ -92,11 +92,9 @@
 				<link type="text/css" href="{$include_path}/css/fullscreen.css" rel="stylesheet"/>
 
 				<!-- Google Analytics -->
-				<xsl:if test="string(//config/google_analytics)">
-					<script type="text/javascript">
-						<xsl:value-of select="//config/google_analytics"/>
-					</script>
-				</xsl:if>
+				<xsl:call-template name="google_analytics">
+					<xsl:with-param name="id" select="//config/google_analytics_tag"/>
+				</xsl:call-template>
 			</head>
 			<body>
 				<xsl:call-template name="maps"/>

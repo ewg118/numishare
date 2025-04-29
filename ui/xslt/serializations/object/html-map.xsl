@@ -4,6 +4,8 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:res="http://www.w3.org/2005/sparql-results#"
 	exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../../functions.xsl"/>
+	<xsl:include href="../../templates.xsl"/>
+	
 	<!-- URL params -->
 	<xsl:param name="pipeline">display_map</xsl:param>
 	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
@@ -230,11 +232,9 @@
 		<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
 		<script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"/>
 		<link type="text/css" href="{$include_path}/css/fullscreen.css" rel="stylesheet"/>
-		<xsl:if test="string(//config/google_analytics)">
-			<script type="text/javascript">
-				<xsl:value-of select="//config/google_analytics"/>
-			</script>
-		</xsl:if>
+		<xsl:call-template name="google_analytics">
+			<xsl:with-param name="id" select="//config/google_analytics_tag"/>
+		</xsl:call-template>
 
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0/dist/leaflet.css"/>
 		<script src="https://unpkg.com/leaflet@1.0.0/dist/leaflet.js"/>

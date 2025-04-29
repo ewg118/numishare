@@ -99,11 +99,10 @@
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
 				<script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"/>
-				<xsl:if test="string(//config/google_analytics)">
-					<script type="text/javascript">
-						<xsl:value-of select="//config/google_analytics"/>
-					</script>
-				</xsl:if>
+				<xsl:call-template name="google_analytics">
+					<xsl:with-param name="id" select="//config/google_analytics_tag"/>
+				</xsl:call-template>			
+				
 				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
 			</head>
 			<body>

@@ -768,11 +768,9 @@
 		<!-- bootstrap -->
 		<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
 		<script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"/>
-		<xsl:if test="string(//config/google_analytics)">
-			<script type="text/javascript">
-				<xsl:value-of select="//config/google_analytics"/>
-			</script>
-		</xsl:if>
+		<xsl:call-template name="google_analytics">
+			<xsl:with-param name="id" select="//config/google_analytics_tag"/>
+		</xsl:call-template>
 
 		<!-- always include leaflet -->
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0/dist/leaflet.css"/>
