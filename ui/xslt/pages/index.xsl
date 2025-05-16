@@ -47,6 +47,9 @@
 				<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
 				<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>
 				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
+				<xsl:if test="$collection-name = 'igch'">
+					<meta name="msvalidate.01" content="113C483FF4C2A6BBEE2A9FAB59465CD1" />
+				</xsl:if>
 
 				<xsl:for-each select="includes/include">
 					<xsl:choose>
