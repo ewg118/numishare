@@ -446,7 +446,7 @@ button.multiselect, button.hierarchical-facet {
   ***************************************
  */
 #resultMap {
-    width: 600px;
+    width: 100%;
     height: 400px;
 }
 #clear_all {

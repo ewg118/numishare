@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Author: Ethan Gruber
+	Date modified: May 2025
+	Function: Serialize Solr results for the browse page into HTML -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0"
 	xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="#all">
 	<xsl:include href="html-templates.xsl"/>
@@ -127,13 +130,10 @@
 				<xsl:if test="count(//lst[contains(@name, '_geo')]/int) &gt; 0">
 					<!-- maps-->
 					<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0/dist/leaflet.css"/>
-					<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css"/>
-					<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"/>
 
 					<!-- js -->
 					<script src="https://unpkg.com/leaflet@1.0.0/dist/leaflet.js"/>
 					<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
-					<script type="text/javascript" src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"/>
 					<script type="text/javascript" src="{$include_path}/javascript/result_map_functions.js"/>
 				</xsl:if>
 
@@ -176,14 +176,32 @@
 					<xsl:if test="//result[@name = 'response']/@numFound &gt; 0">
 						<xsl:call-template name="export"/>
 					</xsl:if>
+					
+					<div class="row">
+						<h1>
+							<xsl:choose>
+								<xsl:when test="$q = '*:*' or not(string($q))">
+									<xsl:value-of select="numishare:normalizeLabel('results_all-terms', $lang)"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="numishare:normalizeLabel('results_filters', $lang)"/>
+								</xsl:otherwise>
+							</xsl:choose>
+							<xsl:if test="//lst[ends-with(@name, '_geo')][int &gt; 0]">
+								<small>
+									<a id="map_results" href="#">View Map</a>
+								</small>
+							</xsl:if>
+						</h1>
+					</div>
+					
 					<xsl:call-template name="remove_facets"/>
+					
 					<xsl:choose>
 						<xsl:when test="$numFound &gt; 0">
 							<!-- include resultMap div when there are geographical results-->
 							<xsl:if test="//lst[ends-with(@name, '_geo')][int &gt; 0]">
-								<div style="display:none">
-									<div id="resultMap"/>
-								</div>
+								<div id="resultMap" style="display:none"/>
 							</xsl:if>
 
 							<!-- display link to return to the identify page, if referred from there -->

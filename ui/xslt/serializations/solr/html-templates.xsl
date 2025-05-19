@@ -855,36 +855,8 @@
 	<xsl:template name="remove_facets">
 		<xsl:variable name="rtl" select="//config/languages/language[@code = $lang]/@rtl = true()" as="xs:boolean"/>
 
-		<div class="row">
-			<xsl:choose>
-				<xsl:when test="$q = '*:*' or not(string($q))">
-					<h1>
-						<xsl:value-of select="numishare:normalizeLabel('results_all-terms', $lang)"/>
-						<xsl:if
-							test="count(//lst[@name = 'mint_geo']/int) &gt; 0 or count(//lst[@name = 'findspot_geo']/int) &gt; 0 or count(//lst[@name = 'productionPlace_geo']/int) &gt; 0 or count(//lst[@name = 'hoard_geo']/int) &gt; 0">
-							<small>
-								<a href="#resultMap" id="map_results">
-									<xsl:value-of select="numishare:normalizeLabel('results_map-results', $lang)"/>
-								</a>
-							</small>
-						</xsl:if>
-					</h1>
-				</xsl:when>
-				<xsl:otherwise>
-					<h1>
-						<xsl:value-of select="numishare:normalizeLabel('results_filters', $lang)"/>
-						<xsl:if
-							test="count(//lst[@name = 'mint_geo']/int) &gt; 0 or count(//lst[@name = 'findspot_geo']/int) &gt; 0 or count(//lst[@name = 'productionPlace_geo']/int) &gt; 0 or count(//lst[@name = 'hoard_geo']/int) &gt; 0">
-							<small>
-								<a href="#resultMap" id="map_results">
-									<xsl:value-of select="numishare:normalizeLabel('results_map-results', $lang)"/>
-								</a>
-							</small>
-						</xsl:if>
-					</h1>
-				</xsl:otherwise>
-			</xsl:choose>
-		</div>
+		
+		
 		<xsl:for-each select="$tokenized_q">
 			<xsl:variable name="val" select="."/>
 			<xsl:variable name="new_query">
