@@ -1,12 +1,22 @@
 $(document).ready(function () {
     var q = $('#current-query').text();
-    $("#map_results").fancybox({
-        beforeShow: function () {
-            if ($('#resultMap').html().length == 0) {
-                $('#resultMap').html('');
-                initialize_map(q);
-            }
+    
+    
+    $("#map_results").click(function () {
+        $('#resultMap').toggle();
+        //only load map if the div is empty
+        if ($('#resultMap').html().length == 0) {
+            $('#resultMap').html('')            
+            initialize_map(q);
         }
+        
+        if ($(this).text() == 'View Map') {
+            $(this).text('Hide Map');
+        } else {
+            $(this).text('View Map'); 
+        }
+        
+        return false;
     });
     
     function initialize_map(q) {
