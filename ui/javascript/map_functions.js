@@ -125,11 +125,9 @@ $(document).ready(function () {
         
         L.control.Legend({
             position: "bottomleft",
-            legends:[ {
-                label: "Marker1",
-                type: "image",
-                url: "marker/marker-red.png"
-            }]
+            symbolWidth: 24,
+            symbolHeight: 24,
+            legends: JSON.parse($('#legend').text())
         }).addTo(map);
         
         //add controls
