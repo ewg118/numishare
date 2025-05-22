@@ -39,7 +39,7 @@
 
 	<!-- blank params (from html templates) -->
 	<xsl:param name="q"/>
-	<xsl:param name="mode"/>
+	<xsl:param name="mode">search</xsl:param>
 	<xsl:param name="sort"/>
 	<xsl:param name="start" as="xs:integer"/>
 	<xsl:param name="rows" as="xs:integer"/>
@@ -139,7 +139,9 @@
 						people and places and may cast a wider net from the preferred label derived from Nomisma.org or the collection database. Note that the entry of keywords in
 						text fields or the selection of terms from the facet lists will restrict other term lists according to the query currently being formed by the user.</p>
 					
-					<xsl:call-template name="advanced-search-form"/>
+					<xsl:call-template name="advanced-search-form">
+						<xsl:with-param name="mode" select="$mode"/>
+					</xsl:call-template>
 
 				</div>
 			</div>

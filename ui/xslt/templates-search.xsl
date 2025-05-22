@@ -3,6 +3,8 @@
 	<!-- ************** SEARCH FORM ************** -->
 	
 	<xsl:template name="advanced-search-form">
+		<xsl:param name="mode"/>
+		
 		<form action="{$display_path}results" method="GET" role="form" id="facet_form">
 			
 			<div class="form-group">
@@ -63,7 +65,7 @@
 					<xsl:if test="//config/facets/facet[@role = 'entity']">
 						<h3>
 							<xsl:text>People and Organizations</xsl:text>
-							<xsl:if test="//config/facets/facet[@role = 'entity' and @type = 'text']">
+							<xsl:if test="//config/facets/facet[@role = 'entity' and @type = 'text'] and $mode = 'search'">
 								<small>
 									<a class="addBtn" id="add-entity" href="#">
 										<span class="glyphicon glyphicon-plus"/> add search field </a>
@@ -71,32 +73,44 @@
 							</xsl:if>
 						</h3>
 						
-						<!-- only include text searchable fields if applicable -->
-						<xsl:if test="//config/facets/facet[@role = 'entity' and @type = 'text']">
-							<div class="section-container" id="entity-container">
-								<div class="form-group">
-									<input type="text" class="form-control text-search"/>
-									<select class="category_list form-control">
-										<xsl:for-each select="//config/facets/facet[@role = 'entity' and @type = 'text']">
-											<option value="{.}">
-												<xsl:value-of select="numishare:normalize_fields(., $lang)"/>
-											</option>
-										</xsl:for-each>
-									</select>
-									<a class="removeBtn hidden" href="#" title="Remove field from query">
-										<span class="glyphicon glyphicon-remove"/>
-									</a>
-								</div>
-							</div>
-						</xsl:if>
-						
-						<!-- list fields -->
-						<xsl:for-each select="//config/facets/facet[@role = 'entity' and @type = 'list']">
-							<xsl:variable name="field" select="."/>
+						<xsl:choose>
+							<!-- only include text searchable fields if applicable -->
+							<xsl:when test="$mode = 'search'">								
+								<xsl:if test="//config/facets/facet[@role = 'entity' and @type = 'text']">
+									<div class="section-container" id="entity-container">
+										<div class="form-group">
+											<input type="text" class="form-control text-search"/>
+											<select class="category_list form-control">
+												<xsl:for-each select="//config/facets/facet[@role = 'entity' and @type = 'text']">
+													<option value="{.}">
+														<xsl:value-of select="numishare:normalize_fields(., $lang)"/>
+													</option>
+												</xsl:for-each>
+											</select>
+											<a class="removeBtn hidden" href="#" title="Remove field from query">
+												<span class="glyphicon glyphicon-remove"/>
+											</a>
+										</div>
+									</div>
+								</xsl:if>
+								
+								<!-- list fields -->
+								<xsl:for-each select="//config/facets/facet[@role = 'entity' and @type = 'list']">
+									<xsl:variable name="field" select="."/>
+									
+									<xsl:apply-templates select="//lst[@name = $field and number(int) &gt; 0]" mode="facet"/>
+								</xsl:for-each>
+							</xsl:when>
 							
-							<xsl:apply-templates select="//lst[@name = $field and number(int) &gt; 0]" mode="facet"/>
-						</xsl:for-each>
-						
+							<!-- display all as facet lists on maps page -->
+							<xsl:when test="$mode = 'maps'">
+								<xsl:for-each select="//config/facets/facet[@role = 'entity']">
+									<xsl:variable name="field" select="."/>
+									
+									<xsl:apply-templates select="//lst[@name = $field and number(int) &gt; 0]" mode="facet"/>
+								</xsl:for-each>
+							</xsl:when>
+						</xsl:choose>
 					</xsl:if>
 					
 					
@@ -112,11 +126,13 @@
 						</h3>
 						
 						<!-- general text fields -->
-						<div class="form-group">
-							<label for="place_text">Place Search</label>
-							<input type="text" class="form-control text-search" id="place_text"
-								fields="{string-join(//config/facets/facet[@role = 'place' and @type = 'list'], ';')}"/>
-						</div>
+						<xsl:if test="$mode = 'search'">
+							<div class="form-group">
+								<label for="place_text">Place Search</label>
+								<input type="text" class="form-control text-search" id="place_text"
+									fields="{string-join(//config/facets/facet[@role = 'place' and @type = 'list'], ';')}"/>
+							</div>
+						</xsl:if>						
 						
 						<!-- list fields -->
 						<xsl:for-each select="//config/facets/facet[@role = 'place' and @type = 'list']">
@@ -267,7 +283,7 @@
 					</xsl:if>
 					
 					
-					<xsl:if test="//config/facets/facet[@role = 'reference']">
+					<xsl:if test="//config/facets/facet[@role = 'reference'] and $mode = 'search'">
 						<h3>
 							<xsl:value-of select="numishare:normalize_fields('refDesc', $lang)"/>
 						</h3>
@@ -297,7 +313,12 @@
 			
 			<br/>
 			<button type="submit" id="search_button" class="btn btn-default">
-				<i class="glyphicon glyphicon-search"/> Search </button>
+				<i class="glyphicon glyphicon-search"/> 
+				<xsl:choose>
+					<xsl:when test="$mode = 'search'">Search</xsl:when>
+					<xsl:when test="$mode = 'maps'">Refine Map</xsl:when>
+				</xsl:choose>
+			</button>
 		</form>
 	</xsl:template>
 	

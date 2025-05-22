@@ -356,6 +356,11 @@
 					</xsl:if>
 					<head>
 						<xsl:call-template name="generic_head"/>
+						
+						<!-- Add fancyBox -->
+						<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
+						<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
+						
 						<xsl:choose>
 							<xsl:when test="$recordType = 'physical'">
 								<!--- IIIF -->
@@ -374,6 +379,10 @@
 
 								<xsl:if test="$geoEnabled = true()">
 									<xsl:if test="$hasMints = true() or $hasFindspots = true()">
+										<script type="text/javascript" src="{$include_path}/javascript/leaflet.legend.js"/>
+										<link type="text/css" href="{$include_path}/css/leaflet.legend.css" rel="stylesheet"/>
+										<script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"/>
+										<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" rel="stylesheet"/>
 										<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
 									</xsl:if>
 								</xsl:if>
@@ -382,10 +391,7 @@
 							<xsl:when test="$recordType = 'conceptual'">
 								<!--- IIIF -->
 								<script type="text/javascript" src="{$include_path}/javascript/leaflet-iiif.js"/>
-
-								<!-- Add fancyBox -->
-								<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
-								<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
+								
 								<script type="text/javascript" src="{$include_path}/javascript/display_functions.js"/>
 
 								<!-- visualization -->
@@ -411,6 +417,10 @@
 								<!-- mapping -->
 								<xsl:if test="$geoEnabled = true()">
 									<xsl:if test="$hasMints = true() or $hasFindspots = true()">
+										<script type="text/javascript" src="{$include_path}/javascript/leaflet.legend.js"/>
+										<link type="text/css" href="{$include_path}/css/leaflet.legend.css" rel="stylesheet"/>
+										<script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"/>
+										<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" rel="stylesheet"/>
 										<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
 									</xsl:if>
 								</xsl:if>
@@ -467,6 +477,19 @@
 							</span>
 							<span id="publisher">
 								<xsl:value-of select="descendant::nuds:copyrightHolder"/>
+							</span>
+							<span id="legend"> [{"label": "<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>", "type": "rectangle", "fillColor": "#6992fd", "color": "black", "weight": 1},
+								{"label": "<xsl:value-of select="numishare:regularize_node('hoard', $lang)"/>", "type": "rectangle", "fillColor": "#d86458", "color": "black", "weight": 1}
+								<xsl:if test="$rdf//nmo:Mint[skos:related]">
+									<!-- only display the uncertain mint key if there's an uncertain mint match -->
+									,{"label": "<xsl:value-of select="concat(numishare:regularize_node('mint', $lang), ' (uncertain)')"/>", "type": "rectangle", "fillColor": "#666666", "color": "black", "weight": 1}
+								</xsl:if>
+								<xsl:if test="not($collection_type = 'hoard')"> 
+									,{"label": "<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>", "type": "rectangle", "fillColor": "#f98f0c", "color": "black", "weight": 1} 
+									<xsl:if test="descendant::nuds:subject[contains(@xlink:href, 'geonames.org')]">
+										,{"label": "<xsl:value-of select="numishare:regularize_node('subject', $lang)"/>", "type": "rectangle", "fillColor": "#00e64d", "color": "black", "weight": 1}
+									</xsl:if>
+								</xsl:if>]
 							</span>
 
 
@@ -1256,59 +1279,8 @@
 		<h3>
 			<xsl:value-of select="numishare:normalizeLabel('display_map', $lang)"/>
 		</h3>
-		<xsl:choose>
-			<xsl:when test="$recordType = 'conceptual'">
-				<xsl:choose>
-					<xsl:when test="$hasFindspots = true()">
-						<div id="mapcontainer"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<div id="mapcontainer"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:when>
-			<xsl:otherwise>
-				<div id="mapcontainer"/>
-			</xsl:otherwise>
-		</xsl:choose>
-		<div class="legend">
-			<table>
-				<tbody>
-					<tr>
-						<th style="width:100px;background:none">
-							<xsl:value-of select="numishare:normalizeLabel('maps_legend', $lang)"/>
-						</th>
-						<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
-						<td style="width:100px;padding-left:6px;">
-							<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
-						</td>
-						<xsl:if test="$rdf//nmo:Mint[skos:related]">
-							<!-- only display the uncertain mint key if there's an uncertain mint match -->
-							<td style="background-color:#666666;border:2px solid black;width:50px;"/>
-							<td style="width:150px;padding-left:6px;">
-								<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
-								<xsl:text> (uncertain)</xsl:text>
-							</td>
-						</xsl:if>
-						<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
-						<td style="width:100px;padding-left:6px;">
-							<xsl:value-of select="numishare:regularize_node('hoard', $lang)"/>
-						</td>
-						<td style="background-color:#f98f0c;border:2px solid black;width:50px;"/>
-						<td style="width:100px;padding-left:6px;">
-							<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
-						</td>
-						<xsl:if test="descendant::nuds:subject[contains(@xlink:href, 'geonames.org')]">
-							<td style="background-color:#00e64d;border:2px solid black;width:50px;"/>
-							<td style="width:100px;padding-left:6px;">
-								<xsl:value-of select="numishare:regularize_node('subject', $lang)"/>
-							</td>
-						</xsl:if>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<p>View map in <a href="{$display_path}map/{$id}">fullscreen</a>.</p>
+		
+		<div id="mapcontainer"/>
 	</xsl:template>
 
 	<xsl:template match="nuds:undertypeDesc">

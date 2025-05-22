@@ -284,15 +284,11 @@
 			<head>
 				<xsl:call-template name="generic_head"/>
 
-				<xsl:if test="$hasSpecimens">
-					<!--- IIIF -->
-					<script type="text/javascript" src="{$include_path}/javascript/leaflet-iiif.js"/>
-
-					<!-- Add fancyBox for popups of coin images -->
-					<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
-					<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
-					<script type="text/javascript" src="{$include_path}/javascript/display_functions.js"/>
-				</xsl:if>
+				<!-- leaflet legend -->
+				<script type="text/javascript" src="{$include_path}/javascript/leaflet.legend.js"/>
+				<link type="text/css" href="{$include_path}/css/leaflet.legend.css" rel="stylesheet"/>	
+				<script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"/>
+				<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" rel="stylesheet"/>
 
 				<!-- visualization -->
 				<script type="text/javascript" src="{$include_path}/javascript/d3.min.js"/>
@@ -306,6 +302,12 @@
 				<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 
 				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
+				
+				<xsl:if test="$hasSpecimens">
+					<!--- IIIF -->
+					<script type="text/javascript" src="{$include_path}/javascript/leaflet-iiif.js"/>
+					<script type="text/javascript" src="{$include_path}/javascript/display_functions.js"/>
+				</xsl:if>
 			</head>
 			<body>
 
@@ -337,6 +339,19 @@
 					</span>
 					<span id="lang">
 						<xsl:value-of select="$lang"/>
+					</span>
+					<span id="legend"> [{"label": "<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>", "type": "rectangle", "fillColor": "#6992fd", "color": "black", "weight": 1},
+						{"label": "<xsl:value-of select="numishare:regularize_node('hoard', $lang)"/>", "type": "rectangle", "fillColor": "#d86458", "color": "black", "weight": 1}
+						<xsl:if test="$rdf//nmo:Mint[skos:related]">
+							<!-- only display the uncertain mint key if there's an uncertain mint match -->
+							,{"label": "<xsl:value-of select="concat(numishare:regularize_node('mint', $lang), ' (uncertain)')"/>", "type": "rectangle", "fillColor": "#666666", "color": "black", "weight": 1}
+						</xsl:if>
+						<xsl:if test="not($collection_type = 'hoard')"> 
+							,{"label": "<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>", "type": "rectangle", "fillColor": "#f98f0c", "color": "black", "weight": 1} 
+							<xsl:if test="descendant::nuds:subject[contains(@xlink:href, 'geonames.org')]">
+								,{"label": "<xsl:value-of select="numishare:regularize_node('subject', $lang)"/>", "type": "rectangle", "fillColor": "#00e64d", "color": "black", "weight": 1}
+							</xsl:if>
+						</xsl:if>]
 					</span>
 					<span id="page">record</span>
 					<div id="filterHoards">
@@ -488,34 +503,6 @@
 				<xsl:if test="$hasMints = true() or $hasFindspots = true()">
 					<div class="col-md-6">
 						<div id="mapcontainer"/>
-						<div class="legend">
-							<table>
-								<tbody>
-									<tr>
-										<th style="width:100px">
-											<xsl:value-of select="numishare:normalizeLabel('maps_legend', $lang)"/>
-										</th>
-										<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
-										<td style="width:100px">
-											<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
-										</td>
-										<xsl:if test="$rdf//nmo:Mint[skos:related]">
-											<!-- only display the uncertain mint key if there's an uncertain mint match -->
-											<td style="background-color:#666666;border:2px solid black;width:50px;"/>
-											<td style="width:150px;padding-left:6px;">
-												<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
-												<xsl:text> (uncertain)</xsl:text>
-											</td>
-										</xsl:if>
-										<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
-										<td style="width:100px">
-											<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-						<p>View map in <a href="{$display_path}map/{$id}">fullscreen</a>.</p>
 					</div>
 				</xsl:if>
 			</xsl:if>
