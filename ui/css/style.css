@@ -626,7 +626,12 @@ div#mapcontainer {
 }
 
 .maps-page #mapcontainer {
-    height: 500px;
+    height: 800px;
+    width: 100%;
+}
+
+.fullscreen #mapcontainer {
+    height: 100%;
     width: 100%;
 }
 
