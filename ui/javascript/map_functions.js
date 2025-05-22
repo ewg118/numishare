@@ -1,26 +1,28 @@
 /************************************
-GET FACET TERMS IN RESULTS PAGE
-Written by Ethan Gruber, gruber@numismatics.org
-Library: jQuery
-Description: This utilizes ajax to populate the list of terms in the facet category in the results page.
-If the list is populated and then hidden, when it is re-activated, it fades in rather than executing the ajax call again.
+ GET FACET TERMS IN RESULTS PAGE
+ Written by Ethan Gruber, gruber@numismatics.org
+ Library: jQuery, Leaflet
+ Date modified: May 2025
+ Description: This utilizes ajax to populate the list of terms in the facet category in the results page.
+ If the list is populated and then hidden, when it is re-activated, it fades in rather than executing the ajax call again.
  ************************************/
 $(document).ready(function () {
     var popupStatus = 0;
     var firstrun = true;
-    var langStr = getURLParameter('lang');
-    var departmentStr = getURLParameter('department');
     
+    //get lang if applicable
+    var langStr = getURLParameter('lang');
     if (langStr == 'null') {
         var lang = '';
     } else {
         var lang = langStr;
     }
     
-    if (departmentStr == 'null') {
-        var department = '';
+    var qStr = getURLParameter('q');
+    if (qStr == 'null') {
+        var q = '*:*';
     } else {
-        var department = departmentStr;
+        var q = qStr;
     }
     
     var pipeline = $('#pipeline').text();
@@ -35,12 +37,7 @@ $(document).ready(function () {
         dateLabel();
     }
     
-    $("#backgroundPopup").on('click', function (event) {
-        disablePopup();
-    });
-    
     /* INITIALIZE MAP */
-    var q = '*:*';
     var collection_type = $('#collection_type').text();
     
     //Leaflet variables
@@ -91,11 +88,11 @@ $(document).ready(function () {
     
     if (collection_type == 'hoard') {
         //load individual hoards and mints for a hoard collection
-        var mintLayer = L.geoJson.ajax(path + "mints.geojson?q=" + q + '&department=' + department, {
+        var mintLayer = L.geoJson.ajax(path + "mints.geojson?q=" + q + (lang.length > 0 ? '&lang=' + lang: ''), {
             pointToLayer: renderPoints
         }).addTo(map);
         
-        var hoardLayer = L.geoJson.ajax(path + "hoards.geojson?q=" + q + '&department=' + department, {
+        var hoardLayer = L.geoJson.ajax(path + "hoards.geojson?q=" + q + (lang.length > 0 ? '&lang=' + lang: ''), {
             pointToLayer: renderPoints
         }).addTo(map);
         
@@ -103,6 +100,37 @@ $(document).ready(function () {
             'Hoards': hoardLayer,
             'Mints': mintLayer
         };
+        
+        L.Control.Button = L.Control.extend({
+            options: {
+                position: 'topleft'
+            },
+            onAdd: function (map) {
+                var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+                var button = L.DomUtil.create('a', 'glyphicon glyphicon-filter', container);
+                L.DomEvent.disableClickPropagation(button);
+                L.DomEvent.on(button, 'click', function () {
+                    $.fancybox({
+                        'href': '#map_filters'
+                    });
+                });
+                
+                container.title = "Filter";
+                
+                return container;
+            }
+        });
+        var control = new L.Control.Button()
+        control.addTo(map);
+        
+        L.control.Legend({
+            position: "bottomleft",
+            legends:[ {
+                label: "Marker1",
+                type: "image",
+                url: "marker/marker-red.png"
+            }]
+        }).addTo(map);
         
         //add controls
         var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
@@ -127,16 +155,16 @@ $(document).ready(function () {
         });
     } else {
         //load mints, subjects, and findspots as markers for coin types and physical specimen collections
-        var mintLayer = L.geoJson.ajax(path + "mints.geojson?q=" + q + '&department=' + department, {
+        var mintLayer = L.geoJson.ajax(path + "mints.geojson?q=" + q + (lang.length > 0 ? '&lang=' + lang: ''), {
             pointToLayer: renderPoints
         }).addTo(map);
         
-        var subjectLayer = L.geoJson.ajax(path + "subjects.geojson?q=" + q + '&department=' + department, {
+        var subjectLayer = L.geoJson.ajax(path + "subjects.geojson?q=" + q + (lang.length > 0 ? '&lang=' + lang: ''), {
             pointToLayer: renderPoints
         }).addTo(map);
         
         //add hoards, but don't make visible by default
-        var findspotLayer = L.geoJson.ajax(path + "findspots.geojson?q=" + q + '&department=' + department, {
+        var findspotLayer = L.geoJson.ajax(path + "findspots.geojson?q=" + q + (lang.length > 0 ? '&lang=' + lang: ''), {
             pointToLayer: renderPoints
         }).addTo(map);
         
@@ -145,6 +173,35 @@ $(document).ready(function () {
             'Findspots': findspotLayer,
             'Subjects': subjectLayer
         };
+        
+        L.Control.Button = L.Control.extend({
+            options: {
+                position: 'topleft'
+            },
+            onAdd: function (map) {
+                var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+                var button = L.DomUtil.create('a', 'glyphicon glyphicon-filter', container);
+                L.DomEvent.disableClickPropagation(button);
+                L.DomEvent.on(button, 'click', function () {
+                    $.fancybox({
+                        'href': '#map_filters'
+                    });
+                });
+                
+                container.title = "Filter";
+                
+                return container;
+            }
+        });
+        var control = new L.Control.Button()
+        control.addTo(map);
+        
+        L.control.Legend({
+            position: "bottomleft",
+            symbolWidth: 24,
+            symbolHeight: 24,
+            legends: JSON.parse($('#legend').text())
+        }).addTo(map);
         
         //add controls
         var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
@@ -177,87 +234,37 @@ $(document).ready(function () {
         });
     }
     
-    //multiselect facets
-    $('.multiselect').multiselect({
-        buttonWidth: '250px',
-        enableCaseInsensitiveFiltering: true,
-        maxHeight: 250,
-        enableHTML: true,
-        buttonText: function (options, select) {
-            if (options.length == 0) {
-                return select.attr('title');
-            } else if (options.length > 2) {
-                return select.attr('title') + ': ' + options.length;
-            } else {
-                var selected = '';
-                options.each(function () {
-                    var val = $(this).text();
-                    //if there is an img in the label, then parse the HTML and display only the label
-                    if (val.indexOf('<img') >= 0){
-                        var el = $( '<div></div>' );
-                        el.html(val);
-                        selected += el.text().trim() + ', ';
-                    } else {
-                        selected += $(this).text() + ', ';
-                    }
-                });
-                label = selected.substr(0, selected.length - 2);
-                if (label.length > 20) {
-                    label = label.substr(0, 20) + '...';
-                }
-                return select.attr('title') + ': ' + label;
-            }
-        },
-        onChange: function (element, checked) {
-            //if there are 0 selected checks in the multiselect, re-initialize ajax to populate list
-            id = element.parent('select').attr('id');
-            if ($('#' + id).val() == null) {
-                var q = getQuery();
-                var category = id.split('-select')[0];
-                var mincount = $(this).attr('mincount');
-                $.get(path + 'get_facet_options', {
-                    q: q, category: category, mincount: mincount, lang: lang, pipeline: pipeline
-                },
-                function (data) {
-                    $('#ajax-temp').html(data);
-                    $('#' + id).html('');
-                    $('#' + id).attr('new_query', '');
-                    $('#ajax-temp option').each(function () {
-                        $(this).clone().appendTo('#' + id);
-                    });
-                    $("#" + id).multiselect('rebuild');
-                });
-            }
-            if ($('#mapcontainer').length > 0) {
-                //update map
-                refreshMap();
-            }
-        }
-    });
-    
-    //on open
-    $('button.multiselect').on('click', function () {
+    //assemble query on form submission
+    $('#facet_form').submit(function () {
+        //update map
         var q = getQuery();
-        var id = $(this).parent('div').prev('select').attr('id');
-        var mincount = $(this).parent('div').prev('select').attr('mincount');
-        var category = id.split('-select')[0];
-        $.get(path + 'get_facet_options', {
-            q: q, category: category, mincount: mincount, lang: lang, pipeline: pipeline
-        },
-        function (data) {
-            $('#ajax-temp').html(data);
-            $('#' + id).attr('new_query', '');
-            $('#' + id).html('');
-            $('#ajax-temp option').each(function () {
-                $(this).clone().appendTo('#' + id);
-            });
-            $("#" + id).multiselect('rebuild');
-        });
+        refreshMap(q);
+        
+        //close window
+        $.fancybox.close();
+        
+        //update permalink
+        $('#permalink').attr('href', '?q=' + q);  
+        $('#permalink').parent('p').removeClass('hidden');
+        
+        return false;
     });
     
+    $('#permalink').click(function () {
+        var url = window.location.href.split('?')[0] + $(this).attr('href');
+        navigator.clipboard.writeText(url);
+        
+        $('#permalink-tooltip').fadeIn(3);
+        $('#permalink-tooltip').fadeOut();
+        
+        return false;
+    });
+    
+    
+    //make ajax results pageable
     $('#results').on('click', '.paging_div .page-nos .btn-toolbar .pagination a.pagingBtn', function (event) {
         var href = path + 'results_ajax' + $(this).attr('href');
-        $.get(href, {
+        $. get (href, {
             pipeline: pipeline
         },
         function (data) {
@@ -275,8 +282,8 @@ $(document).ready(function () {
     /*****
      * LEAFLET FUNCTIONS
      *****/
-    function refreshMap() {
-        var query = encodeURI(getQuery());
+    function refreshMap(q) {
+        var query = encodeURI(q);
         //refresh maps.
         if (collection_type == 'hoard') {
             mintUrl = path + "mints.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '');
@@ -306,13 +313,13 @@ $(document).ready(function () {
         type = type[0].toUpperCase() + type.substring(1);
         
         var str = "<strong>" + type + "</strong>: <a href='#results' class='show_coins' q='" + query + "'>" + e.layer.feature.properties.name + "</a> <a href='" + e.layer.feature.properties.uri + "' target='_blank'><span class='glyphicon glyphicon-new-window'/></a>";
-        str += '<br/><strong>Count</strong>: ' + e.layer.feature.properties.count; 
+        str += '<br/><strong>Count</strong>: ' + e.layer.feature.properties.count;
         
         e.layer.bindPopup(str).openPopup();
         $('.show_coins').on('click', function (event) {
             var query = $(this).attr('q');
             var lang = $('input[name=lang]').val();
-            $.get(path + 'results_ajax', {
+            $. get (path + 'results_ajax', {
                 q: query, lang: lang, pipeline: pipeline
             },
             function (data) {
@@ -378,28 +385,3 @@ $(document).ready(function () {
         });
     }
 });
-
-
-/***************************/
-//@Author: Adrian "yEnS" Mato Gondelle
-//@website: www.yensdesign.com
-//@email: yensamg@gmail.com
-//@license: Feel free to use it, but keep this credits please!
-/***************************/
-
-//disabling popup with jQuery magic!
-function disablePopup() {
-    //disables popup only if it is enabled
-    if (popupStatus == 1) {
-        $("#backgroundPopup").fadeOut("fast");
-        $('#category_hier-list').parent('div').attr('style', 'width: 192px;');
-        $('#findspot_hier-list').parent('div').attr('style', 'width: 192px;');
-        $('#century_num-list').parent('div').attr('style', 'width: 192px;');
-        popupStatus = 0;
-    }
-}
-
-function getURLParameter(name) {
-    return decodeURI(
-    (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) ||[, null])[1]);
-}
