@@ -1,13 +1,11 @@
 /***
  Author: Ethan Gruber
- Date: September 2020
- Function: Generate a Leaflet map for a specimen/type page and call the relevant GeoJSON serialization
-***/
+ Date: June 2021
+ Function: Generate a Leaflet map for a specimen/type/symbol page and call the relevant GeoJSON serialization
+ ***/
 $(document).ready(function () {
     var id = $('title').attr('id');
-    var collection_type = $('#collection_type').text();
     var path = $('#path').text();
-    var pipeline = $('#pipeline').text();
     var lang = $('#lang').text();
     
     if ($('#mapcontainer').length > 0) {
@@ -42,25 +40,48 @@ function initialize_map(id, path, lang) {
     var map = new L.Map('mapcontainer', {
         center: new L.LatLng(0, 0),
         zoom: 4,
+        fullscreenControl: true,
         layers:[eval(baselayers[0])]
     });
     
-    //add mintLayer from AJAX
-    var overlay = L.geoJson.ajax(url, {
-        onEachFeature: onEachFeature,
-        style: function (feature) {
-            if (feature.geometry.type == 'Polygon') {
-                var fillColor = getFillColor(feature.properties.type);
-                
-                return {
-                    color: fillColor
+    //add GeoJSON from AJAX
+    $.getJSON(url, function (data) {
+        var maxFindspotDensity = 0;
+        var maxMintDensity = 0;
+        $.each(data.features, function (key, value) {
+            if (value.properties.type == 'findspot' && value.properties.hasOwnProperty('count') == true) {
+                if (value.properties.count !== undefined) {
+                    if (value.properties.count > maxFindspotDensity) {
+                        maxFindspotDensity = value.properties.count;
+                    }
+                }
+            } else if (value.properties.type == 'mint' && value.properties.hasOwnProperty('count') == true) {
+                if (value.properties.count !== undefined) {
+                    if (value.properties.count > maxMintDensity) {
+                        maxMintDensity = value.properties.count;
+                    }
                 }
             }
-        },
-        pointToLayer: function (feature, latlng) {
-            return renderPoints(feature, latlng);
-        }
-    }).addTo(map);
+        });
+        
+        var overlay = L.geoJson(data, {
+            onEachFeature: onEachFeature,
+            style: function (feature) {
+                if (feature.geometry.type == 'Polygon') {
+                    var fillColor = getFillColor(feature.properties.type);
+                    
+                    return {
+                        color: fillColor
+                    }
+                }
+            },
+            pointToLayer: function (feature, latlng) {
+                return renderPoints(feature, latlng, maxFindspotDensity, maxMintDensity);
+            }
+        }).addTo(map);
+        
+        map.fitBounds(overlay.getBounds());
+    });
     
     //add controls
     var baseMaps = {
@@ -80,35 +101,89 @@ function initialize_map(id, path, lang) {
         baseMaps[label] = eval(baselayers[i]);
     }
     
-    var overlayMaps = {
-        'Markers': overlay
-    };
+    L.control.Legend({
+        position: "bottomleft",
+        symbolWidth: 24,
+        symbolHeight: 24,
+        legends: JSON.parse($('#legend').text())
+    }).addTo(map);
     
     //add controls
-    var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
-    
-    
-    
-    //zoom to groups on AJAX complete
-    overlay.on('data:loaded', function () {
-        map.fitBounds(overlay.getBounds());
-    }.bind(this));
+    var layerControl = L.control.layers(baseMaps).addTo(map);
     
     /*****
      * Features for manipulating layers
      *****/
-    function renderPoints(feature, latlng) {
+    function renderPoints(feature, latlng, maxFindspotDensity, maxMintDensity) {
         
         var fillColor = getFillColor(feature.properties.type);
         
-        return new L.CircleMarker(latlng, {
-            radius: 5,
-            fillColor: fillColor,
-            color: "#000",
-            weight: 1,
-            opacity: 1,
-            fillOpacity: 0.6
-        });
+        if (feature.properties.type == 'findspot' && feature.properties.hasOwnProperty('count')) {
+            grade = maxFindspotDensity / 5;
+            
+            var radius = 5;
+            if (Math.round(grade) == 0) {
+                radius = 5;
+            } else if (feature.properties.count < Math.round(grade)) {
+                radius = 5;
+            } else if (feature.properties.count >= Math.round(grade) && feature.properties.count < Math.round(grade * 2)) {
+                radius = 10;
+            } else if (feature.properties.count >= Math.round(grade * 2) && feature.properties.count < Math.round(grade * 3)) {
+                radius = 15;
+            } else if (feature.properties.count >= Math.round(grade * 3) && feature.properties.count < Math.round(grade * 4)) {
+                radius = 20;
+            } else if (feature.properties.count >= Math.round(grade * 4)) {
+                radius = 25;
+            } else {
+                radius = 5;
+            }
+            
+            return new L.CircleMarker(latlng, {
+                radius: radius,
+                fillColor: fillColor,
+                color: "#000",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.6
+            });
+        } else if (feature.properties.type == 'mint' && feature.properties.hasOwnProperty('count')) {
+            grade = maxMintDensity / 5;
+            
+            var radius = 5;
+            if (Math.round(grade) == 0) {
+                radius = 5;
+            } else if (feature.properties.count < Math.round(grade)) {
+                radius = 5;
+            } else if (feature.properties.count >= Math.round(grade) && feature.properties.count < Math.round(grade * 2)) {
+                radius = 10;
+            } else if (feature.properties.count >= Math.round(grade * 2) && feature.properties.count < Math.round(grade * 3)) {
+                radius = 15;
+            } else if (feature.properties.count >= Math.round(grade * 3) && feature.properties.count < Math.round(grade * 4)) {
+                radius = 20;
+            } else if (feature.properties.count >= Math.round(grade * 4)) {
+                radius = 25;
+            } else {
+                radius = 5;
+            }
+            
+            return new L.CircleMarker(latlng, {
+                radius: radius,
+                fillColor: fillColor,
+                color: "#000",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.6
+            });
+        } else {
+            return new L.CircleMarker(latlng, {
+                radius: 5,
+                fillColor: fillColor,
+                color: "#000",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.6
+            });
+        }
     }
     
     function getFillColor (type) {
@@ -118,13 +193,13 @@ function initialize_map(id, path, lang) {
             fillColor = '#6992fd';
             break;
             case 'findspot':
-            fillColor = '#d86458';
+            fillColor = '#f98f0c';
             break;
             case 'hoard':
             fillColor = '#d86458';
             break;
             case 'subject':
-            fillColor = '#a1d490';
+            fillColor = '#00e64d';
             break;
             default:
             fillColor = '#efefef'
@@ -153,6 +228,9 @@ function initialize_map(id, path, lang) {
                 if (feature.properties.type == 'hoard' && feature.properties.hasOwnProperty('closing_date') == true) {
                     str += '<br/><b>Closing Date: </b>' + feature.properties.closing_date;
                 }
+            }
+            if (feature.properties.hasOwnProperty('count') == true) {
+                str += '<br/><b>Count: </b>' + feature.properties.count;
             }
         }
         layer.bindPopup(str);
