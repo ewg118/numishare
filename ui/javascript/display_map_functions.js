@@ -1,7 +1,7 @@
 /***
-Author: Ethan Gruber
-Date: June 2021
-Function: Generate a Leaflet map for a specimen/type/symbol page and call the relevant GeoJSON serialization
+ Author: Ethan Gruber
+ Date: June 2021
+ Function: Generate a Leaflet map for a specimen/type/symbol page and call the relevant GeoJSON serialization
  ***/
 $(document).ready(function () {
     var id = $('title').attr('id');
@@ -40,6 +40,7 @@ function initialize_map(id, path, lang) {
     var map = new L.Map('mapcontainer', {
         center: new L.LatLng(0, 0),
         zoom: 4,
+        fullscreenControl: true,
         layers:[eval(baselayers[0])]
     });
     
@@ -99,6 +100,13 @@ function initialize_map(id, path, lang) {
         }
         baseMaps[label] = eval(baselayers[i]);
     }
+    
+    L.control.Legend({
+        position: "bottomleft",
+        symbolWidth: 24,
+        symbolHeight: 24,
+        legends: JSON.parse($('#legend').text())
+    }).addTo(map);
     
     //add controls
     var layerControl = L.control.layers(baseMaps).addTo(map);
