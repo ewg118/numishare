@@ -1,13 +1,14 @@
 /************************************
-GET FACET TERMS IN RESULTS PAGE
-Written by Ethan Gruber, gruber@numismatics.org
-Library: jQuery
-Description: This utilizes ajax to populate the list of terms in the facet category in the results page.
-If the list is populated and then hidden, when it is re-activated, it fades in rather than executing the ajax call again.
+ GET FACET TERMS IN RESULTS PAGE
+ Written by Ethan Gruber, gruber@numismatics.org
+ Library: jQuery
+ Description: This utilizes ajax to populate the list of terms in the facet category in the results page.
+ If the list is populated and then hidden, when it is re-activated, it fades in rather than executing the ajax call again.
  ************************************/
 $(document).ready(function () {
     var popupStatus = 0;
     var pipeline = 'results';
+    var path = $('#path').text();
     var langStr = getURLParameter('lang');
     if (langStr == 'null') {
         var lang = '';
@@ -71,7 +72,7 @@ $(document).ready(function () {
                 if (q.length > 0) {
                     var category = id.split('-select')[0];
                     var mincount = $(this).attr('mincount');
-                    $.get('get_facet_options', {
+                    $.get (path + 'get_facet_options', {
                         q: q, category: category, mincount: mincount, lang: lang, pipeline: 'results'
                     },
                     function (data) {
@@ -94,7 +95,7 @@ $(document).ready(function () {
         var id = $(this).parent('div').prev('select').attr('id');
         var category = id.split('-select')[0];
         var mincount = $(this).parent('div').prev('select').attr('mincount');
-        $.get('get_facet_options', {
+        $.get (path + 'get_facet_options', {
             q: q, category: category, mincount: mincount, lang: lang, pipeline: 'results'
         },
         function (data) {
@@ -125,7 +126,7 @@ $(document).ready(function () {
         var field = $(this).attr('id').split('_hier')[0];
         var list_id = $(this).attr('id').split('-btn')[0] + '-list';
         if ($('#' + list_id).html().indexOf('<li') < 0) {
-            $.get('get_hier', {
+            $.get (path + 'get_hier', {
                 q: q, field: field, prefix: 'L1', fq: '*', link: '', lang: lang
             },
             function (data) {
@@ -159,7 +160,7 @@ $(document).ready(function () {
             $(this).addClass('glyphicon-minus');
             //perform ajax load on first click of expand button
             if ($(this).parent('li').children('ul').html().indexOf('<li') < 0) {
-                $.get('get_hier', {
+                $.get (path + 'get_hier', {
                     q: q, field: field, prefix: prefix, fq: '"' + fq + '"', link: link, section: section, lang: lang
                 },
                 function (data) {
@@ -206,7 +207,7 @@ $(document).ready(function () {
         q = getQuery();
         var list_id = $(this).attr('id').split('_link')[0] + '-list';
         if ($('#' + list_id).html().indexOf('<li') < 0) {
-            $.get('get_centuries', {
+            $. get ('get_centuries', {
                 q: q
             },
             function (data) {
@@ -234,7 +235,7 @@ $(document).ready(function () {
             $(this).addClass('glyphicon-minus');
             //perform ajax load on first click of expand button
             if ($(this).parent('li').children('ul').html().indexOf('<li') < 0) {
-                $.get('get_decades', {
+                $. get ('get_decades', {
                     q: q, century: century
                 },
                 function (data) {
@@ -264,31 +265,31 @@ $(document).ready(function () {
         //set label
         dateLabel();
     });
-    
-    /***************************/
-    //@Author: Adrian "yEnS" Mato Gondelle
-    //@website: www.yensdesign.com
-    //@email: yensamg@gmail.com
-    //@license: Feel free to use it, but keep this credits please!
-    /***************************/
-    
-    //disabling popup with jQuery magic!
-    function disablePopup() {
-        //disables popup only if it is enabled
-        if (popupStatus == 1) {
-            $("#backgroundPopup").fadeOut("fast");
-            $('#century_num-list').parent('div').removeClass('open');
-            $('#findspot_hier-list').parent('div').removeClass('open');
-            $('#category_hier-list').parent('div').removeClass('open');
-            $('#region_hier-list').parent('div').removeClass('open');
-            
-            popupStatus = 0;
-        }
-    }
-    
-    
-    function getURLParameter(name) {
-        return decodeURI(
-        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) ||[, null])[1]);
-    }
 });
+
+/***************************/
+//@Author: Adrian "yEnS" Mato Gondelle
+//@website: www.yensdesign.com
+//@email: yensamg@gmail.com
+//@license: Feel free to use it, but keep this credits please!
+/***************************/
+
+//disabling popup with jQuery magic!
+function disablePopup() {
+    //disables popup only if it is enabled
+    if (popupStatus == 1) {
+        $("#backgroundPopup").fadeOut("fast");
+        $('#century_num-list').parent('div').removeClass('open');
+        $('#findspot_hier-list').parent('div').removeClass('open');
+        $('#category_hier-list').parent('div').removeClass('open');
+        $('#region_hier-list').parent('div').removeClass('open');
+        
+        popupStatus = 0;
+    }
+}
+
+
+function getURLParameter(name) {
+    return decodeURI(
+    (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) ||[, null])[1]);
+}
