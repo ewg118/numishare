@@ -144,6 +144,10 @@
 					
 					<h3>Typology</h3>
 					
+					<xsl:if test="$collection_type = 'hoard'">
+						<xsl:apply-templates select="//lst[@name = 'coinType_facet' and number(int) &gt; 0]" mode="facet"/>
+					</xsl:if>
+					
 					<xsl:for-each select="//config/facets/facet[@role = 'typology' and @type = 'list']">
 						<xsl:variable name="field" select="."/>
 						

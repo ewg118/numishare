@@ -133,7 +133,7 @@
 					</h1>
 				</div>
 				<div class="col-md-6">
-					<p>Click on the <span class="glyphicon glyphicon-filter"/> icon to filter the map based on a query.</p>
+					<p>Click on the <span class="glyphicon glyphicon-filter"/> icon to filter the map based on a query. View this interface in <a href="maps/fullscreen">fullscreen mode</a>.</p>
 				</div>
 				<div class="col-md-6 text-right">
 					<p>
