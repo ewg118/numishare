@@ -339,9 +339,11 @@
 					<li>
 						<a href="{$display_path}visualize?compare={if (string($q)) then substring-after($query, 'q=') else '*:*'}" rel="nofollow">Distribution Visualization</a>
 					</li>
-					<li>
-						<a href="{$display_path}maps?q={if (string($q)) then substring-after($query, 'q=') else '*:*'}" rel="nofollow">Map Interface</a>
-					</li>
+					<xsl:if test="string($q)">
+						<li>
+							<a href="{$display_path}maps?q={$q}" rel="nofollow">Map Interface</a>
+						</li>
+					</xsl:if>					
 				</ul>
 			</div>
 		</div>
