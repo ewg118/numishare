@@ -140,7 +140,7 @@
 						<xsl:if test="not(string($q))">
 							<xsl:attribute name="class">hidden</xsl:attribute>
 						</xsl:if>
-						<a href="?q={if (string($q)) then $q else '*:*'}" id="permalink"><span class="glyphicon glyphicon-link"/> Copy Link</a>
+						<a href="maps?q={if (string($q)) then encode-for-uri($q) else '*:*'}" id="permalink"><span class="glyphicon glyphicon-link"/> Copy Link</a>
 						<span style="display:none" id="permalink-tooltip"> copied</span>
 					</p>
 				</div>

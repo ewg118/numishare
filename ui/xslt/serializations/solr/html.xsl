@@ -341,7 +341,7 @@
 					</li>
 					<xsl:if test="string($q)">
 						<li>
-							<a href="{$display_path}maps?q={$q}" rel="nofollow">Map Interface</a>
+							<a href="{$display_path}maps?q={encode-for-uri($q)}" rel="nofollow">Map Interface</a>
 						</li>
 					</xsl:if>					
 				</ul>
