@@ -1,3 +1,9 @@
+/************************************
+ Written by Ethan Gruber, egruber@numismatics.org
+ Library: jQuery, Leaflet
+ Date modified: May 2025
+ Description: Display the Leaflet map on the browse page, based on the Solr query
+ ************************************/
 $(document).ready(function () {
     var q = $('#current-query').text();
     
@@ -65,6 +71,7 @@ $(document).ready(function () {
             baseMaps[label] = eval(baselayers[i]);
         }
         
+        q = encodeURI(q);
         if (collection_type == 'hoard') {
             var mintLayer = L.geoJson.ajax(path + "mints.geojson?q=" + q, {
                 onEachFeature: onEachFeature,
