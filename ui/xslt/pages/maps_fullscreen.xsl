@@ -126,7 +126,7 @@
 			<xsl:choose>
 				<xsl:when test="$numFound &gt; 0">
 
-					<div class="row" style="height:100%">
+					<div class="row" style="height:100%">						
 						<div class="col-md-12 fullscreen" style="height:100%">
 							<div id="mapcontainer"/>
 						</div>
@@ -174,6 +174,7 @@
 				<span id="mapboxKey">
 					<xsl:value-of select="//config/mapboxKey"/>
 				</span>
+				<a href="maps?q={if (string($q)) then encode-for-uri($q) else '*:*'}" id="permalink"></a>
 				<span id="section">maps</span>
 				<span id="baselayers">
 					<xsl:value-of select="string-join(//config/baselayers/layer[@enabled = true()], ',')"/>
