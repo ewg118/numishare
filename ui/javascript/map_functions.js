@@ -1,6 +1,5 @@
 /************************************
- GET FACET TERMS IN RESULTS PAGE
- Written by Ethan Gruber, gruber@numismatics.org
+ Written by Ethan Gruber, egruber@numismatics.org
  Library: jQuery, Leaflet
  Date modified: May 2025
  Description: This utilizes ajax to populate the list of terms in the facet category in the results page.
@@ -18,12 +17,7 @@ $(document).ready(function () {
         var lang = langStr;
     }
     
-    var qStr = getURLParameter('q');
-    if (qStr == 'null') {
-        var q = '*:*';
-    } else {
-        var q = qStr;
-    }
+    var q = $('#permalink').attr('href').split('?q=')[1];
     
     var pipeline = $('#pipeline').text();
     
@@ -86,6 +80,7 @@ $(document).ready(function () {
         baseMaps[label] = eval(baselayers[i]);
     }
     
+    //var query = encodeURI(q);    
     if (collection_type == 'hoard') {
         //load individual hoards and mints for a hoard collection
         var mintLayer = L.geoJson.ajax(path + "mints.geojson?q=" + q + (lang.length > 0 ? '&lang=' + lang: ''), {
@@ -125,11 +120,9 @@ $(document).ready(function () {
         
         L.control.Legend({
             position: "bottomleft",
-            legends:[ {
-                label: "Marker1",
-                type: "image",
-                url: "marker/marker-red.png"
-            }]
+            symbolWidth: 24,
+            symbolHeight: 24,
+            legends: JSON.parse($('#legend').text())
         }).addTo(map);
         
         //add controls
@@ -243,15 +236,15 @@ $(document).ready(function () {
         //close window
         $.fancybox.close();
         
-        //update permalink
-        $('#permalink').attr('href', '?q=' + q);  
+        //update permalink        
+        $('#permalink').attr('href', '?q=' + encodeURIComponent(q));  
         $('#permalink').parent('p').removeClass('hidden');
         
         return false;
     });
     
     $('#permalink').click(function () {
-        var url = window.location.href.split('?')[0] + $(this).attr('href');
+        var url = window.location.href.split('?')[0] + '?' + $(this).attr('href').split('?')[1];
         navigator.clipboard.writeText(url);
         
         $('#permalink-tooltip').fadeIn(3);
