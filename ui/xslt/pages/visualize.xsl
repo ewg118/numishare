@@ -39,6 +39,7 @@
 	</xsl:param>
 
 	<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name = 'q']/value"/>
+	<xsl:variable name="tokenized_q"/>
 
 	<!-- typological comparison -->
 	<xsl:param name="dist" select="doc('input:request')/request/parameters/parameter[name = 'category']/value"/>

@@ -145,6 +145,10 @@
 
 	<!-- get the facets as a sequence -->
 	<xsl:variable name="facets" select="//config/facets/facet"/>
+	
+	<!-- empty variables from search -->
+	<xsl:param name="q"/>
+	<xsl:variable name="tokenized_q"/>
 
 	<!-- get non-coin-type RDF in the document -->
 	<xsl:variable name="rdf" as="element()*">

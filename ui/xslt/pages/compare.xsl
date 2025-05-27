@@ -29,6 +29,10 @@
 
 	<!-- load facets into variable -->
 	<xsl:variable name="facets" select="//lst[@name='facet_fields']"/>
+	
+	<!-- empty variables from search -->
+	<xsl:param name="q"/>
+	<xsl:variable name="tokenized_q"/>
 
 	<xsl:template match="/">
 		<html>

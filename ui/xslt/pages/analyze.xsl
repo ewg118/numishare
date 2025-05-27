@@ -48,6 +48,8 @@
 		<empty/>
 	</xsl:variable>
 	<xsl:variable name="id"/>
+	<xsl:param name="q"/>
+	<xsl:variable name="tokenized_q"/>
 
 	<!-- config variables -->
 	<xsl:variable name="url" select="//config/url"/>
