@@ -87,7 +87,7 @@
 				
 				<!-- analysis scripts -->
 				<script type="text/javascript" src="{$include_path}/javascript/d3.min.js"/>
-				<script type="text/javascript" src="{$include_path}/javascript/d3plus-plot.full.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/d3plus-plot.full.min.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/hoard_analysis_functions.js"/>				
 				<script type="text/javascript" src="{$include_path}/javascript/search_functions.js"/>
 				
