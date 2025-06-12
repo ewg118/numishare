@@ -1654,35 +1654,35 @@
 						<strong>EXPORT:</strong>
 					</li>
 					<li>
-						<a href="{$id}.xml">NUDS/XML</a>
+						<a href="{$id}.xml" rel="nofollow">NUDS/XML</a>
 					</li>
 					<li>
-						<a href="{$id}.rdf">RDF/XML</a>
+						<a href="{$id}.rdf" rel="nofollow">RDF/XML</a>
 					</li>
 					<li>
-						<a href="{$id}.ttl">TTL</a>
+						<a href="{$id}.ttl" rel="nofollow">TTL</a>
 					</li>
 					<li>
-						<a href="{$id}.jsonld">JSON-LD</a>
+						<a href="{$id}.jsonld" rel="nofollow">JSON-LD</a>
 					</li>
 					<xsl:if test="$recordType = 'physical'">
 						<li>
-							<a href="{$id}.jsonld?profile=linkedart">Linked.art JSON-LD</a>
+							<a href="{$id}.jsonld?profile=linkedart" rel="nofollow">Linked.art JSON-LD</a>
 						</li>
 					</xsl:if>
 					<xsl:if test="$hasMints = true() or $hasFindspots = true()">
 						<li>
-							<a href="{$id}.kml">KML</a>
+							<a href="{$id}.kml" rel="nofollow">KML</a>
 						</li>
 						<li>
-							<a href="{$id}.geojson">GeoJSON</a>
+							<a href="{$id}.geojson" rel="nofollow">GeoJSON</a>
 						</li>
 					</xsl:if>
 					<xsl:if test="descendant::mets:file[@USE = 'iiif']">
 						<xsl:variable name="manifestURI" select="concat($url, 'manifest/', $id)"/>
 
 						<li>
-							<a href="{$manifestURI}">IIIF Manifest</a>
+							<a href="{$manifestURI}" rel="nofollow">IIIF Manifest</a>
 							<xsl:text> </xsl:text>
 							<a href="http://numismatics.org/mirador/?manifest={encode-for-uri($manifestURI)}">(view)</a>
 						</li>
@@ -1694,7 +1694,7 @@
 						<xsl:if test="$hasIIIF = true()">
 							<xsl:variable name="manifestURI" select="concat($url, 'manifest/', $id)"/>
 							<li>
-								<a href="{$manifestURI}">IIIF Manifest</a>
+								<a href="{$manifestURI}" rel="nofollow">IIIF Manifest</a>
 								<xsl:text> </xsl:text>
 								<a href="http://www.kanzaki.com/works/2016/pub/image-annotator?u={encode-for-uri($manifestURI)}">(view)</a>
 							</li>

@@ -199,7 +199,7 @@
                     <xsl:variable name="typeURIs"
                         select="tokenize(res:binding[@name = 'types']/res:literal, '\|')"/>
                     <xsl:variable name="typeTitles"
-                        select="tokenize(res:binding[@name = 'typeTitles']/res:literal, '\|')"/>
+                        select="tokenize(res:binding[@name = 'typeLabels']/res:literal, '\|')"/>
 
                     <dt>
                         <xsl:value-of select="numishare:regularize_node('coinType', $lang)"/>

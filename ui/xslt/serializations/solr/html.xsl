@@ -315,7 +315,7 @@
 						<a href="{$display_path}query.csv{$query}" rel="nofollow">CSV</a>
 					</li>
 					<li>
-						<a href="{$display_path}feed/{$query}">Atom</a>
+						<a href="{$display_path}feed/{$query}" rel="nofollow">Atom</a>
 					</li>
 
 					<xsl:if test="//lst[ends-with(@name, '_geo')][int &gt; 0]">
@@ -330,7 +330,7 @@
 							</xsl:choose>
 						</li>
 						<li>
-							<a href="{$display_path}query.geojson{$query}">GeoJSON</a>
+							<a href="{$display_path}query.geojson{$query}" rel="nofollow">GeoJSON</a>
 						</li>
 					</xsl:if>
 					<li>
