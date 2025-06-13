@@ -1,7 +1,28 @@
 #!/bin/sh
+#restarts tomcat (and other services) after a timeout. the script should be run in cron as root
+SOLR_URL="http://localhost:8983/solr/"
+EXIST_URL="http://localhost:8888/exist/rest/db/"
 
-#restarts tomcat after a timeout. the script should be run in cron as root
+#check Solr
+curl -m 5 $SOLR_URL
 
+if [ $? -eq 0 ]; then
+    echo "Solr is up"
+else
+    service solr restart
+fi
+
+#check eXist-db
+curl -m 5 $EXIST_URL
+
+if [ $? -eq 0 ]; then
+    echo "eXist-db is up"
+else
+    service exist-db restart
+fi
+
+
+#check Tomcat and Apache
 service=tomcat10
 
 curl -m 10 http://localhost:8080/orbeon/numishare/
