@@ -38,7 +38,8 @@ if [ $? -eq 0 ]; then
         echo $(date --utc +%FT%T.%3NZ) "Restarted Tomcat due to Orbeon Forms error" >> /var/log/$service/restart.log
         service $service stop
         service $service start
-        service apache2 restart
+        service apache2 stop
+        service apache2 start
     else   
         #if Tomcat is successful, try Apache
         curl -m 10 http://localhost/
