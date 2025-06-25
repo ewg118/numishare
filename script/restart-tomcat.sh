@@ -9,7 +9,8 @@ curl -m 5 $SOLR_URL
 if [ $? -eq 0 ]; then
     echo "Solr is up"
 else
-    service solr restart
+    service solr stop
+    service solr start
 fi
 
 #check eXist-db
@@ -18,7 +19,8 @@ curl -m 5 $EXIST_URL
 if [ $? -eq 0 ]; then
     echo "eXist-db is up"
 else
-    service exist-db restart
+    service exist-db stop
+    service exist-db start
 fi
 
 
