@@ -14,6 +14,27 @@ $(document).ready(function () {
         }
     });
     
+    //show and populate data download options via js
+    $('.icons').find('a').each(function () {
+        href = $(this).attr('path');
+        $(this).attr('href', href);
+        $(this).removeAttr('path');
+    });
+    $('.icons').removeClass('hidden')
+    
+    //adjust the pagination attributes to prevent bots from paging
+    $('.pagination').find('a').each(function () {
+        href = $(this).attr('path');
+        $(this).attr('href', href);
+        $(this).removeAttr('path');
+    });
+    
+    $('.stacked_term').find('a').each(function () {
+        href = $(this).attr('path');
+        $(this).attr('href', href);
+        $(this).removeAttr('path');
+    });
+    
     //toggle divs
     $('.toggle-button').click(function () {
         var id = '#' + $(this).attr('id').split('-')[1] + '-container';

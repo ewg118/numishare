@@ -935,7 +935,7 @@
 					<div class="stacked_term alert alert-info row">
 						<xsl:if test="$rtl = true()">
 							<div class="col-md-2 left">
-								<a href="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
+								<a path="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
 									<span class="glyphicon glyphicon-remove"/>
 								</a>
 							</div>
@@ -953,7 +953,7 @@
 						</div>
 						<xsl:if test="not($rtl = true())">
 							<div class="col-md-2 right">
-								<a href="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
+								<a path="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
 									<span class="glyphicon glyphicon-remove"/>
 								</a>
 							</div>
@@ -1509,7 +1509,7 @@
 		<xsl:param name="class"/>
 		<xsl:param name="params"/>
 
-		<a class="btn btn-default {$class}" role="button" title="First" href="{if($pipeline='results') then 'results' else ''}?{string-join($params//param, '&amp;')}">
+		<a class="btn btn-default {$class}" role="button" title="First" path="{if($pipeline='results') then 'results' else ''}?{string-join($params//param, '&amp;')}">
 			<span class="glyphicon glyphicon-fast-{if (//config/languages/language[@code = $lang]/@rtl = true()) then 'forward' else 'backward'}"/>
 		</a>
 	</xsl:template>
@@ -1520,7 +1520,7 @@
 		<xsl:param name="params"/>
 
 		<a class="btn btn-default {$class}" role="button" title="Previous"
-			href="{if($pipeline='results') then 'results' else    ''}?{string-join($params//param, '&amp;')}&amp;start={$previous}">
+			path="{if($pipeline='results') then 'results' else    ''}?{string-join($params//param, '&amp;')}&amp;start={$previous}">
 			<span class="glyphicon glyphicon-{if (//config/languages/language[@code = $lang]/@rtl = true()) then 'forward' else 'backward'}"/>
 		</a>
 	</xsl:template>
@@ -1531,7 +1531,7 @@
 		<xsl:param name="params"/>
 
 		<a class="btn btn-default {$class}" role="button" title="Next"
-			href="{if($pipeline='results') then 'results' else ''}?{string-join($params//param, '&amp;')}&amp;start={$next}">
+			path="{if($pipeline='results') then 'results' else ''}?{string-join($params//param, '&amp;')}&amp;start={$next}">
 			<span class="glyphicon glyphicon-{if (//config/languages/language[@code = $lang]/@rtl = true()) then 'backward' else 'forward'}"/>
 		</a>
 	</xsl:template>
@@ -1542,7 +1542,7 @@
 		<xsl:param name="params"/>
 
 		<a class="btn btn-default {$class}" role="button"
-			href="{if($pipeline='results') then 'results' else ''}?{string-join($params//param, '&amp;')}&amp;start={($total * $rows) - $rows}">
+			path="{if($pipeline='results') then 'results' else ''}?{string-join($params//param, '&amp;')}&amp;start={($total * $rows) - $rows}">
 			<span class="glyphicon glyphicon-fast-{if (//config/languages/language[@code = $lang]/@rtl = true()) then 'backward' else 'forward'}"/>
 		</a>
 	</xsl:template>
@@ -1660,14 +1660,14 @@
 					</xsl:variable>
 
 					<a class="btn btn-default" style="margin-right:10px" title="List layout"
-						href="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
+						path="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
 						<xsl:if test="not($layout = 'grid')">
 							<xsl:attribute name="disabled">disabled</xsl:attribute>
 						</xsl:if>
 						<span class="glyphicon glyphicon-th-list"/>
 					</a>
 					<a class="btn btn-default" title="Grid layout"
-						href="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
+						path="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
 						<xsl:if test="$layout = 'grid'">
 							<xsl:attribute name="disabled">disabled</xsl:attribute>
 						</xsl:if>

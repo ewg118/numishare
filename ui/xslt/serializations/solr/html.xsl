@@ -298,6 +298,7 @@
 				</xsl:if>
 			</params>
 		</xsl:variable>
+		
 		<xsl:variable name="query">
 			<xsl:if test="count($requestParameters//param) &gt; 0">
 				<xsl:text>?</xsl:text>
@@ -305,43 +306,43 @@
 			<xsl:value-of select="string-join($requestParameters//param, '&amp;')"/>
 		</xsl:variable>
 
-		<div class="row pull-right icons">
+		<div class="row pull-right icons hidden">
 			<div class="col-md-12">
 				<ul class="list-inline">
 					<li>
 						<strong>EXPORT:</strong>
 					</li>
 					<li>
-						<a href="{$display_path}query.csv{$query}" rel="nofollow">CSV</a>
+						<a path="{$display_path}query.csv{$query}" rel="nofollow">CSV</a>
 					</li>
 					<li>
-						<a href="{$display_path}feed/{$query}" rel="nofollow">Atom</a>
+						<a path="{$display_path}feed/{$query}" rel="nofollow">Atom</a>
 					</li>
 
 					<xsl:if test="//lst[ends-with(@name, '_geo')][int &gt; 0]">
 						<li>
 							<xsl:choose>
 								<xsl:when test="/content/config/collection_type = 'hoard'">
-									<a href="{$display_path}findspots.kml{$query}" rel="nofollow">KML</a>
+									<a path="{$display_path}findspots.kml{$query}" rel="nofollow">KML</a>
 								</xsl:when>
 								<xsl:otherwise>
-									<a href="{$display_path}query.kml{$query}" rel="nofollow">KML</a>
+									<a path="{$display_path}query.kml{$query}" rel="nofollow">KML</a>
 								</xsl:otherwise>
 							</xsl:choose>
 						</li>
 						<li>
-							<a href="{$display_path}query.geojson{$query}" rel="nofollow">GeoJSON</a>
+							<a path="{$display_path}query.geojson{$query}" rel="nofollow">GeoJSON</a>
 						</li>
 					</xsl:if>
 					<li>
 						<strong>VIEW:</strong>
 					</li>
 					<li>
-						<a href="{$display_path}visualize?compare={if (string($q)) then substring-after($query, 'q=') else '*:*'}" rel="nofollow">Distribution Visualization</a>
+						<a path="{$display_path}visualize?compare={if (string($q)) then substring-after($query, 'q=') else '*:*'}" rel="nofollow">Distribution Visualization</a>
 					</li>
 					<xsl:if test="string($q)">
 						<li>
-							<a href="{$display_path}maps?q={encode-for-uri($q)}" rel="nofollow">Map Interface</a>
+							<a path="{$display_path}maps?q={encode-for-uri($q)}" rel="nofollow">Map Interface</a>
 						</li>
 					</xsl:if>					
 				</ul>
