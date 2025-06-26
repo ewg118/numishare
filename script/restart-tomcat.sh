@@ -9,16 +9,18 @@ curl -m 5 $SOLR_URL
 if [ $? -eq 0 ]; then
     echo "Solr is up"
 else
+    echo $(date --utc +%FT%T.%3NZ) "Restarted Solr" >> /var/log/$service/restart.log
     service solr stop
     service solr start
 fi
 
 #check eXist-db
-curl -m 5 $EXIST_URL
+curl -m 10 $EXIST_URL
 
 if [ $? -eq 0 ]; then
     echo "eXist-db is up"
 else
+    echo $(date --utc +%FT%T.%3NZ) "Restarted eXist-db" >> /var/log/$service/restart.log
     service exist-db stop
     service exist-db start
 fi
