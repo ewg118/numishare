@@ -256,7 +256,7 @@ $(document).ready(function () {
     
     //make ajax results pageable
     $('#results').on('click', '.paging_div .page-nos .btn-toolbar .pagination a.pagingBtn', function (event) {
-        var href = path + 'results_ajax' + $(this).attr('href');
+        var href = path + 'results_ajax' + $(this).attr('path');
         $. get (href, {
             pipeline: pipeline
         },
