@@ -1,11 +1,11 @@
 /************************************
  VISUALIZATION FUNCTIONS
  Written by Ethan Gruber, gruber@numismatics.org
- Date: May 2020
+ Date: January 2025
  Library: jQuery
  Description: Display functions for coin type records. Extended 2020 for displaying images of physical coins connected to hoards
  ************************************/
-$(document).ready(function () {
+$(document).ready(function () {    
     
     //display the magnifying glass glyph when hovering the mouse of divs that contain it (for IIIF)
     $('.g_doc:has(.iiif-zoom-glyph)').hover(function () {
@@ -26,6 +26,17 @@ $(document).ready(function () {
             }
         }
     });
+    
+    
+    
+    //show and populate data links by javascript
+    $('a[path]').each(function () {
+        href = $(this).attr('path');
+        $(this).attr('href', href);
+        $(this).removeAttr('path');
+    });
+    
+    $('.icons').removeClass('hidden')
     
     $('.iiif-image').fancybox({
         beforeShow: function () {
@@ -73,21 +84,21 @@ $(document).ready(function () {
         $. get ('../apis/getMetrical', {
             format: 'json', measurement: 'nmo:hasAxis', compare: query
         },
-        function (data) {            
+        function (data) {
             if (data[0][ 'average'] != null) {
                 $('#avg-axis').text(data[0][ 'average']);
             } else {
-                 $('#avg-axis').text('null');
+                $('#avg-axis').text('null');
             }
         });
         $. get ('../apis/getMetrical', {
             format: 'json', measurement: 'nmo:hasWeight', compare: query
         },
-        function (data) {            
+        function (data) {
             if (data[0][ 'average'] != null) {
                 $('#avg-weight').text(data[0][ 'average']);
             } else {
-                 $('#avg-weight').text('null');
+                $('#avg-weight').text('null');
             }
         });
         $. get ('../apis/getMetrical', {
@@ -97,7 +108,7 @@ $(document).ready(function () {
             if (data[0][ 'average'] != null) {
                 $('#avg-diameter').text(data[0][ 'average']);
             } else {
-                 $('#avg-diameter').text('null');
+                $('#avg-diameter').text('null');
             }
         });
     });
