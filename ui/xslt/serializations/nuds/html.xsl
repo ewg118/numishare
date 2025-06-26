@@ -383,6 +383,7 @@
 										<link type="text/css" href="{$include_path}/css/leaflet.legend.css" rel="stylesheet"/>
 										<script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"/>
 										<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" rel="stylesheet"/>
+										<script type="text/javascript" src="{$include_path}/javascript/display_functions.js"/>
 										<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
 									</xsl:if>
 								</xsl:if>
@@ -1309,7 +1310,7 @@
 							<ul>
 								<li>
 									<b><xsl:value-of select="numishare:regularize_node('hoard', $lang)"/>: </b>
-									<a href="{$display_path}results?q=hoard_uri:&#x022;{@xlink:href}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else
+									<a path="{$display_path}results?q=hoard_uri:&#x022;{@xlink:href}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else
 										''}">
 										<xsl:value-of select="$label"/>
 									</a>
@@ -1323,7 +1324,7 @@
 							<ul>
 								<li>
 									<b><xsl:value-of select="numishare:regularize_node('hoard', $lang)"/>: </b>
-									<a href="{$display_path}results?q=hoard_uri:&#x022;{@xlink:href}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else
+									<a path="{$display_path}results?q=hoard_uri:&#x022;{@xlink:href}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else
 										''}">
 										<xsl:value-of select="@xlink:href"/>
 									</a>

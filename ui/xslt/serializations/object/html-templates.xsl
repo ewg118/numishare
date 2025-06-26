@@ -395,7 +395,7 @@
 											</xsl:variable>
 
 											<a
-												href="{$display_path}results?q=region_hier:({encode-for-uri($selfQuery)}){if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+												path="{$display_path}results?q=region_hier:({encode-for-uri($selfQuery)}){if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 												<xsl:value-of select="$value"/>
 											</a>
 										</xsl:when>
@@ -409,7 +409,7 @@
 											</xsl:variable>
 
 											<a
-												href="{$display_path}results?q=region_hier:({encode-for-uri($selfQuery)}){if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+												path="{$display_path}results?q=region_hier:({encode-for-uri($selfQuery)}){if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 												<xsl:value-of select="$value"/>
 											</a>
 										</xsl:otherwise>
@@ -777,7 +777,7 @@
 				<xsl:choose>
 					<xsl:when test="string($position) and $positions//position[@value = $position]">
 						<a
-							href="{$display_path}results?q=symbol_{$side}_{$position}_facet:&#x022;{if (string($image-url)) then concat($image-url, '%7C', $value) else $value}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+							path="{$display_path}results?q=symbol_{$side}_{$position}_facet:&#x022;{if (string($image-url)) then concat($image-url, '%7C', $value) else $value}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 							<xsl:value-of select="$value"/>
 						</a>
 					</xsl:when>
@@ -785,13 +785,13 @@
 						<xsl:choose>
 							<xsl:when test="string($side)">
 								<a
-									href="{$display_path}results?q=symbol_{$side}_facet:&#x022;{if (string($image-url)) then concat($image-url, '%7C', $value) else $value}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+									path="{$display_path}results?q=symbol_{$side}_facet:&#x022;{if (string($image-url)) then concat($image-url, '%7C', $value) else $value}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 									<xsl:value-of select="$value"/>
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
 								<a
-									href="{$display_path}results?q=symbol_facet:&#x022;{if (string($image-url)) then concat($image-url, '%7C', $value) else $value}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+									path="{$display_path}results?q=symbol_facet:&#x022;{if (string($image-url)) then concat($image-url, '%7C', $value) else $value}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 									<xsl:value-of select="$value"/>
 								</a>
 							</xsl:otherwise>
@@ -815,7 +815,7 @@
 				</xsl:variable>
 
 
-				<a href="{$display_path}results?q={$field}_facet:&#x022;{$queryValue}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+				<a path="{$display_path}results?q={$field}_facet:&#x022;{$queryValue}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 					<xsl:choose>
 						<xsl:when test="contains($href, 'geonames.org')">
 							<xsl:choose>
@@ -1105,7 +1105,7 @@
 			<xsl:choose>
 				<xsl:when test="@xlink:title">
 					<a
-						href="{$display_path}results?q={if (@xlink:arcrole='nmo:hasTypeSeriesItem') then 'coinType' else 'reference'}_facet:&#x022;{@xlink:title}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+						path="{$display_path}results?q={if (@xlink:arcrole='nmo:hasTypeSeriesItem') then 'coinType' else 'reference'}_facet:&#x022;{@xlink:title}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 						<xsl:value-of select="@xlink:title"/>
 					</a>
 				</xsl:when>
@@ -1126,7 +1126,7 @@
 					</xsl:variable>
 
 					<a
-						href="{$display_path}results?q={if (@xlink:arcrole='nmo:hasTypeSeriesItem') then 'coinType' else 'reference'}_facet:&#x022;{$label}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+						path="{$display_path}results?q={if (@xlink:arcrole='nmo:hasTypeSeriesItem') then 'coinType' else 'reference'}_facet:&#x022;{$label}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 						<xsl:apply-templates select="*"/>
 					</a>
 				</xsl:otherwise>
@@ -1507,7 +1507,7 @@
 				</xsl:choose>
 			</xsl:variable>
 
-			<a href="{$display_path}results?q=category_hier:({encode-for-uri($fragment)}){if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+			<a path="{$display_path}results?q=category_hier:({encode-for-uri($fragment)}){if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 				<xsl:value-of select="."/>
 			</a>
 			<xsl:if test="not(position() = last())">
@@ -1544,7 +1544,7 @@
 				</xsl:choose>
 			</xsl:variable>
 
-			<a href="{$display_path}results?q=region_hier:({encode-for-uri($fragment)}){if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+			<a path="{$display_path}results?q=region_hier:({encode-for-uri($fragment)}){if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 				<xsl:value-of select="."/>
 			</a>
 			<xsl:if test="not(position() = last())">
@@ -1654,37 +1654,37 @@
 						<strong>EXPORT:</strong>
 					</li>
 					<li>
-						<a href="{$id}.xml" rel="nofollow">NUDS/XML</a>
+						<a path="{$id}.xml" rel="nofollow">NUDS/XML</a>
 					</li>
 					<li>
-						<a href="{$id}.rdf" rel="nofollow">RDF/XML</a>
+						<a path="{$id}.rdf" rel="nofollow">RDF/XML</a>
 					</li>
 					<li>
-						<a href="{$id}.ttl" rel="nofollow">TTL</a>
+						<a path="{$id}.ttl" rel="nofollow">TTL</a>
 					</li>
 					<li>
-						<a href="{$id}.jsonld" rel="nofollow">JSON-LD</a>
+						<a path="{$id}.jsonld" rel="nofollow">JSON-LD</a>
 					</li>
 					<xsl:if test="$recordType = 'physical'">
 						<li>
-							<a href="{$id}.jsonld?profile=linkedart" rel="nofollow">Linked.art JSON-LD</a>
+							<a path="{$id}.jsonld?profile=linkedart" rel="nofollow">Linked.art JSON-LD</a>
 						</li>
 					</xsl:if>
 					<xsl:if test="$hasMints = true() or $hasFindspots = true()">
 						<li>
-							<a href="{$id}.kml" rel="nofollow">KML</a>
+							<a path="{$id}.kml" rel="nofollow">KML</a>
 						</li>
 						<li>
-							<a href="{$id}.geojson" rel="nofollow">GeoJSON</a>
+							<a path="{$id}.geojson" rel="nofollow">GeoJSON</a>
 						</li>
 					</xsl:if>
 					<xsl:if test="descendant::mets:file[@USE = 'iiif']">
 						<xsl:variable name="manifestURI" select="concat($url, 'manifest/', $id)"/>
 
 						<li>
-							<a href="{$manifestURI}" rel="nofollow">IIIF Manifest</a>
+							<a path="{$manifestURI}" rel="nofollow">IIIF Manifest</a>
 							<xsl:text> </xsl:text>
-							<a href="http://numismatics.org/mirador/?manifest={encode-for-uri($manifestURI)}">(view)</a>
+							<a path="http://numismatics.org/mirador/?manifest={encode-for-uri($manifestURI)}">(view)</a>
 						</li>
 					</xsl:if>
 					<xsl:if test="$collection_type = 'cointype'">
@@ -1694,9 +1694,9 @@
 						<xsl:if test="$hasIIIF = true()">
 							<xsl:variable name="manifestURI" select="concat($url, 'manifest/', $id)"/>
 							<li>
-								<a href="{$manifestURI}" rel="nofollow">IIIF Manifest</a>
+								<a path="{$manifestURI}" rel="nofollow">IIIF Manifest</a>
 								<xsl:text> </xsl:text>
-								<a href="http://www.kanzaki.com/works/2016/pub/image-annotator?u={encode-for-uri($manifestURI)}">(view)</a>
+								<a path="http://www.kanzaki.com/works/2016/pub/image-annotator?u={encode-for-uri($manifestURI)}">(view)</a>
 							</li>
 						</xsl:if>
 					</xsl:if>

@@ -701,7 +701,7 @@
 					'findspot_type'"/>
 
 
-		<a href="{$display_path}results?q={$facet}_facet:&#x022;{.}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+		<a path="{$display_path}results?q={$facet}_facet:&#x022;{.}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 			<xsl:value-of select="."/>
 		</a>
 		<!-- display certainty -->
