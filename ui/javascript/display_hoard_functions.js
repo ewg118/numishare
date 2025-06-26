@@ -8,6 +8,14 @@ $(document).ready(function () {
     var path = $('#path').text();
     var lang = $('#lang').text();
     
+    //show and populate data links by javascript
+    $('a[path]').each(function () {
+        href = $(this).attr('path');
+        $(this).attr('href', href);
+        $(this).removeAttr('path');
+    });
+    $('.icons').removeClass('hidden')
+    
     $('.toggle-coin').click(function () {
         var id = $(this).attr('id').split('-')[0];
         $('#' + id + '-div').toggle('slow');
