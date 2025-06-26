@@ -363,8 +363,9 @@
 						
 						<xsl:choose>
 							<xsl:when test="$recordType = 'physical'">
+								<script type="text/javascript" src="{$include_path}/javascript/display_functions.js"/>
+								
 								<!--- IIIF -->
-
 								<!-- use Leaflet for standard photographs of coins in IIIF -->
 								<xsl:if test="descendant::mets:fileGrp[@USE = 'obverse' or @USE = 'reverse' or @USE = 'combined']/mets:file[@USE = 'iiif']">
 									<script type="text/javascript" src="{$include_path}/javascript/leaflet-iiif.js"/>
@@ -382,8 +383,7 @@
 										<script type="text/javascript" src="{$include_path}/javascript/leaflet.legend.js"/>
 										<link type="text/css" href="{$include_path}/css/leaflet.legend.css" rel="stylesheet"/>
 										<script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"/>
-										<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" rel="stylesheet"/>
-										<script type="text/javascript" src="{$include_path}/javascript/display_functions.js"/>
+										<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" rel="stylesheet"/>										
 										<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
 									</xsl:if>
 								</xsl:if>
