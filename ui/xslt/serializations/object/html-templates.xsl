@@ -612,7 +612,7 @@
 											</h4>
 											<ul>
 												<xsl:apply-templates mode="descMeta"/>
-												
+
 												<!-- if $hasDies is true for a physical collection, then display the die link(s) in the appropriate obverse/reverse section -->
 												<xsl:if test="$collection_type = 'object' and $hasDies = true()">
 													<xsl:choose>
@@ -636,15 +636,17 @@
 												</h4>
 												<ul>
 													<xsl:apply-templates select="*[not(local-name() = 'type' or local-name() = 'legend')]" mode="descMeta"/>
-													
+
 													<!-- if $hasDies is true for a physical collection, then display the die link(s) in the appropriate obverse/reverse section -->
 													<xsl:if test="$collection_type = 'object' and $hasDies = true()">
 														<xsl:choose>
 															<xsl:when test="self::nuds:obverse">
-																<xsl:apply-templates select="doc('input:dies')//res:sparql[1]/descendant::res:binding[@name = 'die']" mode="coin-die"/>
+																<xsl:apply-templates select="doc('input:dies')//res:sparql[1]/descendant::res:binding[@name = 'die']"
+																	mode="coin-die"/>
 															</xsl:when>
 															<xsl:when test="self::nuds:reverse">
-																<xsl:apply-templates select="doc('input:dies')//res:sparql[2]/descendant::res:binding[@name = 'die']" mode="coin-die"/>
+																<xsl:apply-templates select="doc('input:dies')//res:sparql[2]/descendant::res:binding[@name = 'die']"
+																	mode="coin-die"/>
 															</xsl:when>
 														</xsl:choose>
 													</xsl:if>
@@ -661,8 +663,8 @@
 											</li>
 										</xsl:if>
 									</xsl:otherwise>
-								</xsl:choose>								
-								
+								</xsl:choose>
+
 							</xsl:when>
 							<xsl:otherwise>
 								<li>
@@ -1232,9 +1234,11 @@
 		<xsl:apply-templates/>
 	</xsl:template>
 
-	<xsl:template match="tei:div[@type = 'transliteration']|tei:div[@type = 'translation']" mode="legend">
+	<xsl:template match="tei:div[@type = 'transliteration'] | tei:div[@type = 'translation']" mode="legend">
 		<xsl:text> [</xsl:text>
-		<xsl:value-of select="@type"/>
+		<strong>
+			<xsl:value-of select="@type"/>
+		</strong>
 		<xsl:text>:</xsl:text>
 		<xsl:apply-templates/>
 		<xsl:text>]</xsl:text>
