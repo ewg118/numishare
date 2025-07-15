@@ -218,7 +218,7 @@
                     <xsl:when test="$label = 'grade'">Grad</xsl:when>
                     <xsl:when test="$label = 'height'">Höhe</xsl:when>
                     <xsl:when test="$label = 'hoardDesc'">Schatzfundbeschreibung</xsl:when>
-                    <xsl:when test="$label = 'identifier'">Inventarnummer</xsl:when>
+                    <xsl:when test="$label = 'identifier'">Id-Nummer</xsl:when>
                     <xsl:when test="$label = 'issuer'">Herausgeber</xsl:when>
                     <xsl:when test="$label = 'landowner'">Grundstückseigentümer</xsl:when>
                     <xsl:when test="$label = 'legend'">Legende</xsl:when>
