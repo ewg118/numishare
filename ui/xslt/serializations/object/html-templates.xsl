@@ -140,6 +140,7 @@
 				<xsl:when test="child::tei:div">
 					<xsl:apply-templates select="tei:div[@type = 'edition']" mode="legend"/>
 					<xsl:apply-templates select="tei:div[@type = 'transliteration']" mode="legend"/>
+					<xsl:apply-templates select="tei:div[@type = 'translation']" mode="legend"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates/>
@@ -1231,8 +1232,10 @@
 		<xsl:apply-templates/>
 	</xsl:template>
 
-	<xsl:template match="tei:div[@type = 'transliteration']" mode="legend">
-		<xsl:text> [transliteration:</xsl:text>
+	<xsl:template match="tei:div[@type = 'transliteration']|tei:div[@type = 'translation']" mode="legend">
+		<xsl:text> [</xsl:text>
+		<xsl:value-of select="@type"/>
+		<xsl:text>:</xsl:text>
 		<xsl:apply-templates/>
 		<xsl:text>]</xsl:text>
 	</xsl:template>
