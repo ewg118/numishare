@@ -285,12 +285,6 @@
 					<xsl:with-param name="recordType" select="$recordType"/>
 					<xsl:with-param name="primary" select="$primary"/>
 				</xsl:apply-templates>
-				
-				<!--<xsl:for-each select="tei:div[not(@type = 'edition')]">
-					<field name="{$side}_leg_text">
-						<xsl:value-of select="normalize-space(.)"/>
-					</field>
-				</xsl:for-each>-->
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:if test="string(.)">
@@ -319,10 +313,16 @@
 			</xsl:otherwise>
 		</xsl:choose>
 
-		<!-- index transliterations for text searchign -->
+		<!-- index transliterations and translations for text searchign -->
 		<xsl:if test="child::tei:div[@type = 'transliteration']">
 			<field name="{$side}_leg_text">
 				<xsl:apply-templates select="tei:div[@type = 'transliteration']"/>
+			</field>
+		</xsl:if>
+		
+		<xsl:if test="child::tei:div[@type = 'translation']">
+			<field name="{$side}_leg_text">
+				<xsl:apply-templates select="tei:div[@type = 'translation']"/>
 			</field>
 		</xsl:if>
 	</xsl:template>
