@@ -286,11 +286,11 @@
 					<xsl:with-param name="primary" select="$primary"/>
 				</xsl:apply-templates>
 				
-				<xsl:for-each select="tei:div[not(@type = 'edition')]">
+				<!--<xsl:for-each select="tei:div[not(@type = 'edition')]">
 					<field name="{$side}_leg_text">
 						<xsl:value-of select="normalize-space(.)"/>
 					</field>
-				</xsl:for-each>
+				</xsl:for-each>-->
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:if test="string(.)">
