@@ -1149,23 +1149,26 @@
 			<b><xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>: </b>
 
 			<!-- structure a bibliographic reference -->
-			<xsl:for-each select="tei:author">
-				<xsl:if test="(position() = last()) and position() &gt; 1">
-					<xsl:text> and</xsl:text>
+			<xsl:if test="tei:author">
+				<xsl:for-each select="tei:author">
+					<xsl:if test="(position() = last()) and position() &gt; 1">
+						<xsl:text> and</xsl:text>
+					</xsl:if>
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="."/>
+					<xsl:if test="not(position() = last()) and (count(../tei:author) &gt; 2)">
+						<xsl:text>,</xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+				
+				<!--insert period after final author if it isn't embedded in the value -->
+				<xsl:if test="not(substring(tei:author[last()], -1, 1) = '.')">
+					<xsl:text>. </xsl:text>
 				</xsl:if>
-				<xsl:text> </xsl:text>
-				<xsl:value-of select="."/>
-				<xsl:if test="not(position() = last()) and (count(../tei:author) &gt; 2)">
-					<xsl:text>,</xsl:text>
-				</xsl:if>
-			</xsl:for-each>
-
-			<!--insert period after final author if it isn't embedded in the value -->
-			<xsl:if test="not(substring(tei:author[last()], -1, 1) = '.')">
-				<xsl:text>. </xsl:text>
 			</xsl:if>
 
 			<xsl:apply-templates select="tei:title"/>
+			<xsl:apply-templates select="tei:seg"/>
 
 			<xsl:if test="tei:publisher or tei:pubPlace or tei:date">
 				<xsl:text>. </xsl:text>
@@ -1211,6 +1214,14 @@
 			</xsl:if>
 			<xsl:apply-templates/>
 		</i>
+		
+		<!-- display the @key URI link after the title if there is no id number -->
+		<xsl:if test="matches(@key, '^https?://') and not(parent::node()/tei:idno)">
+			<xsl:text> </xsl:text>
+			<a href="{@key}" target="_blank">
+				<span class="glyphicon glyphicon-new-window"/>
+			</a>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="tei:idno">
