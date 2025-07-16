@@ -1234,6 +1234,17 @@
 			</a>
 		</xsl:if>
 	</xsl:template>
+	
+	<xsl:template match="tei:seg">
+		<xsl:if test="preceding-sibling::*">
+			<xsl:text>, </xsl:text>
+		</xsl:if>		
+		<xsl:if test="@type">
+			<xsl:value-of select="@type"/>
+			<xsl:text> </xsl:text>			
+		</xsl:if>
+		<xsl:value-of select="."/>
+	</xsl:template>
 
 	<xsl:template match="tei:div" mode="descMeta">
 		<li>
