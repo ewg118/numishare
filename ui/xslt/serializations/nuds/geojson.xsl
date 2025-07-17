@@ -167,8 +167,12 @@
 				<type>FeatureCollection</type>
 				<features>
 					<_array>
+						<!-- mints: only call template from NUDS Group for unique URIs -->
+						<xsl:apply-templates select="$nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint' or @xlink:role = 'productionPlace'][string(@xlink:href) and not(preceding::*/@xlink:href = @xlink:href)]"/>
+						
+						<!-- findspots -->
 						<xsl:apply-templates
-							select="descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'numismatics.org')] | descendant::nuds:hoard[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'numismatics.org')] | $nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)] | $nudsGroup/descendant::nuds:geogname[@xlink:role = 'productionPlace'][string(@xlink:href)]"/>
+							select="descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'numismatics.org')] | descendant::nuds:hoard[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'numismatics.org')]"/>
 
 						<!-- if there's no linkable mint look for a region -->
 						<xsl:if
