@@ -3,7 +3,7 @@
 	Author: Ethan Gruber
 	Function: this XSLT stylesheet is included into display.xsl.  It contains shared templates and functions that may be used in object-
 	specific stylesheets. Includes templates for bibliographies in MODS and TEI/EpiDoc extensions
-	Modification date: 2022
+	Modification date: 2025
 -->
 <xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
@@ -482,6 +482,8 @@
 
 					<!-- display certainty -->
 					<xsl:apply-templates select="@certainty"/>
+					
+					<xsl:apply-templates select="@variant"/>
 
 					<!-- display calendar -->
 					<xsl:if test="string(@calendar)">
@@ -862,6 +864,16 @@
 			<xsl:text>)</xsl:text>
 		</i>
 	</xsl:template>
+	
+	<!-- *************** DISPLAY VARIANT FLAG, IF TRUE ******************-->
+	<xsl:template match="@variant">
+		<xsl:if test=". = true()">
+			<xsl:text> </xsl:text>
+			<i>
+				<xsl:text>(var.)</xsl:text>
+			</i>
+		</xsl:if>
+	</xsl:template>
 
 	<!-- *************** RENDER RDF ABOUT SYMBOLS ******************-->
 	<xsl:template match="nmo:Monogram | crm:E37_Mark">
@@ -1141,6 +1153,7 @@
 				</a>
 			</xsl:if>
 			<xsl:apply-templates select="@certainty"/>
+			<xsl:apply-templates select="@variant"/>
 		</li>
 	</xsl:template>
 
