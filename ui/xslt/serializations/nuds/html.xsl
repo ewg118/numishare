@@ -91,7 +91,12 @@
 	<xsl:variable name="image_location" select="/content/config/theme/layouts/display/nuds/image_location"/>
 	<xsl:variable name="display_path">
 		<xsl:if test="not(string($mode))">
-			<xsl:text>../</xsl:text>
+			<xsl:choose>
+				<xsl:when test="string(//config/uri_space) and $recordType = 'physical'">					
+					<xsl:value-of select="if (doc('input:request')/request/scheme = 'https') then replace($url, 'http://', 'https://') else $url"/>
+				</xsl:when>
+				<xsl:otherwise>../</xsl:otherwise>
+			</xsl:choose>
 		</xsl:if>
 	</xsl:variable>
 	<xsl:variable name="include_path" select="
