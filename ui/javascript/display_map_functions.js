@@ -16,6 +16,12 @@ $(document).ready(function () {
 function initialize_map(id, path, lang) {
     var baselayers = $('#baselayers').text().split(',');
     var mapboxKey = $('#mapboxKey').text();
+    
+    //update the protocol if the location URL is https but the path is http
+    if (location.protocol == 'https:' && path.includes('http://')) {
+        path = path.replace('http://', 'https://');        
+    }
+    
     var url = path + id + ".geojson" + (lang.length > 0 ? '?lang=' + lang: '');
     
     //baselayers
