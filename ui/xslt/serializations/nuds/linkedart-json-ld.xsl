@@ -2,9 +2,9 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mets="http://www.loc.gov/METS/"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:nuds="http://nomisma.org/nuds" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#"
-	xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#" xmlns:tei="http://www.tei-c.org/ns/1.0"
-	xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all" version="2.0">
+	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#" xmlns:nomisma="http://nomisma.org/"
+	xmlns:nmo="http://nomisma.org/ontology#" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all"
+	version="2.0">
 	<xsl:include href="../json/json-metamodel.xsl"/>
 	<xsl:include href="../../functions.xsl"/>
 
@@ -13,8 +13,7 @@
 	<!-- config variables -->
 	<xsl:variable name="url" select="/content/config/url"/>
 	<xsl:variable name="id" select="normalize-space(//*[local-name() = 'recordId'])"/>
-	<xsl:variable name="objectUri"
-		select="
+	<xsl:variable name="objectUri" select="
 			if (/content/config/uri_space) then
 				concat(/content/config/uri_space, $id)
 			else
@@ -82,8 +81,7 @@
 
 	<xsl:variable name="coinType_uris" as="node()*">
 		<uris>
-			<xsl:for-each
-				select="descendant::nuds:typeDesc[string(@xlink:href)] | descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]">
+			<xsl:for-each select="descendant::nuds:typeDesc[string(@xlink:href)] | descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]">
 				<uri>
 					<xsl:value-of select="@xlink:href"/>
 				</uri>
@@ -95,12 +93,10 @@
 	<!-- get non-coin-type RDF in the document -->
 	<xsl:variable name="rdf" as="element()*">
 		<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-			xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-			xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#"
-			xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#">
+			xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+			xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#" xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#">
 			<xsl:variable name="id-param">
-				<xsl:for-each
-					select="
+				<xsl:for-each select="
 						distinct-values(descendant::*[not(local-name() = 'typeDesc') and not(local-name() = 'reference')][contains(@xlink:href,
 						'nomisma.org')]/@xlink:href | $nudsGroup/descendant::*[not(local-name() = 'object') and not(local-name() = 'typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
 					<xsl:value-of select="substring-after(., 'id/')"/>
@@ -165,7 +161,7 @@
 
 		<xsl:apply-templates select="nuds:physDesc"/>
 		<xsl:apply-templates select="$nudsGroup//nuds:typeDesc"/>
-
+		<xsl:apply-templates select="nuds:findspotDesc"/>
 		<xsl:apply-templates select="nuds:adminDesc/nuds:collection"/>
 	</xsl:template>
 
@@ -236,14 +232,12 @@
 					</technique>
 				</xsl:if>
 				<xsl:if test="nuds:date or nuds:dateRange">
-					<xsl:variable name="fromDate"
-						select="
+					<xsl:variable name="fromDate" select="
 							if (nuds:dateRange/nuds:fromDate/@standardDate) then
 								nuds:dateRange/nuds:fromDate/@standardDate
 							else
 								nuds:date/@standardDate"/>
-					<xsl:variable name="toDate"
-						select="
+					<xsl:variable name="toDate" select="
 							if (nuds:dateRange/nuds:toDate/@standardDate) then
 								nuds:dateRange/nuds:toDate/@standardDate
 							else
@@ -655,6 +649,53 @@
 			</_object>
 		</current_owner>
 
+	</xsl:template>
+
+	<xsl:template match="nuds:findspotDesc">
+		<xsl:apply-templates select="nuds:findspot[nuds:fallsWithin/nuds:geogname[@xlink:href]]" mode="findspot"/>
+	</xsl:template>
+
+	<xsl:template match="nuds:findspot">
+		<encountered_by>
+			<type>Activity</type>
+			<_label>Find</_label>
+			<classified_as>
+				<_array>
+					<_object>
+						<id>aat:300055863</id>
+						<type>Type</type>
+						<_label>Provenance Activity</_label>
+					</_object>
+				</_array>
+			</classified_as>
+			<took_place_at>
+				<_array>
+					<xsl:apply-templates select="nuds:fallsWithin/nuds:geogname[@xlink:href]"/>
+				</_array>
+			</took_place_at>
+		</encountered_by>
+	</xsl:template>
+
+	<xsl:template match="nuds:geogname" mode="findspot">
+		<_object>
+			<type>Place</type>
+			<_label>
+				<xsl:value-of select="."/>
+			</_label>
+			<part_of>
+				<_array>
+					<_object>
+						<id>
+							<xsl:value-of select="@xlink:href"/>
+						</id>
+						<type>Place</type>
+						<_label>
+							<xsl:value-of select="."/>
+						</_label>
+					</_object>
+				</_array>
+			</part_of>
+		</_object>
 	</xsl:template>
 
 	<!-- ***** Digitial representations ***** -->
