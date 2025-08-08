@@ -652,7 +652,7 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:findspotDesc">
-		<xsl:apply-templates select="nuds:findspot[nuds:fallsWithin/nuds:geogname[@xlink:href]]" mode="findspot"/>
+		<xsl:apply-templates select="nuds:findspot[nuds:fallsWithin/nuds:geogname[@xlink:href]]"/>
 	</xsl:template>
 
 	<xsl:template match="nuds:findspot">
@@ -670,7 +670,7 @@
 			</classified_as>
 			<took_place_at>
 				<_array>
-					<xsl:apply-templates select="nuds:fallsWithin/nuds:geogname[@xlink:href]"/>
+					<xsl:apply-templates select="nuds:fallsWithin/nuds:geogname[@xlink:href]" mode="findspot"/>
 				</_array>
 			</took_place_at>
 		</encountered_by>
