@@ -657,22 +657,24 @@
 
 	<xsl:template match="nuds:findspot">
 		<encountered_by>
-			<type>Activity</type>
-			<_label>Find</_label>
-			<classified_as>
-				<_array>
-					<_object>
-						<id>aat:300055863</id>
-						<type>Type</type>
-						<_label>Provenance Activity</_label>
-					</_object>
-				</_array>
-			</classified_as>
-			<took_place_at>
-				<_array>
-					<xsl:apply-templates select="nuds:fallsWithin/nuds:geogname[@xlink:href]" mode="findspot"/>
-				</_array>
-			</took_place_at>
+			<_object>
+				<type>Activity</type>
+				<_label>Find</_label>
+				<classified_as>
+					<_array>
+						<_object>
+							<id>aat:300055863</id>
+							<type>Type</type>
+							<_label>Provenance Activity</_label>
+						</_object>
+					</_array>
+				</classified_as>
+				<took_place_at>
+					<_array>
+						<xsl:apply-templates select="nuds:fallsWithin/nuds:geogname[@xlink:href]" mode="findspot"/>
+					</_array>
+				</took_place_at>
+			</_object>			
 		</encountered_by>
 	</xsl:template>
 
