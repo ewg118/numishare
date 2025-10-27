@@ -83,6 +83,12 @@
 						<xsl:value-of select="concat($uri_space, .)"/>
 					</field>
 				</xsl:for-each>
+				
+				<xsl:for-each select="nuds:control/nuds:otherRecordId[@semantic = 'foaf:homepage']">
+					<field name="homepage_uri">
+						<xsl:value-of select="."/>
+					</field>
+				</xsl:for-each>
 
 				<xsl:choose>
 					<xsl:when test="$collection-type = 'cointype'">
