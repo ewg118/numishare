@@ -1641,6 +1641,11 @@
 			<xsl:with-param name="side"/>
 			<xsl:with-param name="position"/>
 		</xsl:call-template>
+		<xsl:if test="string(@xlink:href)">
+			<a href="{@xlink:href}" target="_blank" class="external_link">
+				<span class="glyphicon glyphicon-new-window"/>
+			</a>
+		</xsl:if>
 		<xsl:text>)</xsl:text>
 	</xsl:template>
 
