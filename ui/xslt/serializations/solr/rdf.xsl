@@ -209,6 +209,11 @@
 				</xsl:otherwise>
 			</xsl:choose>
 			
+			<xsl:if test="arr[@name = 'homepage_uri']">
+				<xsl:for-each select="arr[@name = 'homepage_uri']/str">
+					<foaf:homepage rdf:resource="{.}"/>
+				</xsl:for-each>
+			</xsl:if>			
 			
 			<xsl:for-each select="arr[@name = 'collection_uri']/str">
 				<nmo:hasCollection rdf:resource="{.}"/>
