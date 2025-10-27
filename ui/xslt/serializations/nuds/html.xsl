@@ -635,9 +635,11 @@
 								<xsl:if test="nuds:control/nuds:otherRecordId[@semantic = 'foaf:homepage']">
 									<p>
 										<strong>URL: </strong>
-										<a href="{nuds:control/nuds:otherRecordId[@semantic = 'foaf:homepage']}" title="{nuds:control/nuds:otherRecordId[@semantic = 'foaf:homepage']}" rel="foaf:homepage">
-											<xsl:value-of select="nuds:control/nuds:otherRecordId[@semantic = 'foaf:homepage']"/>
-										</a>
+										<code>
+											<a href="{nuds:control/nuds:otherRecordId[@semantic = 'foaf:homepage']}" title="{nuds:control/nuds:otherRecordId[@semantic = 'foaf:homepage']}" rel="foaf:homepage">
+												<xsl:value-of select="nuds:control/nuds:otherRecordId[@semantic = 'foaf:homepage']"/>
+											</a>
+										</code>										
 									</p>
 								</xsl:if>
 
@@ -1605,9 +1607,11 @@
 				<span class="glyphicon glyphicon-new-window"/>
 			</a>
 		</xsl:if>
+		
+		<xsl:apply-templates select="nuds:persname|nuds:corpname|nuds:famname" mode="provenance"/>
 
 		<xsl:if test="nuds:identifier">
-			<xsl:text>no. </xsl:text>
+			<xsl:text>, no. </xsl:text>
 			<xsl:value-of select="nuds:identifier"/>
 		</xsl:if>
 	</xsl:template>
@@ -1624,6 +1628,20 @@
 			<xsl:value-of select="concat(nuds:fromDate, ' - ', nuds:toDate)"/>
 		</strong>
 		<xsl:text>: </xsl:text>
+	</xsl:template>
+	
+	<xsl:template match="nuds:persname|nuds:corpname|nuds:famname" mode="provenance">
+		<xsl:text> (</xsl:text>
+		<xsl:call-template name="display-label">
+			<xsl:with-param name="field">
+				<xsl:if test="//config/facets/facet[. = 'seller_facet']">seller</xsl:if>
+			</xsl:with-param>
+			<xsl:with-param name="value" select="."/>
+			<xsl:with-param name="href" select="@xlink:href"/>
+			<xsl:with-param name="side"/>
+			<xsl:with-param name="position"/>
+		</xsl:call-template>
+		<xsl:text>)</xsl:text>
 	</xsl:template>
 
 	<!-- flatten adminDesc editors -->

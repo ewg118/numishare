@@ -1019,6 +1019,17 @@
 					else
 						normalize-space(.)"/>
 		</field>
+		
+		<xsl:if test="nuds:saleCatalog/@xlink:href">
+			<field name="provenance_uri">
+				<xsl:value-of select="nuds:saleCatalog/@xlink:href"/>
+			</field>
+			<field name="source_uri">
+				<xsl:value-of select="nuds:saleCatalog/@xlink:href"/>
+			</field>
+		</xsl:if>
+		
+		<xsl:apply-templates select="nuds:persname|nuds:corpname|nuds:famname"/>
 	</xsl:template>
 
 	<xsl:template match="nuds:identifier">
