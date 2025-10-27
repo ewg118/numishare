@@ -132,6 +132,14 @@
                         </xsl:for-each>
                     </dd>
                 </xsl:if>
+                
+                <!-- insert additional homepage link, e.g., if the object is derived from SITNAM but links to an auction catalog record -->
+                <xsl:if test="res:binding[@name = 'homepage']">
+                    <dt>URL</dt>
+                    <dd>
+                        <xsl:value-of select="res:binding[@name = 'homepage']/res:uri"/>
+                    </dd>
+                </xsl:if>
 
                 <!-- typological attributes for coins connected to types -->
                 <xsl:if test="string(res:binding[@name = 'axis']/res:literal)">

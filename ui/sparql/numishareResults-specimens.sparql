@@ -6,7 +6,7 @@ PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX void:	<http://rdfs.org/ns/void#>
 
-SELECT DISTINCT ?object ?identifier ?collection ?datasetTitle ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef WHERE {
+SELECT DISTINCT ?object ?identifier ?collection ?datasetTitle ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef ?homepage WHERE {
 { ?object a nmo:NumismaticObject ;
  nmo:hasTypeSeriesItem <typeUri>}
 UNION { <typeUri> skos:exactMatch ?match .
@@ -30,4 +30,5 @@ OPTIONAL { ?object nmo:hasObverse/foaf:thumbnail ?obvThumb }
 OPTIONAL { ?object nmo:hasObverse/foaf:depiction ?obvRef }
 OPTIONAL { ?object nmo:hasReverse/foaf:thumbnail ?revThumb }
 OPTIONAL { ?object nmo:hasReverse/foaf:depiction ?revRef }
+OPTIONAL { ?object foaf:homepage ?homepage }
 } HAVING (isURI(?comThumb) || isURI(?comRef) || isURI(?obvThumb) || isURI(?obvRef) || isURI(?revThumb) || isURI(?revRef)) ORDER BY ASC(?datasetTitle) LIMIT 1

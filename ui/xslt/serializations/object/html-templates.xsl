@@ -1228,8 +1228,8 @@
 			<xsl:apply-templates/>
 		</i>
 		
-		<!-- display the @key URI link after the title if there is no id number -->
-		<xsl:if test="matches(@key, '^https?://') and not(parent::node()/tei:idno)">
+		<!-- display the @key URI link -->
+		<xsl:if test="matches(@key, '^https?://')">
 			<xsl:text> </xsl:text>
 			<a href="{@key}" target="_blank">
 				<span class="glyphicon glyphicon-new-window"/>

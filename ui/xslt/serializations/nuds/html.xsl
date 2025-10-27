@@ -631,6 +631,15 @@
 										</a>
 									</code>
 								</p>
+								
+								<xsl:if test="nuds:control/nuds:otherRecordId[@semantic = 'foaf:homepage']">
+									<p>
+										<strong>URL: </strong>
+										<a href="{nuds:control/nuds:otherRecordId[@semantic = 'foaf:homepage']}" title="{nuds:control/nuds:otherRecordId[@semantic = 'foaf:homepage']}" rel="foaf:homepage">
+											<xsl:value-of select="nuds:control/nuds:otherRecordId[@semantic = 'foaf:homepage']"/>
+										</a>
+									</p>
+								</xsl:if>
 
 								<p>
 									<xsl:if test="count($subtypes//subtype) &gt; 0">
