@@ -83,12 +83,6 @@
 						<xsl:value-of select="concat($uri_space, .)"/>
 					</field>
 				</xsl:for-each>
-				
-				<xsl:for-each select="nuds:control/nuds:otherRecordId[@semantic = 'foaf:homepage']">
-					<field name="homepage_uri">
-						<xsl:value-of select="."/>
-					</field>
-				</xsl:for-each>
 
 				<xsl:choose>
 					<xsl:when test="$collection-type = 'cointype'">
@@ -122,9 +116,17 @@
 			<field name="recordType">
 				<xsl:value-of select="@recordType"/>
 			</field>
+			
 			<xsl:if test="nuds:control/nuds:publicationStatus = 'approvedSubtype'">
 				<field name="subtype">true</field>
 			</xsl:if>
+			
+			<xsl:for-each select="nuds:control/nuds:otherRecordId[@semantic = 'foaf:homepage']">
+				<field name="homepage_uri">
+					<xsl:value-of select="."/>
+				</field>
+			</xsl:for-each>
+			
 			<field name="publisher_display">
 				<xsl:value-of select="$publisher"/>
 			</field>
