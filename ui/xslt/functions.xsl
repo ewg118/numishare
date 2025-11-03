@@ -2111,6 +2111,7 @@
                     <xsl:when test="$label = 'material'">Material</xsl:when>
                     <xsl:when test="$label = 'measurementsSet'">Measurements</xsl:when>
                     <xsl:when test="$label = 'mint'">Mint</xsl:when>
+                    <xsl:when test="$label = 'namedEntity'">Named Entity</xsl:when>
                     <xsl:when test="$label = 'note'">Note</xsl:when>
                     <xsl:when test="$label = 'noteSet'">Notes</xsl:when>
                     <xsl:when test="$label = 'objectType'">Object Type</xsl:when>
