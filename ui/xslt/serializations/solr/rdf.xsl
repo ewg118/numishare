@@ -211,7 +211,7 @@
 			
 			<xsl:if test="arr[@name = 'homepage_uri']">
 				<xsl:for-each select="arr[@name = 'homepage_uri']/str">
-					<foaf:homepage rdf:resource="{.}"/>
+					<foaf:homepage rdf:resource="{replace(., '\|', '%7C')}"/>
 				</xsl:for-each>
 			</xsl:if>			
 			
