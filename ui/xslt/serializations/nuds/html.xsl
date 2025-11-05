@@ -1376,7 +1376,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates select="nuds:description | nuds:fallsWithin/nuds:geogname" mode="descMeta"/>
-					<xsl:apply-templates select="parent::node()/nuds:discovery/nuds:project/nuds:title" mode="descMeta"/>
+					<!--<xsl:apply-templates select="parent::node()/nuds:discovery/nuds:project/nuds:title" mode="descMeta"/>-->
 					<xsl:apply-templates select="nuds:geogname[not(@xlink:href)]" mode="descMeta"/>
 					<xsl:apply-templates select="nuds:spatialContext" mode="descMeta"/>
 				</xsl:otherwise>
@@ -1397,7 +1397,7 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:project" mode="descMeta">
-		<xsl:apply-templates select="*[not(self::nuds:title)]" mode="descMeta"/>
+		<xsl:apply-templates select="*" mode="descMeta"/>
 	</xsl:template>
 
 	<xsl:template match="nuds:project/nuds:title" mode="descMeta">
