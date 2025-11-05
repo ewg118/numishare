@@ -1405,7 +1405,7 @@
 			<b><xsl:value-of select="numishare:regularize_node('projectName', $lang)"/>: </b>
 
 			<xsl:call-template name="display-label">
-				<xsl:with-param name="field">projectName</xsl:with-param>
+				<xsl:with-param name="field">excavation</xsl:with-param>
 				<xsl:with-param name="value" select="."/>
 				<xsl:with-param name="href"/>
 				<xsl:with-param name="position"/>
