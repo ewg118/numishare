@@ -12,7 +12,7 @@ PREFIX edm: <http://www.europeana.eu/schemas/edm/>
 SELECT DISTINCT ?object ?title ?identifier ?collection ?publisher ?dataset ?datasetTitle ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef ?obvManifest ?revManifest ?comManifest (GROUP_CONCAT(DISTINCT ?type ; separator='|') AS ?types) (GROUP_CONCAT(DISTINCT ?typeTitle ; separator='|') AS ?typeTitles) (GROUP_CONCAT(DISTINCT ?mint ; separator='|') AS ?mints) (GROUP_CONCAT(DISTINCT ?denomination ; separator='|') AS ?denominations) (GROUP_CONCAT(DISTINCT ?authority ; separator='|') AS ?authorities) WHERE {
 { ?object a nmo:NumismaticObject ;
  dcterms:isPartOf <hoardURI>}
-UNION { <http://coinhoards.org/id/igch1764> skos:exactMatch ?match .
+UNION { <hoardURI> skos:exactMatch ?match .
 ?object dcterms:isPartOf ?match ;
   a nmo:NumismaticObject }
 ?object dcterms:title ?title .
