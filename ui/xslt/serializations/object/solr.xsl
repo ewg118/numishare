@@ -101,9 +101,11 @@
 			</xsl:variable>			
 			
 			<!-- use XXForms function to load the FastAPI JSON document and convert to XML for processing -->
-			<xsl:if test="unparsed-text-available('https://numismatics.org/nnlp/')">
-				<xsl:copy-of select="xxf:json-to-xml(unparsed-text(concat('https://numismatics.org/nnlp/expand?identifiers=', encode-for-uri($ids))))"/>
-			</xsl:if>			
+			<xsl:if test="string-length($ids) &gt; 0">
+				<xsl:if test="unparsed-text-available('https://numismatics.org/nnlp/')">
+					<xsl:copy-of select="xxf:json-to-xml(unparsed-text(concat('https://numismatics.org/nnlp/expand?identifiers=', encode-for-uri($ids))))"/>
+				</xsl:if>
+			</xsl:if>						
 		</concepts>
 	</xsl:variable>
 
