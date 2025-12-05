@@ -46,8 +46,12 @@
 									</field>
 								</xsl:for-each>
 							</xsl:if>
+						</xsl:when>
+						<xsl:when test="@localType = 'concept'">
+							<!-- NLP concepts -->
+							<xsl:variable name="conceptURI" select="@xlink:href"/>
 							
-							
+							<xsl:apply-templates select="$concepts/json[@type = 'array']/_[@type = 'object'][concept = $conceptURI]" mode="nlp"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<field name="{@localType}_facet">
@@ -112,6 +116,36 @@
 				</field>
 			</xsl:if>
 		</xsl:for-each>
+	</xsl:template>
+	
+	<xsl:template match="_[@type = 'object']" mode="nlp">
+		<field name="concept_uri">
+			<xsl:value-of select="concept"/>
+		</field>
+		
+		<field name="concept_text">
+			<xsl:value-of select="label"/>
+			
+			<xsl:if test="altLabels">
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="string-join(altLabels/_, ' ')"/>
+			</xsl:if>			
+		</field>
+		
+		<field name="type_text">
+			<xsl:value-of select="label"/>
+			
+			<xsl:if test="altLabels">
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="string-join(altLabels/_, ' ')"/>
+			</xsl:if>			
+		</field>
+		
+		<xsl:apply-templates select="parents" mode="nlp"/>
+	</xsl:template>
+	
+	<xsl:template match="parents" mode="nlp">
+		<xsl:apply-templates mode="nlp"/>
 	</xsl:template>
 
 	<!-- typeDesc -->

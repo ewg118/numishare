@@ -7,7 +7,7 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mets="http://www.loc.gov/METS/" xmlns:gml="http://www.opengis.net/gml" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:nmo="http://nomisma.org/ontology#"
 	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:org="http://www.w3.org/ns/org#"
-	xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:crmgeo="http://www.ics.forth.gr/isl/CRMgeo/" exclude-result-prefixes="#all" version="2.0">
+	xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:crmgeo="http://www.ics.forth.gr/isl/CRMgeo/" xmlns:xxf="http://www.orbeon.com/oxf/pipeline" exclude-result-prefixes="#all" version="3.0">
 	<xsl:output method="xml" encoding="UTF-8"/>
 	<xsl:include href="../../functions.xsl"/>
 	<xsl:include href="../nuds/solr.xsl"/>
@@ -85,6 +85,26 @@
 				</object>
 			</xsl:for-each>
 		</nudsGroup>
+	</xsl:variable>
+	
+	<!-- indexing hierarchical and alternative labels for Wikidata concepts derived from natural language processing -->
+	<xsl:variable name="concepts" as="element()*">
+		<concepts>
+			<xsl:variable name="ids">
+				<xsl:for-each select="distinct-values($nudsGroup//nuds:subject[@localType = 'concept']/@xlink:href|descendant::nuds:subject[@localType = 'concept']/@xlink:href)">
+					<xsl:value-of select="tokenize(., '/')[last()]"/>
+					<xsl:if test="not(position() = last())">
+						<xsl:text>|</xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+				
+			</xsl:variable>			
+			
+			<!-- use XXForms function to load the FastAPI JSON document and convert to XML for processing -->
+			<xsl:if test="unparsed-text-available('https://numismatics.org/nnlp/')">
+				<xsl:copy-of select="xxf:json-to-xml(unparsed-text(concat('https://numismatics.org/nnlp/expand?identifiers=', encode-for-uri($ids))))"/>
+			</xsl:if>			
+		</concepts>
 	</xsl:variable>
 
 
