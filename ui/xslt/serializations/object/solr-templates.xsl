@@ -123,6 +123,16 @@
 			<xsl:value-of select="concept"/>
 		</field>
 		
+		<field name="concept_facet">
+			<xsl:value-of select="label"/>
+		</field>
+		
+		<xsl:for-each select="altLabels/_">
+			<field name="concept_facet">
+				<xsl:value-of select="."/>
+			</field>
+		</xsl:for-each>
+		
 		<field name="concept_text">
 			<xsl:value-of select="label"/>
 			
