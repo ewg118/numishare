@@ -119,7 +119,7 @@
 	</xsl:template>
 	
 	<xsl:template match="_[@type = 'object']" mode="nlp">
-		<xml>test</xml>
+		<test>test</test>
 	</xsl:template>
 	
 	<!--<xsl:template match="_[@type = 'object']" mode="nlp">
