@@ -92,17 +92,21 @@
 		<concepts>
 			<xsl:variable name="ids">
 				<xsl:for-each select="distinct-values($nudsGroup//nuds:subject[@localType = 'concept']/@xlink:href|descendant::nuds:subject[@localType = 'concept']/@xlink:href)">
-					<xsl:value-of select="tokenize(., '/')[last()]"/>
-					<xsl:if test="not(position() = last())">
-						<xsl:text>|</xsl:text>
-					</xsl:if>
+					<xsl:variable name="entity_id" select="tokenize(., '/')[last()]"/>
+					
+					<xsl:if test="string-length($entity_id) &gt; 0">
+						<xsl:value-of select="$entity_id"/>
+						<xsl:if test="not(position() = last())">
+							<xsl:text>|</xsl:text>
+						</xsl:if>
+					</xsl:if>					
 				</xsl:for-each>
 				
 			</xsl:variable>			
 			
 			<!-- use XXForms function to load the FastAPI JSON document and convert to XML for processing -->
 			<xsl:if test="string-length($ids) &gt; 0">
-				<xsl:if test="unparsed-text-available('https://numismatics.org/nnlp/')">
+				<xsl:if test="unparsed-text-available(concat('https://numismatics.org/nnlp/expand?identifiers=', encode-for-uri($ids)))">
 					<xsl:copy-of select="xxf:json-to-xml(unparsed-text(concat('https://numismatics.org/nnlp/expand?identifiers=', encode-for-uri($ids))))"/>
 				</xsl:if>
 			</xsl:if>						
