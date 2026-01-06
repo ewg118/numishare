@@ -51,7 +51,7 @@
 							<!-- NLP concepts -->
 							<xsl:variable name="conceptURI" select="@xlink:href"/>
 							
-							<xsl:apply-templates select="$concepts/json[@type = 'array']/_[@type = 'object'][concept = $conceptURI]" mode="nlp"/>
+							<!--<xsl:apply-templates select="$concepts/json[@type = 'array']/_[@type = 'object'][concept = $conceptURI]" mode="nlp"/>-->
 						</xsl:when>
 						<xsl:otherwise>
 							<field name="{@localType}_facet">
@@ -118,7 +118,7 @@
 		</xsl:for-each>
 	</xsl:template>
 	
-	<xsl:template match="_[@type = 'object']" mode="nlp">
+	<!--<xsl:template match="_[@type = 'object']" mode="nlp">
 		<field name="concept_uri">
 			<xsl:value-of select="concept"/>
 		</field>
@@ -156,7 +156,7 @@
 	
 	<xsl:template match="parents" mode="nlp">
 		<xsl:apply-templates mode="nlp"/>
-	</xsl:template>
+	</xsl:template>-->
 
 	<!-- typeDesc -->
 	<xsl:template match="nuds:typeDesc">
