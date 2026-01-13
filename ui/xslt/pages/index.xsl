@@ -33,6 +33,26 @@
 				<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
 				<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"/>
 				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
+				
+				<xsl:for-each select="includes/include">
+					<xsl:choose>
+						<xsl:when test="@type = 'css'">
+							<link type="text/{@type}" rel="stylesheet" href="{@url}"/>
+						</xsl:when>
+						<xsl:when test="@type = 'javascript'">
+							<script type="text/{@type}" src="{@url}"/>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:for-each>
+				
+				<!-- open graph/twitter metadata -->
+				<meta property="og:url" content="{url}"/>
+				<meta property="og:type" content="article"/>
+				<meta property="og:title" content="{title}"/>
+				<meta property="twitter:url" content="{url}"/>
+				<meta property="twitter:title" content="{title}"/>
+				<meta name="twitter:card" content="summary_large_image"/>
+				
 				<xsl:call-template name="google_analytics">
 					<xsl:with-param name="id" select="//config/google_analytics_tag"/>
 				</xsl:call-template>
