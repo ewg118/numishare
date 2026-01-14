@@ -704,19 +704,27 @@
 
 		<xsl:variable name="element">
 			<xsl:choose>
-				<xsl:when test="parent::nuds:obverse or parent::nuds:reverse">hasPortrait</xsl:when>
-				<xsl:when test="self::nuds:famname">hasAuthority</xsl:when>
+				<xsl:when test="parent::nuds:obverse or parent::nuds:reverse">nmo:hasPortrait</xsl:when>
+				<xsl:when test="self::nuds:famname">nmo:hasAuthority</xsl:when>
 				<!-- ignore maker and artist -->
-				<xsl:when test="@xlink:role = 'artist' or @xlink:role = 'maker' or @xlink:role = 'designer' or @xlink:role = 'copyist' or @xlink:role = 'castBy' or @xlink:role = 'engraver' or @xlink:role = 'modeler' or @xlink:role = 'sculptor'"/>
-				<xsl:when test="@xlink:role = 'ruler'">hasAuthority</xsl:when>
+				
+				<xsl:when test="@xlink:role = 'artist' or @xlink:role = 'maker' or @xlink:role = 'designer' or @xlink:role = 'copyist' or @xlink:role = 'castBy' or @xlink:role = 'engraver' or @xlink:role = 'modeler' or @xlink:role = 'sculptor'">
+					<xsl:choose>
+						<xsl:when test="@xlink:arcrole">
+							<xsl:value-of select="@xlink:arcrole"/>
+						</xsl:when>
+						<xsl:otherwise>crm:P14_carried_out_by</xsl:otherwise>
+					</xsl:choose>
+				</xsl:when>
+				<xsl:when test="@xlink:role = 'ruler'">nmo:hasAuthority</xsl:when>
 				<xsl:otherwise>
 					<xsl:variable name="role" select="
 							if (@xlink:role) then
-								@xlink:role
+								concat('nmo:', @xlink:role)
 							else
 								local-name()"/>
 					<xsl:value-of
-						select="concat('has', concat(upper-case(substring($role, 1, 1)), substring($role, 2)))"
+						select="concat('nmo:has', concat(upper-case(substring($role, 1, 1)), substring($role, 2)))"
 					/>
 				</xsl:otherwise>
 			</xsl:choose>
@@ -726,7 +734,7 @@
 			<xsl:choose>
 				<xsl:when
 					test="@certainty = 'uncertain' or matches(@certainty, 'https?://nomisma\.org')">
-					<xsl:element name="nmo:{$element}">
+					<xsl:element name="{$element}">
 						<rdf:Description>
 							<rdf:value rdf:resource="{@xlink:href}"/>
 							<un:hasUncertainty>
@@ -744,7 +752,7 @@
 					</xsl:element>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:element name="nmo:{$element}">
+					<xsl:element name="{$element}">
 						<xsl:attribute name="rdf:resource" select="@xlink:href"/>
 					</xsl:element>
 				</xsl:otherwise>

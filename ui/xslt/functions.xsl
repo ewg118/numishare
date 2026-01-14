@@ -5627,6 +5627,11 @@
                     <xsl:when test="$element = 'skos:definition'">Definition</xsl:when>
                     <xsl:when test="$element = 'skos:exactMatch'">Exact Match</xsl:when>
                     <xsl:when test="$element = 'skos:prefLabel'">Preferred Label</xsl:when>
+                    
+                    <!-- attribution qualifiers -->
+                    <xsl:when test="$element = 'http://vocab.getty.edu/aat/300404269'">attributed to</xsl:when>
+                    <xsl:when test="$element = 'http://vocab.getty.edu/aat/300404282'">follower of</xsl:when>
+                    <xsl:when test="$element = 'http://vocab.getty.edu/aat/300404285'">style of</xsl:when>
                 </xsl:choose>
             </xsl:when>
         </xsl:choose>

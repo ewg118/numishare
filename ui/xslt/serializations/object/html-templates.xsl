@@ -483,7 +483,13 @@
 					<!-- display certainty -->
 					<xsl:apply-templates select="@certainty"/>
 					
-					<xsl:apply-templates select="@variant"/>
+					<xsl:apply-templates select="@variant"/>					
+
+					<xsl:apply-templates select="@attributionQualifier">
+						<xsl:with-param name="arcrole" select="@xlink:arcrole"/>
+					</xsl:apply-templates>
+					
+					
 
 					<!-- display calendar -->
 					<xsl:if test="string(@calendar)">
@@ -873,6 +879,38 @@
 				<xsl:text>(var.)</xsl:text>
 			</i>
 		</xsl:if>
+	</xsl:template>
+	
+	<!-- *************** DISPLAY ATTRIBUTIONS FOR ARTISTS ******************-->
+	<xsl:template match="@attributionQualifier">
+		<xsl:param name="arcrole"/>
+		
+		<xsl:text> </xsl:text>		
+		<i><xsl:text>(</xsl:text>
+			<xsl:choose>
+				<xsl:when test="string($arcrole)">
+					<xsl:choose>
+						<xsl:when test="$arcrole = 'crm:P14_carried_out_by'">
+							<xsl:text>or </xsl:text>
+							<a href="{.}">
+								<xsl:value-of select="numishare:getLabelforRDF(., 'en')"/>
+							</a>							
+						</xsl:when>
+						<xsl:when test="$arcrole = 'crm:P15_was_influenced_by'">
+							<a href="{.}">
+								<xsl:value-of select="numishare:getLabelforRDF(., 'en')"/>
+							</a>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:when>
+				<xsl:otherwise>
+					<a href="{.}">
+						<xsl:value-of select="numishare:getLabelforRDF(., 'en')"/>
+					</a>
+				</xsl:otherwise>
+			</xsl:choose>
+			<xsl:text>)</xsl:text>
+		</i>
 	</xsl:template>
 
 	<!-- *************** RENDER RDF ABOUT SYMBOLS ******************-->
