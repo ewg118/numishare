@@ -1267,12 +1267,12 @@
 		</i>
 		
 		<!-- display the @key URI link -->
-		<xsl:if test="matches(@key, '^https?://')">
+		<!--<xsl:if test="matches(@key, '^https?://')">
 			<xsl:text> </xsl:text>
 			<a href="{@key}" target="_blank">
 				<span class="glyphicon glyphicon-new-window"/>
 			</a>
-		</xsl:if>
+		</xsl:if>-->
 	</xsl:template>
 
 	<xsl:template match="tei:idno">
