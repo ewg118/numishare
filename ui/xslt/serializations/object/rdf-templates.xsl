@@ -720,7 +720,7 @@
 				<xsl:otherwise>
 					<xsl:variable name="role" select="
 							if (@xlink:role) then
-								concat('nmo:', @xlink:role)
+								@xlink:role
 							else
 								local-name()"/>
 					<xsl:value-of
