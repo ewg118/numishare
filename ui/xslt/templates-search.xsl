@@ -350,6 +350,19 @@
 							</xsl:if>
 						</input>
 					</div>
+					<div class="form-group">
+						<label for="type_text">All Iconography</label>
+						<input type="text" class="form-control text-search" id="type_text">
+							<xsl:if test="$tokenized_q[starts-with(., 'type_text')]">
+								<xsl:attribute name="value">
+									<xsl:for-each select="$tokenized_q[starts-with(., 'type_text')][1]">
+										<xsl:value-of select="substring-after(., ':')"/>
+									</xsl:for-each>
+								</xsl:attribute>
+							</xsl:if>
+						</input>
+						<span class="text-info">These terms will search obverse and reverse descriptions and associated iconographic concepts.</span>
+					</div>
 
 					<xsl:if test="//config/facets/facet[@role = 'symbol']">
 						<h3>
