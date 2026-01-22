@@ -361,7 +361,7 @@
 								</xsl:attribute>
 							</xsl:if>
 						</input>
-						<span class="text-info">These terms will search obverse and reverse descriptions and associated iconographic concepts. Note that not all coins have been undergone natural language processing yet.</span>
+						<span class="text-info">These terms will search obverse and reverse descriptions and associated iconographic concepts.</span>
 					</div>
 
 					<xsl:if test="//config/facets/facet[@role = 'symbol']">
