@@ -186,6 +186,12 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</field>
+				
+				<!-- Extract NLP concepts from $nudsGroup for physical objects -->
+				<xsl:for-each select="$nudsGroup//object[@xlink:href = $href]/descendant::nuds:subject[@localType = 'concept']">
+					<xsl:variable name="conceptURI" select="@xlink:href"/>
+					<xsl:apply-templates select="$concepts/json[@type = 'array']/_[@type = 'object'][concept = $conceptURI]" mode="nlp"/>
+				</xsl:for-each>
 			</xsl:for-each>
 
 			<!-- insert the coinType_facet for the conceptual record -->

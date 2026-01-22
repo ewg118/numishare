@@ -119,10 +119,6 @@
 	</xsl:template>
 	
 	<xsl:template match="_[@type = 'object']" mode="nlp">
-		<test>test</test>
-	</xsl:template>
-	
-	<!--<xsl:template match="_[@type = 'object']" mode="nlp">
 		<field name="concept_uri">
 			<xsl:value-of select="concept"/>
 		</field>
@@ -160,7 +156,7 @@
 	
 	<xsl:template match="parents" mode="nlp">
 		<xsl:apply-templates mode="nlp"/>
-	</xsl:template>-->
+	</xsl:template>
 
 	<!-- typeDesc -->
 	<xsl:template match="nuds:typeDesc">
