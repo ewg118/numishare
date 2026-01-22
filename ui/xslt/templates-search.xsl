@@ -352,7 +352,7 @@
 					</div>
 					<div class="form-group">
 						<label for="type_text">All Iconography</label>
-						<input type="text" class="form-control text-search" id="type_text">
+						<input type="text" class="form-control text-search" id="type_text" placeholder="e.g., 'animals'">
 							<xsl:if test="$tokenized_q[starts-with(., 'type_text')]">
 								<xsl:attribute name="value">
 									<xsl:for-each select="$tokenized_q[starts-with(., 'type_text')][1]">
@@ -361,7 +361,7 @@
 								</xsl:attribute>
 							</xsl:if>
 						</input>
-						<span class="text-info">These terms will search obverse and reverse descriptions and associated iconographic concepts.</span>
+						<span class="text-info">These terms will search obverse and reverse descriptions and associated iconographic concepts. Note that not all coins have been undergone natural language processing yet.</span>
 					</div>
 
 					<xsl:if test="//config/facets/facet[@role = 'symbol']">
