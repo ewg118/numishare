@@ -169,7 +169,7 @@
 					</xforms:input>
 				</div>
 
-				<fr:recaptcha id="my-recaptcha">
+				<fr:simple-captcha id="my-recaptcha">
 					<xforms:action ev:event="fr-verify-done">
 						<xforms:setvalue ref="instance('control-instance')/verified" value="true()"/>
 						<xforms:setvalue ref="instance('control-instance')/error" value="false()"/>
@@ -178,7 +178,7 @@
 						<xforms:setvalue ref="instance('control-instance')/verified" value="false()"/>
 						<xforms:setvalue ref="instance('control-instance')/error" value="true()"/>
 					</xforms:action>
-				</fr:recaptcha>
+				</fr:simple-captcha>
 
 				<div>
 					<xforms:trigger bind="send-trigger">
