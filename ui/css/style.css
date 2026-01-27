@@ -48,6 +48,11 @@ dl.dl-rtl dd{
     margin-right: 180px;
     margin-left: 0;
 }
+#feedback-frame {
+    width:100%;
+    border:none;
+    height:600px;
+}
 .highlight{
     background-color: #F8F8F8;
     border: 1px solid #E7E7E7;
