@@ -91,10 +91,10 @@
 				<xsl:variable name="service">
 					<xsl:choose>
 						<xsl:when test="string($lang)">
-							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+(mint_geo:*+OR+findspot_geo:*+OR+subject_geo:*+OR+productionPlace_geo:*+OR+hoard_geo:*)&amp;start=', $start, $facets, '&amp;facet.field=mint_geo&amp;facet.field=productionPlace_geo&amp;facet.limit=1&amp;facet.sort=index&amp;facet=true&amp;rows=0')"/>
+							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+(mint_geo:*+OR+findspot_geo:*+OR+subject_geo:*+OR+productionPlace_geo:*+OR+hoard_geo:*+OR+issuePlace_geo:*)&amp;start=', $start, $facets, '&amp;facet.field=mint_geo&amp;facet.field=productionPlace_geo&amp;facet.limit=1&amp;facet.sort=index&amp;facet=true&amp;rows=0')"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+(mint_geo:*+OR+findspot_geo:*+OR+subject_geo:*+OR+productionPlace_geo:*+OR+hoard_geo:*)&amp;start=', $start, $facets, '&amp;facet.field=mint_geo&amp;facet.field=productionPlace_geo&amp;facet.limit=1&amp;facet.sort=index&amp;facet=true&amp;rows=0')"/>
+							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+(mint_geo:*+OR+findspot_geo:*+OR+subject_geo:*+OR+productionPlace_geo:*+OR+hoard_geo:*+OR+issuePlace_geo:*)&amp;start=', $start, $facets, '&amp;facet.field=mint_geo&amp;facet.field=productionPlace_geo&amp;facet.limit=1&amp;facet.sort=index&amp;facet=true&amp;rows=0')"/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>

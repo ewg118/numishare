@@ -168,11 +168,14 @@
 				<features>
 					<_array>
 						<!-- mints: only call template from NUDS Group for unique URIs -->
-						<xsl:apply-templates select="$nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint' or @xlink:role = 'productionPlace'][string(@xlink:href) and not(preceding::*/@xlink:href = @xlink:href)]"/>
+						<xsl:apply-templates select="$nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint' or @xlink:role = 'productionPlace'][string(@xlink:href) and not(preceding::*[@xlink:role = 'mint' or @xlink:role = 'productionPlace']/@xlink:href = @xlink:href)]"/>
 						
 						<!-- findspots -->
 						<xsl:apply-templates
 							select="descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'numismatics.org')] | descendant::nuds:hoard[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'numismatics.org')]"/>
+
+						<!-- issuePlace -->
+						<xsl:apply-templates select="$nudsGroup/descendant::nuds:geogname[@xlink:role = 'issuePlace'][string(@xlink:href) and not(preceding::*[@xlink:role = 'issuePlace']/@xlink:href = @xlink:href)]"/>
 
 						<!-- if there's no linkable mint look for a region -->
 						<xsl:if
@@ -221,6 +224,7 @@
 			<xsl:with-param name="type">
 				<xsl:choose>
 					<xsl:when test="@xlink:role = 'mint' or @xlink:role = 'productionPlace' or @xlink:role = 'region'">mint</xsl:when>
+					<xsl:when test="@xlink:role = 'issuePlace'">issuePlace</xsl:when>
 					<xsl:when test="@xlink:role = 'findspot'">findspot</xsl:when>
 				</xsl:choose>
 			</xsl:with-param>

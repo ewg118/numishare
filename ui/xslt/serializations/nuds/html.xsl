@@ -330,6 +330,15 @@
 			<xsl:otherwise>false</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
+	
+	<xsl:variable name="hasIssuePlaces" as="xs:boolean">
+		<xsl:choose>
+			<xsl:when
+				test="descendant::nuds:geographic/nuds:geogname[(@xlink:role = 'issuePlace') and contains(@xlink:href, 'geonames.org')]"
+				>true</xsl:when>
+			<xsl:otherwise>false</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 
 	<!-- variable for whether or not geography has been enabled -->
 	<xsl:variable name="geoEnabled" as="xs:boolean">
@@ -379,7 +388,7 @@
 								</xsl:if>
 
 								<xsl:if test="$geoEnabled = true()">
-									<xsl:if test="$hasMints = true() or $hasFindspots = true()">
+									<xsl:if test="$hasMints = true() or $hasFindspots = true() or $hasIssuePlaces = true()">
 										<script type="text/javascript" src="{$include_path}/javascript/leaflet.legend.js"/>
 										<link type="text/css" href="{$include_path}/css/leaflet.legend.css" rel="stylesheet"/>
 										<script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"/>
@@ -417,7 +426,7 @@
 
 								<!-- mapping -->
 								<xsl:if test="$geoEnabled = true()">
-									<xsl:if test="$hasMints = true() or $hasFindspots = true()">
+									<xsl:if test="$hasMints = true() or $hasFindspots = true() or $hasIssuePlaces = true()">
 										<script type="text/javascript" src="{$include_path}/javascript/leaflet.legend.js"/>
 										<link type="text/css" href="{$include_path}/css/leaflet.legend.css" rel="stylesheet"/>
 										<script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"/>
@@ -489,6 +498,9 @@
 									,{"label": "<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>", "type": "rectangle", "fillColor": "#f98f0c", "color": "black", "weight": 1} 
 									<xsl:if test="descendant::nuds:subject[contains(@xlink:href, 'geonames.org')]">
 										,{"label": "<xsl:value-of select="numishare:regularize_node('subject', $lang)"/>", "type": "rectangle", "fillColor": "#00e64d", "color": "black", "weight": 1}
+									</xsl:if>
+									<xsl:if test="descendant::nuds:geogname[@xlink:role = 'issuePlace']">
+										,{"label": "<xsl:value-of select="numishare:regularize_node('issuePlace', $lang)"/>", "type": "rectangle", "fillColor": "#00e64d", "color": "black", "weight": 1}
 									</xsl:if>
 								</xsl:if>]
 							</span>
@@ -1193,7 +1205,7 @@
 							<xsl:choose>
 								<xsl:when test="$geoEnabled = true()">
 									<xsl:choose>
-										<xsl:when test="$hasFindspots = false() and $hasMints = false()">
+										<xsl:when test="$hasFindspots = false() and $hasMints = false() and $hasIssuePlaces = false()">
 											<div class="col-md-12">
 												<xsl:call-template name="metadata-container"/>
 											</div>
@@ -1228,7 +1240,7 @@
 							<xsl:call-template name="metadata-container"/>
 						</div>
 						<xsl:if test="$geoEnabled = true()">
-							<xsl:if test="$hasMints = true() or $hasFindspots = true()">
+							<xsl:if test="$hasMints = true() or $hasFindspots = true() or $hasIssuePlaces = true()">
 								<div class="row">
 									<div class="col-md-12">
 										<xsl:call-template name="map-container"/>

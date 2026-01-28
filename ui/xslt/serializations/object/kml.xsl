@@ -172,6 +172,15 @@
 						</Icon>
 					</IconStyle>
 				</Style>
+				<Style id="issuePlace">
+					<IconStyle>
+						<scale>1</scale>
+						<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
+						<Icon>
+							<href>https://maps.google.com/intl/en_us/mapfiles/ms/micons/green-dot.png</href>
+						</Icon>
+					</IconStyle>
+				</Style>
 				<xsl:choose>
 					<xsl:when test="count(/content/*[local-name() = 'nuds']) &gt; 0">
 						<xsl:apply-templates select="/content/nuds:nuds"/>
@@ -191,6 +200,14 @@
 			<xsl:call-template name="getPlacemark">
 				<xsl:with-param name="uri" select="@xlink:href"/>
 				<xsl:with-param name="styleUrl">#mint</xsl:with-param>
+			</xsl:call-template>
+		</xsl:for-each>
+		
+		<xsl:for-each
+			select="$nudsGroup/descendant::nuds:geogname[@xlink:role = 'issuePlace'][string(@xlink:href)]">
+			<xsl:call-template name="getPlacemark">
+				<xsl:with-param name="uri" select="@xlink:href"/>
+				<xsl:with-param name="styleUrl">#issuePlace</xsl:with-param>
 			</xsl:call-template>
 		</xsl:for-each>
 

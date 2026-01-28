@@ -71,10 +71,10 @@
 				<!-- facet variable -->
 				<xsl:variable name="facet">
 					<xsl:choose>
-						<xsl:when test="matches(doc('input:request')/request/request-url, 'mints\.(kml|geojson)')">mint_geo&amp;facet.field=productionPlace_geo</xsl:when>
+						<xsl:when test="matches(doc('input:request')/request/request-url, 'mints\.(kml|geojson)')">mint_geo&amp;facet.field=productionPlace_geo</xsl:when>						
 						<xsl:when test="matches(doc('input:request')/request/request-url, 'findspots\.(kml|geojson)')">findspot_geo&amp;facet.field=hoard_geo</xsl:when>
-						<xsl:when test="matches(doc('input:request')/request/request-url, 'subjects\.(kml|geojson)')">subject_geo</xsl:when>
-						<xsl:otherwise>mint_geo&amp;facet.field=productionPlace_geo&amp;facet.field=findspot_geo&amp;facet.field=hoard_geo&amp;facet.field=subject_geo</xsl:otherwise>
+						<xsl:when test="matches(doc('input:request')/request/request-url, 'subjects\.(kml|geojson)')">subject_geo&amp;facet.field=issuePlace_geo</xsl:when>
+						<xsl:otherwise>mint_geo&amp;facet.field=productionPlace_geo&amp;facet.field=findspot_geo&amp;facet.field=hoard_geo&amp;facet.field=subject_geo&amp;facet.field=issuePlace_geo</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
 

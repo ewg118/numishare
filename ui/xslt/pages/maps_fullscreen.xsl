@@ -184,7 +184,7 @@
 					{"label": "<xsl:value-of select="numishare:regularize_node('hoard', $lang)"/>", "type": "rectangle", "fillColor": "#d86458", "color": "black", "weight": 1}
 					<xsl:if test="not($collection_type = 'hoard')">
 						,{"label": "<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>", "type": "rectangle", "fillColor": "#f98f0c", "color": "black", "weight": 1},
-						{"label": "<xsl:value-of select="numishare:regularize_node('subject', $lang)"/>", "type": "rectangle", "fillColor": "#00e64d", "color": "black", "weight": 1}
+						{"label": "<xsl:value-of select="numishare:regularize_node('subject', $lang)"/>/<xsl:value-of select="numishare:regularize_node('issuePlace', $lang)"/>", "type": "rectangle", "fillColor": "#00e64d", "color": "black", "weight": 1}
 					</xsl:if>]					
 				</span>
 				<div id="ajax-temp"/>
