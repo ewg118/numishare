@@ -365,6 +365,7 @@ $(document).ready(function () {
             fillColor = '#f98f0c';
             break;
             case 'subject':
+            case 'issuePlace':
             fillColor = '#a1d490';
         }
         
