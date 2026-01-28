@@ -754,7 +754,7 @@
 
 					<xsl:if test="string-length($geonames//place[@id = $href]) &gt; 0">
 						<field name="{$role}_geo">
-							<xsl:value-of select="$geonames//place[@id = $href]/@label"/>
+							<xsl:value-of select="$geonames//place[@id = $href]/@name"/>
 							<xsl:text>|</xsl:text>
 							<xsl:value-of select="$href"/>
 							<xsl:text>|</xsl:text>

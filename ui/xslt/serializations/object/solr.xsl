@@ -252,12 +252,13 @@
 								<xsl:value-of select="concat($geonames_data//lng, ',', $geonames_data//lat)"/>
 							</xsl:if>
 						</xsl:variable>
+						
+						<xsl:variable name="name" select="$geonames_data//name[1]"/>
 
 						<!-- generate AACR2 label -->
 						<xsl:variable name="label">
 							<xsl:variable name="countryCode" select="$geonames_data//countryCode[1]"/>
-							<xsl:variable name="countryName" select="$geonames_data//countryName[1]"/>
-							<xsl:variable name="name" select="$geonames_data//name[1]"/>
+							<xsl:variable name="countryName" select="$geonames_data//countryName[1]"/>							
 							<xsl:variable name="adminName1" select="$geonames_data//adminName1[1]"/>
 							<xsl:variable name="fcode" select="$geonames_data//fcode[1]"/>
 							<!-- set a value equivalent to AACR2 standard for US, AU, CA, and GB.  This equation deviates from AACR2 for Malaysia since standard abbreviations for territories cannot be found -->
@@ -282,7 +283,7 @@
 												concat($name, ' (', $countryName, ')')"/>
 						</xsl:variable>
 
-						<place id="{.}" label="{$label}">
+						<place id="{.}" label="{$label}" name="{$name}">
 							<xsl:if test="$regionHierarchy = true() or $findspotHierarchy = true()">
 								<xsl:variable name="geonames_hier" as="element()*">
 									<results>
