@@ -16,6 +16,12 @@ $(document).ready(function () {
 function initialize_map(id, path, lang) {
     var baselayers = $('#baselayers').text().split(',');
     var mapboxKey = $('#mapboxKey').text();
+    
+    //update the protocol if the location URL is https but the path is http
+    if (location.protocol == 'https:' && path.includes('http://')) {
+        path = path.replace('http://', 'https://');        
+    }
+    
     var url = path + id + ".geojson" + (lang.length > 0 ? '?lang=' + lang: '');
     
     //baselayers
@@ -190,6 +196,7 @@ function initialize_map(id, path, lang) {
         var fillColor;
         switch (type) {
             case 'mint':
+            case 'productionPlace':
             fillColor = '#6992fd';
             break;
             case 'findspot':
@@ -199,6 +206,7 @@ function initialize_map(id, path, lang) {
             fillColor = '#d86458';
             break;
             case 'subject':
+            case 'issuePlace':
             fillColor = '#00e64d';
             break;
             default:
