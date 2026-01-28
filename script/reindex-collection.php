@@ -41,6 +41,9 @@ if (isset($argv[1])){
             case 'hoard':
                 $perPage = 25;
                 break;
+            case 'object':
+                $perPage = 1000;
+                break;
             default:
                 $perPage = 100;
         }
@@ -58,9 +61,15 @@ if (isset($argv[1])){
         
         $response = curl_exec($ch); 
         
-        echo "IDs received. Processing now.\n";
-        $list = simplexml_load_string($response);
+        //write curl response to file
+        $fp = fopen('response.xml', 'a');
+        fwrite($fp, $response);
+        fclose($fp);        
         curl_close($ch);
+        
+        echo "IDs received. Processing now.\n";
+        $list = simplexml_load_file('response.xml');
+        
         
         $page = 1;
         foreach ($list->report->id as $id){
