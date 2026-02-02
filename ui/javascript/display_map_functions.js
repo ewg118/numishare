@@ -201,7 +201,7 @@ function initialize_map(id, path, lang) {
             break;
             case 'subject':
             case 'issuePlace':
-            fillColor = '#00e64d';
+            fillColor = '#a1d490';
             break;
             default:
             fillColor = '#efefef'
