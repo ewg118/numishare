@@ -62,7 +62,7 @@ if (isset($argv[1])){
         $response = curl_exec($ch); 
         
         //write curl response to file
-        $fp = fopen('response.xml', 'a');
+        $fp = fopen('response.xml', 'w');
         fwrite($fp, $response);
         fclose($fp);        
         curl_close($ch);
@@ -96,7 +96,8 @@ if (isset($argv[1])){
         
         //POST TO SOLR
         post_to_solr($toIndex, $eXist_config, $collection);
-       
+
+	unlink('response.xml')	
         
     } else {
         echo "eXist config not found at {$eXist_config_path}\n";
