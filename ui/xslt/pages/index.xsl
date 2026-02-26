@@ -5,6 +5,7 @@
 
 	<xsl:param name="pipeline">display</xsl:param>
 	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 	<xsl:param name="lang">
 		<xsl:choose>
 			<xsl:when test="string($langParam)">
@@ -66,7 +67,17 @@
 	</xsl:template>
 
 	<xsl:template name="index">
-		<img src="{$include_path}/images/jumbotron.jpg" style="max-width:100%"/>
+		
+		<xsl:choose>
+			<xsl:when test="$collection-name = 'aod'">
+				<img src="{$include_path}/images/jumbotron.jpg" style="width:100%"/>
+			</xsl:when>
+			<xsl:when test="$collection-name = 'cm'">
+				<img src="{$include_path}/images/rmo-banner.jpg" style="width:100%"/>				
+			</xsl:when>
+		</xsl:choose>
+		
+		
 		<!--<div class="jumbotron">
 			<div class="container">
 				<div class="row">
@@ -91,8 +102,8 @@
 				</div>
 			</div>
 		</div>-->	
-		<div class="container-fluid">
-			<div class="row" id="index">
+		<div class="container-fluid" id="index">
+			<div class="row">				
 				<div class="col-md-9">					
 					<xsl:choose>
 						<xsl:when test="string($lang)">
