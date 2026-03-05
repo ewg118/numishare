@@ -454,7 +454,7 @@
 				<_object>
 					<type>LinguisticObject</type>
 					<content>
-						<xsl:value-of select="."/>
+						<xsl:value-of select="normalize-space(.)"/>
 						<!--<xsl:choose>
 							<xsl:when test="child::tei:div[@type = 'edition']">
 								<xsl:apply-templates select="tei:div[@type = 'edition']"/>
