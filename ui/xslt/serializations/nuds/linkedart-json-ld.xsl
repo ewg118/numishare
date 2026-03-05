@@ -454,14 +454,15 @@
 				<_object>
 					<type>LinguisticObject</type>
 					<content>
-						<xsl:choose>
+						<xsl:value-of select="."/>
+						<!--<xsl:choose>
 							<xsl:when test="child::tei:div[@type = 'edition']">
 								<xsl:apply-templates select="tei:div[@type = 'edition']"/>
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:value-of select="."/>
 							</xsl:otherwise>
-						</xsl:choose>
+						</xsl:choose>-->
 					</content>
 				</_object>
 			</_array>

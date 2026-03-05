@@ -339,6 +339,7 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 							let $collection := '/db/%COLLECTION%'
 							let $path := '%PATH%'
 							let $create-collection := xmldb:create-collection($collection, 'objects')
+							let $create-collection := xmldb:create-collection($collection, 'lots')
 							let $create-symbols := xmldb:create-collection($collection, 'symbols')
 							let $store-xql := xmldb:store-files-from-pattern($collection, concat($path, '/xforms/xquery'), '*.xql', 'application/xquery')
 							for $doc in xmldb:get-child-resources($collection)							
