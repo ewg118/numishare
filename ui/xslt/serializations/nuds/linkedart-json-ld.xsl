@@ -376,7 +376,7 @@
 							<_object>
 								<type>Type</type>
 								<xsl:choose>
-									<xsl:when test="@xlink:role = 'authority'">
+									<xsl:when test="@xlink:role = 'authority' or @xlink:role = 'ruler'">
 										<xsl:choose>
 											<xsl:when test="self::nuds:persname">
 												<id>aat:300025475</id>
@@ -388,6 +388,10 @@
 											</xsl:when>
 										</xsl:choose>
 									</xsl:when>
+									<xsl:when test="@xlink:role = 'artist'">
+										<id>aat:300025103</id>
+										<_label>artists (visual artists)</_label>
+									</xsl:when>
 									<xsl:when test="@xlink:role = 'dynasty'">
 										<id>aat:300386176</id>
 										<_label>dynasties</_label>
@@ -396,9 +400,13 @@
 										<id>aat:300025467</id>
 										<_label>magistrates</_label>
 									</xsl:when>
-									<xsl:when test="@xlink:role = 'mint'">
-										<id>aat:300006031</id>
-										<_label>mints (buildings)</_label>
+									<xsl:when test="@xlink:role = 'maker'">
+										<id>aat:300025230</id>
+										<_label>manufacturers</_label>
+									</xsl:when>
+									<xsl:when test="@xlink:role = 'mint' or @xlink:role = 'productionPlace'">
+										<id>aat:300008347</id>
+										<_label>inhabited places</_label>
 									</xsl:when>
 								</xsl:choose>
 
