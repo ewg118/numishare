@@ -312,18 +312,20 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:geographic">
-		<took_place_at>
-			<_array>
-				<xsl:choose>
-					<xsl:when test="nuds:geogname[@xlink:role = 'mint' or @xlink:role = 'productionPlace'][@xlink:href]">
-						<xsl:apply-templates select="nuds:geogname[@xlink:role = 'mint' or @xlink:role = 'productionPlace'][@xlink:href]"/>
-					</xsl:when>
-					<xsl:when test="nuds:geogname[@xlink:role = 'region'][@xlink:href]">
-						<xsl:apply-templates select="nuds:geogname[@xlink:role = 'region'][@xlink:href]"/>
-					</xsl:when>
-				</xsl:choose>
-			</_array>
-		</took_place_at>
+		<xsl:if test="nuds:geogname[@xlink:role = 'mint' or @xlink:role = 'productionPlace' or @xlink:role = 'region'][@xlink:href]">
+			<took_place_at>
+				<_array>
+					<xsl:choose>
+						<xsl:when test="nuds:geogname[@xlink:role = 'mint' or @xlink:role = 'productionPlace'][@xlink:href]">
+							<xsl:apply-templates select="nuds:geogname[@xlink:role = 'mint' or @xlink:role = 'productionPlace'][@xlink:href]"/>
+						</xsl:when>
+						<xsl:when test="nuds:geogname[@xlink:role = 'region'][@xlink:href]">
+							<xsl:apply-templates select="nuds:geogname[@xlink:role = 'region'][@xlink:href]"/>
+						</xsl:when>
+					</xsl:choose>
+				</_array>
+			</took_place_at>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="nuds:material | nuds:objectType | nuds:denomination | nuds:manufacture | nuds:persname | nuds:famname | nuds:corpname | nuds:geogname">
