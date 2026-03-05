@@ -292,19 +292,31 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:authority">
-		<carried_out_by>
-			<_array>
-				<xsl:apply-templates select="*[@xlink:role = 'authority' or @xlink:role = 'issuer' or @xlink:role = 'dynasty'][@xlink:href]"/>
-			</_array>
-		</carried_out_by>
+		<xsl:if test="*[@xlink:role = 'authority' or @xlink:role = 'ruler' or @xlink:role = 'issuer' or @xlink:role = 'dynasty'][@xlink:href]">
+			<influenced_by>
+				<_array>
+					<xsl:apply-templates select="*[@xlink:role = 'authority' or @xlink:role = 'ruler' or @xlink:role = 'issuer' or @xlink:role = 'dynasty'][@xlink:href]"/>
+				</_array>
+			</influenced_by>
+		</xsl:if>
+		
+		
+		<xsl:if test="*[@xlink:role = 'maker' or @xlink:role = 'artist'][@xlink:href]">
+			<carried_out_by>
+				<_array>
+					<xsl:apply-templates select="*[@xlink:role = 'maker' or @xlink:role = 'artist'][@xlink:href]"/>
+				</_array>
+			</carried_out_by>
+		</xsl:if>
+		
 	</xsl:template>
 
 	<xsl:template match="nuds:geographic">
 		<took_place_at>
 			<_array>
 				<xsl:choose>
-					<xsl:when test="nuds:geogname[@xlink:role = 'mint'][@xlink:href]">
-						<xsl:apply-templates select="nuds:geogname[@xlink:role = 'mint'][@xlink:href]"/>
+					<xsl:when test="nuds:geogname[@xlink:role = 'mint' or @xlink:role = 'productionPlace'][@xlink:href]">
+						<xsl:apply-templates select="nuds:geogname[@xlink:role = 'mint' or @xlink:role = 'productionPlace'][@xlink:href]"/>
 					</xsl:when>
 					<xsl:when test="nuds:geogname[@xlink:role = 'region'][@xlink:href]">
 						<xsl:apply-templates select="nuds:geogname[@xlink:role = 'region'][@xlink:href]"/>
