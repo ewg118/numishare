@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 	Author: Ethan Gruber
-	Date: Last modified May 2021
-	Function: Determine	the correct pipeline to serialize RDF/XML into JSON-LD for the the symbol or default jsonld pipeline (Nomisma data model), or 
+	Date: Last modified March 2026
+	Function: Determine	the correct pipeline to serialize RDF/XML into JSON-LD for the the symbol/lot or default jsonld pipeline (Nomisma data model), or 
 	call an XSLT transformation for NUDS->JSON-LD or EpiDoc TEI->JSON-LD for linked.art data model
 -->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline"
@@ -38,7 +38,7 @@
 	</p:processor>
 	
 	<p:choose href="#path">		
-		<p:when test="path='symbol'">
+		<p:when test="path='symbol' or path='lot'">
 			<p:processor name="oxf:identity">
 				<p:input name="data" href="#data"/>
 				<p:output name="data" id="xml"/>				

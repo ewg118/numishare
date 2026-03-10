@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-	Copyright (C) 2010 Ethan Gruber
-	EADitor: http://code.google.com/p/eaditor/
-	Apache License 2.0: http://code.google.com/p/eaditor/
-	
+	Author: Ethan Gruber
+	Date: Last modified March 2026
+	Function: Determine	the correct pipeline to serialize RDF/XML into TTL for the the symbol/lot or  
+	call an XSLT transformation for NUDS->TTL	
 -->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline"
 	xmlns:oxf="http://www.orbeon.com/oxf/processors">
@@ -38,7 +38,7 @@
 	</p:processor>
 	
 	<p:choose href="#path">		
-		<p:when test="path='symbol'">
+		<p:when test="path='symbol' or path='lot'">
 			<p:processor name="oxf:identity">
 				<p:input name="data" href="#data"/>
 				<p:output name="data" id="xml"/>				

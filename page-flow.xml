@@ -102,6 +102,12 @@
 	<page path="/numishare/[^\/]+/id/(.*)\.ttl" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/rdf/ttl.xpl"/>
 	<page path="/numishare/[^\/]+/id/(.*)\.solr" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/solr.xpl"/>
 	<page path="/numishare/[^\/]+/id/(.*)$" model="xpl/models/object/get-id.xpl" view="xpl/controllers/conneg-id.xpl"/>
+	
+	<!-- object lot -->
+	<page path="/numishare/[^\/]+/lot/(.*)\.rdf" view="xpl/models/lot/get-lot.xpl"/>
+	<page path="/numishare/[^\/]+/lot/(.*)\.jsonld" model="xpl/models/lot/get-lot.xpl" view="xpl/views/serializations/object/json-ld.xpl"/>
+	<page path="/numishare/[^\/]+/lot/(.*)\.ttl" model="xpl/models/lot/get-lot.xpl" view="xpl/views/serializations/rdf/ttl.xpl"/>
+	<page path="/numishare/[^\/]+/lot/(.*)$" model="xpl/models/lot/get-lot.xpl" view="xpl/views/serializations/rdf/lot-html.xpl"/>
 
 	<!-- IIIF manifest pipelines -->
 	<page path="/numishare/[^\/]+/manifest/(.*)$" model="xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>

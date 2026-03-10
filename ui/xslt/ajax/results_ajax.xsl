@@ -64,24 +64,34 @@
 				</xsl:matching-substring>
 			</xsl:analyze-string>
 		</xsl:variable>
-		<h1>
-			<xsl:text>Place</xsl:text>
-			<xsl:if test="count($places) &gt; 0">
-				<xsl:text>s</xsl:text>
-			</xsl:if>
-			<xsl:text>: </xsl:text>
-			<small>
-				<a id="clear_all" href="#">clear</a>
-			</small>
-		</h1>
-		<h2>
-			<xsl:for-each select="$places[string-length(.) &gt; 0]">
-				<xsl:value-of select="."/>
-				<xsl:if test="not(position() = last())">
-					<xsl:text>, </xsl:text>
-				</xsl:if>
-			</xsl:for-each>
-		</h2>
+		
+		<!-- don't display headings for object lots -->
+		<xsl:choose>
+			<xsl:when test="$pipeline = 'lot'">
+				<h3>Public Objects</h3>
+			</xsl:when>
+			<xsl:otherwise>
+				<h1>
+					<xsl:text>Place</xsl:text>
+					<xsl:if test="count($places) &gt; 0">
+						<xsl:text>s</xsl:text>
+					</xsl:if>
+					<xsl:text>: </xsl:text>
+					<small>
+						<a id="clear_all" href="#">clear</a>
+					</small>
+				</h1>
+				<h2>
+					<xsl:for-each select="$places[string-length(.) &gt; 0]">
+						<xsl:value-of select="."/>
+						<xsl:if test="not(position() = last())">
+							<xsl:text>, </xsl:text>
+						</xsl:if>
+					</xsl:for-each>
+				</h2>
+			</xsl:otherwise>
+		</xsl:choose>				
+		
 		<xsl:call-template name="paging"/>
 		<div class="row">
 			<xsl:apply-templates select="descendant::doc" mode="map"/>
