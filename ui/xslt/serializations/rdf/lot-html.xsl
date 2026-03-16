@@ -28,6 +28,7 @@
 	</xsl:param>
 
 	<!-- paths -->
+	<xsl:variable name="url" select="/content/config/url"/>
 	<xsl:variable name="display_path">
 		<xsl:choose>
 			<xsl:when test="string(//config/uri_space)">					
