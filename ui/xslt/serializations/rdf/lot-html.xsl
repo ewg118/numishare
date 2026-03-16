@@ -14,7 +14,7 @@
 			concat('http://localhost:', if (//config/server-port castable as xs:integer) then
 				//config/server-port
 			else
-				'8080', substring-before(doc('input:request')/request/request-uri, 'id/'))"/>
+				'8080', substring-before(doc('input:request')/request/request-uri, 'lot/'))"/>
 	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
 	<xsl:param name="lang">
 		<xsl:choose>
@@ -28,7 +28,14 @@
 	</xsl:param>
 
 	<!-- paths -->
-	<xsl:variable name="display_path">../</xsl:variable>
+	<xsl:variable name="display_path">
+		<xsl:choose>
+			<xsl:when test="string(//config/uri_space)">					
+				<xsl:value-of select="if (doc('input:request')/request/scheme = 'https') then replace($url, 'http://', 'https://') else $url"/>
+			</xsl:when>
+			<xsl:otherwise>../</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 	<xsl:variable name="include_path" select="
 			if (string(//config/theme/themes_url)) then
 				concat(//config/theme/themes_url, //config/theme/orbeon_theme)
@@ -138,7 +145,7 @@
 					<xsl:apply-templates select="//rdf:RDF/la:Set"/>
 
 					<div id="results"/>
-					
+
 					<noscript>
 						<a href="{$display_path}search?q=recordId:{$id}.*">View objects from this lot.</a>
 					</noscript>
