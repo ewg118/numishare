@@ -1,14 +1,15 @@
 <?php 
 	/************************
 	AUTHOR: Ethan Gruber
-	MODIFIED: October 2025
+	MODIFIED: March 2026
 	DESCRIPTION: Receive an accession number in a parameter and delete from Numishare:
-	eXist database and Solr index.
-	REQUIRED LIBRARIES: php7, php7-curl, php7-cgi
+	eXist database and Solr index. It can work on multiple Numishare collections and also delete lots
+	REQUIRED LIBRARIES: php8, php8-curl, php8-cgi
 	APACHE MODULES: sudo a2enmod cgi
 	************************/
     $eXist_config_path = '/usr/local/projects/numishare/exist-config.xml';
 	$accnum = trim($_GET['accnum']);
+	$lotnum = trim($_GET['lot']);
 	$collection = trim($_GET['collection']);
 
 	if (file_exists($eXist_config_path)) {
@@ -74,6 +75,23 @@
 	        }
 	        //close eXist curl
 	        curl_close($deleteFromExist);
+	    } elseif (strlen($lotnum) > 0) {
+	        //delete object lot RDF/XML
+	        
+	        $basename = $lotnum . '.rdf';
+	        $url = $eXist_url . $collection . '/lots/' . $basename;
+	        
+	        $deleteFromExist=curl_init();
+	        //set curl opts
+	        curl_setopt($deleteFromExist,CURLOPT_URL, $url);
+	        curl_setopt($deleteFromExist,CURLOPT_HTTPHEADER, array("Content-Type: text/xml; charset=utf-8"));
+	        curl_setopt($deleteFromExist,CURLOPT_CONNECTTIMEOUT,2);
+	        curl_setopt($deleteFromExist,CURLOPT_RETURNTRANSFER,1);
+	        curl_setopt($deleteFromExist,CURLOPT_CUSTOMREQUEST, "DELETE");
+	        curl_setopt($deleteFromExist,CURLOPT_USERPWD,$eXist_credentials);
+	        $response = curl_exec($deleteFromExist);
+	        
+	        $http_code = curl_getinfo($deleteFromExist,CURLINFO_HTTP_CODE);
 	    }
 	} 
 	
