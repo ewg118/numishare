@@ -1495,42 +1495,10 @@
 				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 			</h3>
 			
-			<xsl:choose>
-				<xsl:when test="nuds:subject[@localType = 'keyword' or @localType = 'concept']">
-					<ul>
-						<xsl:if test="nuds:subject[@localType = 'keyword']">
-							<li>
-								<b><xsl:value-of select="numishare:regularize_node('keyword', $lang)"/>: </b>
-								<xsl:apply-templates select="nuds:subject[@localType = 'keyword']"/>
-							</li>
-						</xsl:if>
-						<xsl:if test="nuds:subject[@localType = 'concept']">
-							<li>
-								<b><xsl:value-of select="numishare:regularize_node('concept', $lang)"/>: </b>
-								<xsl:apply-templates select="nuds:subject[@localType = 'concept']"/>
-							</li>
-						</xsl:if>
-					</ul>
-				</xsl:when>
-			</xsl:choose>
-			
 			<ul>
-				<xsl:apply-templates select="*[not(@localType = 'keyword' or @localType = 'concept')]" mode="descMeta"/>
+				<xsl:apply-templates mode="descMeta"/>
 			</ul>
 		</div>
-	</xsl:template>
-	
-	<!-- consolidate keywords and concepts into one line -->
-	<xsl:template match="nuds:subject[@localType = 'keyword' or @localType = 'concept']">
-		<xsl:value-of select="."/>
-		<xsl:if test="@xlink:href">
-			<a href="{@xlink:href}" target="_blank" class="external_link">
-				<span class="glyphicon glyphicon-new-window"/>
-			</a>			
-		</xsl:if>	
-		<xsl:if test="not(position() = last())">
-			<xsl:text>, </xsl:text>
-		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="nuds:subject[@localType = 'category' and string(@xml:id)]" mode="descMeta">
