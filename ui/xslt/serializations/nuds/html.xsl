@@ -1527,10 +1527,10 @@
 			<a href="{@xlink:href}" target="_blank" class="external_link">
 				<span class="glyphicon glyphicon-new-window"/>
 			</a>
-		</xsl:if>
-		<xsl:if test="not(position() = last())">
-			<xsl:text>, </xsl:text>
-		</xsl:if>
+			<xsl:if test="not(position() = last())">
+				<xsl:text>, </xsl:text>
+			</xsl:if>
+		</xsl:if>		
 	</xsl:template>
 
 	<xsl:template match="nuds:subject[@localType = 'category' and string(@xml:id)]" mode="descMeta">
