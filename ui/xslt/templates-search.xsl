@@ -242,6 +242,21 @@
 							</option>
 						</select>
 					</div>
+					
+					<div class="form-group">
+						<label for="dob_text">
+							<xsl:value-of select="numishare:normalize_fields('dob', $lang)"/>
+						</label>
+						<input type="text" class="form-control text-search" id="dob_text">
+							<xsl:if test="$tokenized_q[starts-with(., 'dob_text')]">
+								<xsl:attribute name="value">
+									<xsl:for-each select="$tokenized_q[starts-with(., 'dob_text')][1]">
+										<xsl:value-of select="substring-after(., ':')"/>
+									</xsl:for-each>
+								</xsl:attribute>
+							</xsl:if>
+						</input>						
+					</div>
 
 					<xsl:if test="//config/ah_enabled = true()">
 						<xsl:variable name="dateRange">
