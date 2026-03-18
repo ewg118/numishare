@@ -503,8 +503,8 @@
 						</h3>
 						
 						<div class="form-group">
-							<label for="type_text">All Subject Terms</label>
-							<input type="text" class="form-control text-search" id="type_text">
+							<label for="subject_text">All Subject Terms</label>
+							<input type="text" class="form-control text-search" id="subject_text">
 								<xsl:if test="$tokenized_q[starts-with(., 'subject_text')]">
 									<xsl:attribute name="value">
 										<xsl:for-each select="$tokenized_q[starts-with(., 'subject_text')][1]">
