@@ -501,6 +501,20 @@
 						<h3>
 							<xsl:value-of select="numishare:normalize_fields('subjectSet', $lang)"/>
 						</h3>
+						
+						<div class="form-group">
+							<label for="type_text">All Subject Terms</label>
+							<input type="text" class="form-control text-search" id="type_text">
+								<xsl:if test="$tokenized_q[starts-with(., 'subject_text')]">
+									<xsl:attribute name="value">
+										<xsl:for-each select="$tokenized_q[starts-with(., 'subject_text')][1]">
+											<xsl:value-of select="substring-after(., ':')"/>
+										</xsl:for-each>
+									</xsl:attribute>
+								</xsl:if>
+							</input>
+							<span class="text-info">This includes all terms found in various classifications of 'subject.'</span>
+						</div>
 
 						<xsl:for-each select="//config/facets/facet[@role = 'subject' and @type = 'list']">
 							<xsl:variable name="field" select="."/>
