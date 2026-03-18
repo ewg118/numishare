@@ -169,7 +169,7 @@
 		</xsl:if>
 
 		<!-- AH dates -->
-		<xsl:apply-templates select="nuds:dateOnObject[@calendar = 'ah' or @calendar = 'Hijri']"/>
+		<xsl:apply-templates select="nuds:dateOnObject"/>
 
 		<xsl:choose>
 			<xsl:when test="$recordType = 'physical'">
@@ -913,18 +913,44 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template match="nuds:dateOnObject[@calendar = 'ah' or @calendar = 'Hijri']">
-		<xsl:if test="normalize-space(.) castable as xs:integer">
-			<field name="ah_num">
-				<xsl:value-of select="normalize-space(.)"/>
-			</field>
-			<field name="ah_minint">
-				<xsl:value-of select="normalize-space(.)"/>
-			</field>
-			<field name="ah_maxint">
-				<xsl:value-of select="normalize-space(.)"/>
-			</field>
-		</xsl:if>
+	<xsl:template match="nuds:dateOnObject">
+		
+		<xsl:choose>
+			<xsl:when test="@calendar = 'ah' or @calendar = 'Hijri'">
+				<xsl:choose>
+					<xsl:when test="normalize-space(.) castable as xs:integer">
+						<field name="ah_num">
+							<xsl:value-of select="normalize-space(.)"/>
+						</field>
+						<field name="ah_minint">
+							<xsl:value-of select="normalize-space(.)"/>
+						</field>
+						<field name="ah_maxint">
+							<xsl:value-of select="normalize-space(.)"/>
+						</field>
+						<field name="dob_text">
+							<xsl:value-of select="normalize-space(.)"/>
+						</field>
+					</xsl:when>
+					<xsl:otherwise>
+						<field name="dob_text">
+							<xsl:value-of select="normalize-space(.)"/>
+						</field>
+					</xsl:otherwise>
+				</xsl:choose>
+				
+			</xsl:when>
+			<xsl:otherwise>
+				<field name="dob_text">
+					<xsl:value-of select="normalize-space(.)"/>
+				</field>
+				<xsl:if test="*[@standardDate]">
+					<field name="dob_num">
+						<xsl:value-of select="number(*/@standardDate)"/>
+					</field>
+				</xsl:if>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<!-- TEI-encoded symbols and monograms encoded in EpiDoc -->

@@ -936,27 +936,6 @@
 				<xsl:value-of select="."/>
 			</field>
 		</xsl:for-each>
-
-		<!-- dateOnObject -->
-		<xsl:for-each select="nuds:dateOnObject/*[string(@standardDate)]/@standardDate">
-			<xsl:sort order="ascending"/>
-			<field name="dob_num">
-				<xsl:value-of select="."/>
-			</field>
-			<!-- add min and max -->
-			<xsl:if test="position() = 1">
-				<field name="dob_min">
-					<xsl:value-of select="."/>
-				</field>
-			</xsl:if>
-			<xsl:if test="position() = last()">
-				<field name="dob_max">
-					<xsl:value-of select="."/>
-				</field>
-			</xsl:if>
-		</xsl:for-each>
-
-
 	</xsl:template>
 
 	<xsl:template match="nuds:conservationState">
