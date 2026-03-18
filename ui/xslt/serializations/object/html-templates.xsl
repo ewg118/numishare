@@ -689,11 +689,19 @@
 										</xsl:otherwise>
 									</xsl:choose>
 									<ul>
-										<!-- suppress type and legend from nested list output for physical records: these fields are displayed with the 
-									obverse and reverse images, if available -->
+										<!-- suppress type and legend from nested list output for physical records for obverse and reverse: these fields are displayed with the 
+									obverse and reverse images, if available. These fields will display for the edge even when there are photographs available -->
 										<xsl:choose>
 											<xsl:when test="$sideImages = true()">
-												<xsl:apply-templates select="*[not(local-name() = 'type' or local-name() = 'legend')]" mode="descMeta"/>
+												<xsl:choose>
+													<xsl:when test="self::nuds:obverse or self::nuds:reverse">
+														<xsl:apply-templates select="*[not(local-name() = 'type' or local-name() = 'legend')]" mode="descMeta"/>
+													</xsl:when>
+													<xsl:otherwise>
+														<xsl:apply-templates mode="descMeta"/>
+													</xsl:otherwise>
+												</xsl:choose>
+												
 											</xsl:when>
 											<xsl:otherwise>
 												<xsl:apply-templates mode="descMeta"/>
