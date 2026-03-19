@@ -29,8 +29,8 @@ $(document).ready(function () {
         }
     }
     
-    $("#backgroundPopup").on('click', function (event) {
-        disablePopup();
+    $("#backgroundPopup").on('click', function () {
+        disablePopup(popupStatus);
     });
     
     //multiselect facets
@@ -112,7 +112,7 @@ $(document).ready(function () {
     /***************** DRILLDOWN HIERARCHICAL FACETS ********************/
     
     $('.hier-close').click(function () {
-        disablePopup();
+        disablePopup(popupStatus);
         return false;
     });
     
@@ -194,7 +194,7 @@ $(document).ready(function () {
     /***************** DRILLDOWN FOR DATES ********************/
     
     $('.century-close').on('click', function (event) {
-        disablePopup();
+        disablePopup(popupStatus);
         return false;
     });
     
@@ -275,7 +275,7 @@ $(document).ready(function () {
 /***************************/
 
 //disabling popup with jQuery magic!
-function disablePopup() {
+function disablePopup(popupStatus) {
     //disables popup only if it is enabled
     if (popupStatus == 1) {
         $("#backgroundPopup").fadeOut("fast");
