@@ -30,10 +30,7 @@
 						<xsl:when test="contains(doc('input:request')/request/request-url, 'lot/')">							
 							<xsl:variable name="doc" select="tokenize(doc('input:request')/request/request-url, '/')[last()]"/>
 							<xsl:variable name="id">
-								<xsl:choose>
-									<xsl:when test="contains($doc, '.xml')">
-										<xsl:value-of select="substring-before($doc, '.xml')"/>
-									</xsl:when>
+								<xsl:choose>									
 									<xsl:when test="contains($doc, '.rdf')">
 										<xsl:value-of select="substring-before($doc, '.rdf')"/>
 									</xsl:when>
