@@ -148,6 +148,24 @@
 			</xsl:choose>
 		</li>
 	</xsl:template>
+	
+	<xsl:template match="nuds:dateOnObject" mode="descMeta">
+		<li>
+			<b>
+				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+				<xsl:text>: </xsl:text>
+			</b>
+			
+			<xsl:choose>
+				<xsl:when test="nuds:dateRange">
+					<xsl:value-of select="concat(nuds:dateRange/nuds:fromDate, '–', nuds:dateRange/nuds:toDate)"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="nuds:date"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</li>
+	</xsl:template>
 
 	<xsl:template match="*:dateRange" mode="descMeta">
 		<li>
