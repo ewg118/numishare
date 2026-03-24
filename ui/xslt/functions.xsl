@@ -5145,6 +5145,7 @@
                         CSV for the given query and selected hoards</xsl:when>
                     <xsl:when test="$label = 'visualize_select_measurement'">Select
                         Measurement</xsl:when>
+                    <xsl:when test="$label = 'visualize_response_type'">Numerical Response Type</xsl:when>
                     <xsl:when test="$label = 'visualize_chart_type'">Select Chart Type</xsl:when>
                     <xsl:when test="$label = 'visualize_categories'">Select Categories for
                         Analysis</xsl:when>

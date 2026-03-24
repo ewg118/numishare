@@ -42,6 +42,15 @@
 				concat(//config/theme/themes_url, //config/theme/orbeon_theme)
 			else
 				concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
+	
+	<!-- specimen variables -->
+	<xsl:variable name="numFound" select="doc('input:specimens')/response/result[@name = 'response']/@numFound"/>
+	<xsl:variable name="hasGeo" as="xs:boolean">
+		<xsl:choose>
+			<xsl:when test="doc('input:specimens')/descendant::lst[ends-with(@name, 'geo')]/int">true</xsl:when>
+			<xsl:otherwise>false</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 
 	<!-- variables -->
 	<xsl:variable name="objectUri" select="//rdf:RDF/*[1]/@rdf:about"/>
@@ -124,14 +133,28 @@
 		<!-- bootstrap -->
 		<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
 		<script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"/>
-		<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
-		<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
-
-		<!-- network graph functions -->
-		<script type="text/javascript" src="{$include_path}/javascript/d3.min.js"/>
-		<script type="text/javascript" src="{$include_path}/javascript/d3plus-network.full.min.js"/>
-
-		<script type="text/javascript" src="{$include_path}/javascript/lot_functions.js"/>
+		
+		<xsl:if test="$numFound &gt; 0">
+			<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
+			<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
+			
+			<!-- network graph functions -->
+			<script type="text/javascript" src="{$include_path}/javascript/d3.min.js"/>
+			<script type="text/javascript" src="{$include_path}/javascript/d3plus-network.full.min.js"/>
+			
+			<script type="text/javascript" src="{$include_path}/javascript/lot_functions.js"/>
+			
+			<xsl:if test="$hasGeo = true()">
+				<!-- maps-->
+				<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0/dist/leaflet.css"/>
+				
+				<!-- js -->
+				<script src="https://unpkg.com/leaflet@1.0.0/dist/leaflet.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/result_map_functions.js"/>
+			</xsl:if>
+		</xsl:if>
+		
 
 		<!-- google analytics -->
 		<xsl:call-template name="google_analytics">
@@ -141,17 +164,17 @@
 
 	<xsl:template name="body">
 		<div class="container-fluid content">
-			<div class="row">
-				<div class="col-md-12">
-					<xsl:apply-templates select="//rdf:RDF/la:Set"/>
-
-					<div id="results"/>
-
-					<noscript>
-						<a href="{$display_path}search?q=recordId:{$id}.*">View objects from this lot.</a>
-					</noscript>
+			
+			<xsl:apply-templates select="//rdf:RDF/la:Set"/>
+			
+			<xsl:if test="$numFound &gt; 0">
+				<div class="row">
+					<div class="col-md-12">
+						<div id="results"/>
+					</div>
 				</div>
-
+			</xsl:if>
+			<div class="row">
 				<div class="col-md-12">
 					<h3>Export</h3>
 					<ul class="list-inline">
@@ -170,6 +193,7 @@
 					</ul>
 				</div>
 			</div>
+			
 		</div>
 
 		<!-- hidden variables -->
@@ -180,13 +204,13 @@
 			<span id="query">
 				<xsl:value-of select="concat('recordId:', $id, '.*')"/>
 			</span>
-			<span id="pipeline">lot</span>
-			<!--<span id="baselayers">
+			<span id="collection_type">lot</span>
+			<span id="baselayers">
 				<xsl:value-of select="string-join(//config/baselayers/layer[@enabled = true()], ',')"/>
 			</span>
 			<span id="mapboxKey">
 				<xsl:value-of select="//config/mapboxKey"/>
-			</span>-->
+			</span>
 			<span id="lang">
 				<xsl:value-of select="$lang"/>
 			</span>
@@ -197,20 +221,33 @@
 	</xsl:template>
 
 	<xsl:template match="la:Set">
-		<div typeof="{name()}" about="{@rdf:about}">
-			<h1>Lot <xsl:value-of select="rdfs:label"/></h1>
-			<p>
-				<strong><xsl:value-of select="numishare:normalizeLabel('display_canonical_uri', $lang)"/>: </strong>
-				<code>
-					<a href="{$objectUri}" title="{$objectUri}">
-						<xsl:value-of select="$objectUri"/>
-					</a>
-				</code>
-			</p>
-
-			<xsl:apply-templates select="la:members_exemplified_by/crm:E22_Human-Made_Object"/>
+		<div class="row" typeof="{name()}" about="{@rdf:about}">
+			<div class="col-md-12">
+				<h1>Lot <xsl:value-of select="rdfs:label"/></h1>
+				<p>
+					<strong><xsl:value-of select="numishare:normalizeLabel('display_canonical_uri', $lang)"/>: </strong>
+					<code>
+						<a href="{$objectUri}" title="{$objectUri}">
+							<xsl:value-of select="$objectUri"/>
+						</a>
+					</code>
+				</p>
+			</div>
+			<div class="col-md-{if ($hasGeo = true()) then '6' else '12'}">
+				
+				<xsl:apply-templates select="la:members_exemplified_by/crm:E22_Human-Made_Object"/>
+				
+				<noscript>
+					<a href="{$display_path}results?q=recordId:{$id}.*">View objects from this lot.</a>
+				</noscript>
+			</div>
+			
+			<xsl:if test="$hasGeo = true()">
+				<div class="col-md-6">
+					<div id="resultMap"/>
+				</div>
+			</xsl:if>
 		</div>
-
 	</xsl:template>
 
 	<!-- set description -->
@@ -283,6 +320,10 @@
 		<xsl:variable name="uri" select="@rdf:resource"/>
 
 		<xsl:apply-templates select="//rdf:RDF/*[@rdf:about = $uri]"/>
+		
+		<xsl:if test="not(position() = last())">
+			<br/>
+		</xsl:if>	
 	</xsl:template>
 
 	<xsl:template match="crm:E21_Person | crm:E74_Group">
@@ -292,10 +333,6 @@
 			<a href="{la:equivalent/@rdf:resource}" target="_blank" class="external_link">
 				<span class="glyphicon glyphicon-new-window"/>
 			</a>
-		</xsl:if>
-
-		<xsl:if test="not(position() = last())">
-			<xsl:text>, </xsl:text>
 		</xsl:if>
 	</xsl:template>
 
