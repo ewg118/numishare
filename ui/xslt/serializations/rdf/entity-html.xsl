@@ -192,15 +192,22 @@
 				
 				<dl class="dl-horizontal">
 					<xsl:apply-templates select="la:equivalent"/>
+					
+					<xsl:for-each select="//crm:P23_transferred_title_from[not(@rdf:resource = preceding-sibling::crm:P23_transferred_title_from/@rdf:resource) and not(@rdf:resource = $objectUri)]">
+						<xsl:variable name="uri" select="@rdf:resource"/>
+						
+						<xsl:apply-templates select="//*[@rdf:about = $uri]" mode="related-entities"/>
+					</xsl:for-each>
 				</dl>
 			</div>
 			
 			<div class="col-md-{if ($hasGeo = true()) then '6' else '12'}">	
-				<table class="table table-striped">
+				<table class="table table-striped table-responsive">
 					<thead>
 						<tr>
 							<th>Lot</th>
 							<th>Date</th>
+							<th>Type</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -227,6 +234,15 @@
 		</dd>
 	</xsl:template>
 	
+	<xsl:template match="crm:E21_Person | crm:E74_Group" mode="related-entities">
+		<dt>Related Entity</dt>
+		<dd>
+			<a href="{@rdf:about}" title="{rdfs:label}">
+				<xsl:value-of select="rdfs:label"/>
+			</a>			
+		</dd>
+	</xsl:template>
+	
 	<!-- display a table row for each object lot -->
 	<xsl:template match="la:Set">
 		<tr>
@@ -244,6 +260,19 @@
 		<td>
 			<xsl:value-of select="crm:P4_has_time-span/crm:E52_Time-Span/rdfs:label"/>
 		</td>
+		<td>
+			<xsl:apply-templates select="crm:P2_has_type" mode="acquisition-type"/>
+		</td>
+	</xsl:template>
+	
+	<xsl:template match="crm:P2_has_type" mode="acquisition-type">
+		<xsl:variable name="uri" select="@rdf:resource"/>
+		
+		<xsl:apply-templates select="//crm:E55_Type[@rdf:about = $uri][1]" mode="acquisition-type"/>
+	</xsl:template>
+	
+	<xsl:template match="crm:E55_Type" mode="acquisition-type">
+		<xsl:value-of select="rdfs:label"/>
 	</xsl:template>
 
 </xsl:stylesheet>
