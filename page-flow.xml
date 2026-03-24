@@ -108,6 +108,9 @@
 	<page path="/numishare/[^\/]+/lot/(.*)\.jsonld" model="xpl/models/lot/get-lot.xpl" view="xpl/views/serializations/object/json-ld.xpl"/>
 	<page path="/numishare/[^\/]+/lot/(.*)\.ttl" model="xpl/models/lot/get-lot.xpl" view="xpl/views/serializations/rdf/ttl.xpl"/>
 	<page path="/numishare/[^\/]+/lot/(.*)$" model="xpl/models/lot/get-lot.xpl" view="xpl/views/serializations/rdf/lot-html.xpl"/>
+	
+	<page path="/numishare/[^\/]+/entity/(.*)$" model="xpl/models/xquery/get-lots-for-entities.xpl" view="xpl/views/serializations/rdf/entity-html.xpl"/>
+	<page path="/numishare/[^\/]+/entity-model/(.*)$" view="xpl/models/xquery/get-lots-for-entities.xpl"/>
 
 	<!-- IIIF manifest pipelines -->
 	<page path="/numishare/[^\/]+/manifest/(.*)$" model="xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
