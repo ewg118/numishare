@@ -24,6 +24,7 @@
 	
 	<!-- include Solr query to ask for associated number of objects and geographic facets -->
 	<p:processor name="oxf:pipeline">
+		<p:input name="data" href="#config"/>
 		<p:input name="config" href="../../../models/solr/ask-coins-for-lots.xpl"/>
 		<p:output name="data" id="specimens"/>
 	</p:processor>

@@ -61,8 +61,14 @@
 	<xsl:variable name="objectUri"
 		select="concat($url, 'entity/', tokenize(doc('input:request')/request/request-uri, '/')[last()])"/>
 
-	<xsl:variable name="numFound">0</xsl:variable>
-	<xsl:variable name="hasGeo">false</xsl:variable>
+	<!-- specimen variables -->
+	<xsl:variable name="numFound" select="doc('input:specimens')/response/result[@name = 'response']/@numFound"/>
+	<xsl:variable name="hasGeo" as="xs:boolean">
+		<xsl:choose>
+			<xsl:when test="doc('input:specimens')/descendant::lst[ends-with(@name, 'geo')]/int">true</xsl:when>
+			<xsl:otherwise>false</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 
 	<!-- namespaces -->
 	<xsl:variable name="namespaces" as="item()*">
@@ -171,6 +177,7 @@
 
 	<xsl:template name="body">
 		<div class="container-fluid content">
+			
 			<xsl:apply-templates select="//*[@rdf:about = $objectUri][1]"/>
 		</div>
 
@@ -258,6 +265,14 @@
 				</div>
 			</xsl:if>
 		</div>
+
+		<xsl:if test="$numFound &gt; 0">
+			<div class="row">
+				<div class="col-md-12">
+					<div id="results"/>
+				</div>
+			</div>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="la:equivalent">

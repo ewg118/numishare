@@ -22,16 +22,17 @@
 		<p:output name="data" id="config"/>
 	</p:processor>
 	
-	<!--<!-\- include Solr query to ask for associated number of objects and geographic facets -\->
+	<!-- include Solr query to ask for associated number of objects and geographic facets -->
 	<p:processor name="oxf:pipeline">
+		<p:input name="data" href="#data"/>
 		<p:input name="config" href="../../../models/solr/ask-coins-for-lots.xpl"/>
 		<p:output name="data" id="specimens"/>
-	</p:processor>-->
+	</p:processor>
 	
 	<!-- serialize models into HTML -->
 	<p:processor name="oxf:unsafe-xslt">
 		<p:input name="request" href="#request"/>
-		<!--<p:input name="specimens" href="#specimens"/>-->
+		<p:input name="specimens" href="#specimens"/>
 		<p:input name="data" href="aggregate('content', #data, #config)"/>
 		<p:input name="config" href="../../../../ui/xslt/serializations/rdf/entity-html.xsl"/>
 		<p:output name="data" id="model"/>
