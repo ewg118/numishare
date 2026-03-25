@@ -244,12 +244,15 @@
 			</div>
 
 			<div class="col-md-{if ($hasGeo = true()) then '6' else '12'}">
+				<p class="text-info">
+					<strong>Note: </strong> Contents recorded in the accession history may differ than what is publicly available in the collection database. </p>
 				<table class="table table-striped table-responsive">
 					<thead>
 						<tr>
 							<th>Lot</th>
 							<th>Date</th>
 							<th>Type</th>
+							<th>Count</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -303,7 +306,9 @@
 			</td>
 			<xsl:apply-templates
 				select="la:members_exemplified_by/crm:E22_Human-Made_Object/crm:P24i_changed_ownership_through/crm:E8_Acquisition"/>
-
+			<td>
+				<xsl:value-of select="sum(descendant::crm:P90_has_value)"/>
+			</td>
 		</tr>
 	</xsl:template>
 
