@@ -16,7 +16,7 @@ declare namespace la = "https://linked.art/ns/terms/";
     xmlns:la="https://linked.art/ns/terms/">
     {
         for $record in collection(COLLECTION)//rdf:RDF[descendant::crm:P23_transferred_title_from[@rdf:resource = '%URI%']]
-            order by $record//crm:P82a_begin_of_the_begin
+            order by $record//crm:P82a_begin_of_the_begin descending
         return
            $record/*
     }

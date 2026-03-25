@@ -327,7 +327,9 @@
 	</xsl:template>
 
 	<xsl:template match="crm:E21_Person | crm:E74_Group">
-		<xsl:value-of select="rdfs:label"/>
+		<a href="{@rdf:about}" title="{rdfs:label}">
+			<xsl:value-of select="rdfs:label"/>
+		</a>
 
 		<xsl:if test="la:equivalent">
 			<a href="{la:equivalent/@rdf:resource}" target="_blank" class="external_link">

@@ -1,28 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dcterms="http://purl.org/dc/terms/"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:void="http://rdfs.org/ns/void#" xmlns:numishare="https://github.com/ewg118/numishare"
-	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#" xmlns:res="http://www.w3.org/2005/sparql-results#"
-	xmlns:prov="http://www.w3.org/ns/prov#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig/"
-	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:la="https://linked.art/ns/terms/" exclude-result-prefixes="#all" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dcterms="http://purl.org/dc/terms/"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:void="http://rdfs.org/ns/void#"
+	xmlns:numishare="https://github.com/ewg118/numishare"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/"
+	xmlns:nmo="http://nomisma.org/ontology#" xmlns:res="http://www.w3.org/2005/sparql-results#"
+	xmlns:prov="http://www.w3.org/ns/prov#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"
+	xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig/"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:la="https://linked.art/ns/terms/"
+	exclude-result-prefixes="#all" version="2.0">
 
 	<xsl:include href="../../templates.xsl"/>
 	<xsl:include href="../../functions.xsl"/>
 
 	<!-- URL params -->
-	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
+	<xsl:variable name="collection-name"
+		select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 	<xsl:variable name="request-uri" select="
 			concat('http://localhost:', if (//config/server-port castable as xs:integer) then
 				//config/server-port
 			else
 				'8080', substring-before(doc('input:request')/request/request-uri, 'lot/'))"/>
-	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
+	<xsl:param name="langParam"
+		select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
 	<xsl:param name="lang">
 		<xsl:choose>
 			<xsl:when test="string($langParam)">
 				<xsl:value-of select="$langParam"/>
 			</xsl:when>
-			<xsl:when test="string(doc('input:request')/request//header[name[. = 'accept-language']]/value)">
-				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[. = 'accept-language']]/value)[1]"/>
+			<xsl:when
+				test="string(doc('input:request')/request//header[name[. = 'accept-language']]/value)">
+				<xsl:value-of
+					select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[. = 'accept-language']]/value)[1]"
+				/>
 			</xsl:when>
 		</xsl:choose>
 	</xsl:param>
@@ -31,8 +41,12 @@
 	<xsl:variable name="url" select="/content/config/url"/>
 	<xsl:variable name="display_path">
 		<xsl:choose>
-			<xsl:when test="string(//config/uri_space)">					
-				<xsl:value-of select="if (doc('input:request')/request/scheme = 'https') then replace($url, 'http://', 'https://') else $url"/>
+			<xsl:when test="string(//config/uri_space)">
+				<xsl:value-of select="
+						if (doc('input:request')/request/scheme = 'https') then
+							replace($url, 'http://', 'https://')
+						else
+							$url"/>
 			</xsl:when>
 			<xsl:otherwise>../</xsl:otherwise>
 		</xsl:choose>
@@ -44,8 +58,9 @@
 				concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 
 	<!-- variables -->
-	<xsl:variable name="objectUri" select="concat($url, 'entity/', tokenize(doc('input:request')/request/request-uri, '/')[last()])"/>
-	
+	<xsl:variable name="objectUri"
+		select="concat($url, 'entity/', tokenize(doc('input:request')/request/request-uri, '/')[last()])"/>
+
 	<xsl:variable name="numFound">0</xsl:variable>
 	<xsl:variable name="hasGeo">false</xsl:variable>
 
@@ -104,7 +119,8 @@
 		</meta>
 
 		<!-- CSS -->
-		<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/{if (string(//config/favicon)) then //config/favicon else 'favicon.png'}"/>
+		<link rel="shortcut icon" type="image/x-icon"
+			href="{$include_path}/images/{if (string(//config/favicon)) then //config/favicon else 'favicon.png'}"/>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
@@ -120,30 +136,32 @@
 		</xsl:for-each>
 
 		<!-- bootstrap -->
-		<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+		<link rel="stylesheet"
+			href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
 		<script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"/>
-		
+
 		<xsl:if test="$numFound &gt; 0">
-			<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
+			<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5"
+				type="text/css" media="screen"/>
 			<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
-			
+
 			<!-- network graph functions -->
 			<script type="text/javascript" src="{$include_path}/javascript/d3.min.js"/>
 			<script type="text/javascript" src="{$include_path}/javascript/d3plus-network.full.min.js"/>
-			
+
 			<script type="text/javascript" src="{$include_path}/javascript/lot_functions.js"/>
-			
+
 			<xsl:if test="$hasGeo = true()">
 				<!-- maps-->
 				<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0/dist/leaflet.css"/>
-				
+
 				<!-- js -->
 				<script src="https://unpkg.com/leaflet@1.0.0/dist/leaflet.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/result_map_functions.js"/>
 			</xsl:if>
 		</xsl:if>
-		
+
 
 		<!-- google analytics -->
 		<xsl:call-template name="google_analytics">
@@ -161,9 +179,22 @@
 			<span id="path">
 				<xsl:value-of select="$display_path"/>
 			</span>
+			<span id="query">
+				<xsl:variable name="lots">
+					<xsl:for-each select="//la:Set">
+						<xsl:value-of select="concat(rdfs:label, '.*')"/>
+						<xsl:if test="not(position() = last())">
+							<xsl:text> OR </xsl:text>
+						</xsl:if>
+					</xsl:for-each>
+				</xsl:variable>
+
+				<xsl:value-of select="concat('recordId:(', $lots, ')')"/>
+			</span>
 			<span id="collection_type">lot</span>
 			<span id="baselayers">
-				<xsl:value-of select="string-join(//config/baselayers/layer[@enabled = true()], ',')"/>
+				<xsl:value-of
+					select="string-join(//config/baselayers/layer[@enabled = true()], ',')"/>
 			</span>
 			<span id="mapboxKey">
 				<xsl:value-of select="//config/mapboxKey"/>
@@ -178,30 +209,34 @@
 	</xsl:template>
 
 	<xsl:template match="crm:E21_Person | crm:E74_Group">
+		<xsl:variable name="uri" select="@rdf:about"/>
+
 		<div class="row" typeof="{name()}" about="{@rdf:about}">
 			<div class="col-md-12">
-				<h1><xsl:value-of select="rdfs:label"/></h1>
+				<h1>
+					<xsl:value-of select="rdfs:label"/>
+				</h1>
 				<p>
-					<strong><xsl:value-of select="numishare:normalizeLabel('display_canonical_uri', $lang)"/>: </strong>
+					<strong><xsl:value-of
+							select="numishare:normalizeLabel('display_canonical_uri', $lang)"/>: </strong>
 					<code>
 						<a href="{@rdf:about}" title="{@rdf:about}">
 							<xsl:value-of select="@rdf:about"/>
 						</a>
 					</code>
 				</p>
-				
+
 				<dl class="dl-horizontal">
 					<xsl:apply-templates select="la:equivalent"/>
-					
-					<xsl:for-each select="//crm:P23_transferred_title_from[not(@rdf:resource = preceding-sibling::crm:P23_transferred_title_from/@rdf:resource) and not(@rdf:resource = $objectUri)]">
-						<xsl:variable name="uri" select="@rdf:resource"/>
-						
-						<xsl:apply-templates select="//*[@rdf:about = $uri]" mode="related-entities"/>
-					</xsl:for-each>
+
+					<!-- apply templates only on unique values for related entities -->
+					<xsl:apply-templates
+						select="//crm:E21_Person[not(@rdf:about = $uri) and not(@rdf:about = preceding::*/@rdf:about)] | crm:E74_Group[not(@rdf:about = $uri) and not(@rdf:about = preceding::*/@rdf:about)]"
+						mode="related-entities"/>
 				</dl>
 			</div>
-			
-			<div class="col-md-{if ($hasGeo = true()) then '6' else '12'}">	
+
+			<div class="col-md-{if ($hasGeo = true()) then '6' else '12'}">
 				<table class="table table-striped table-responsive">
 					<thead>
 						<tr>
@@ -212,11 +247,11 @@
 					</thead>
 					<tbody>
 						<xsl:apply-templates select="//la:Set"/>
-					</tbody>					
+					</tbody>
 				</table>
-				
+
 			</div>
-			
+
 			<xsl:if test="$hasGeo = true()">
 				<div class="col-md-6">
 					<div id="resultMap"/>
@@ -233,29 +268,30 @@
 			</a>
 		</dd>
 	</xsl:template>
-	
+
 	<xsl:template match="crm:E21_Person | crm:E74_Group" mode="related-entities">
 		<dt>Related Entity</dt>
 		<dd>
 			<a href="{@rdf:about}" title="{rdfs:label}">
 				<xsl:value-of select="rdfs:label"/>
-			</a>			
+			</a>
 		</dd>
 	</xsl:template>
-	
+
 	<!-- display a table row for each object lot -->
 	<xsl:template match="la:Set">
 		<tr>
 			<td>
 				<a href="{@rdf:about}" title="{rdfs:label}">
 					<xsl:value-of select="rdfs:label"/>
-				</a>				
+				</a>
 			</td>
-			<xsl:apply-templates select="la:members_exemplified_by/crm:E22_Human-Made_Object/crm:P24i_changed_ownership_through/crm:E8_Acquisition"/>
-			
+			<xsl:apply-templates
+				select="la:members_exemplified_by/crm:E22_Human-Made_Object/crm:P24i_changed_ownership_through/crm:E8_Acquisition"/>
+
 		</tr>
 	</xsl:template>
-	
+
 	<xsl:template match="crm:E8_Acquisition">
 		<td>
 			<xsl:value-of select="crm:P4_has_time-span/crm:E52_Time-Span/rdfs:label"/>
@@ -264,13 +300,13 @@
 			<xsl:apply-templates select="crm:P2_has_type" mode="acquisition-type"/>
 		</td>
 	</xsl:template>
-	
+
 	<xsl:template match="crm:P2_has_type" mode="acquisition-type">
 		<xsl:variable name="uri" select="@rdf:resource"/>
-		
+
 		<xsl:apply-templates select="//crm:E55_Type[@rdf:about = $uri][1]" mode="acquisition-type"/>
 	</xsl:template>
-	
+
 	<xsl:template match="crm:E55_Type" mode="acquisition-type">
 		<xsl:value-of select="rdfs:label"/>
 	</xsl:template>
