@@ -969,9 +969,11 @@
 					</field>
 				</xsl:if>
 			</xsl:if>
-		</xsl:for-each>
+		</xsl:for-each>		
 
 		<xsl:apply-templates select="nuds:identifier"/>
+		
+		<xsl:apply-templates select="nuds:lot"/>
 
 		<xsl:apply-templates select="nuds:provenance/nuds:chronList/nuds:chronItem"/>
 	</xsl:template>
@@ -1025,11 +1027,11 @@
 		<xsl:apply-templates select="nuds:persname|nuds:corpname|nuds:famname"/>
 	</xsl:template>
 
-	<xsl:template match="nuds:identifier">
-		<field name="identifier_text">
+	<xsl:template match="nuds:identifier | nuds:lot">
+		<field name="{local-name()}_text">
 			<xsl:value-of select="normalize-space(.)"/>
 		</field>
-		<field name="identifier_display">
+		<field name="{local-name()}_display">
 			<xsl:value-of select="normalize-space(.)"/>
 		</field>
 	</xsl:template>

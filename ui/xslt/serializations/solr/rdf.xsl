@@ -6,7 +6,7 @@
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:oa="http://www.w3.org/ns/oa#"
 	xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
 	xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:edm="http://www.europeana.eu/schemas/edm/"
-	xmlns:svcs="http://rdfs.org/sioc/services#" xmlns:doap="http://usefulinc.com/ns/doap#" version="2.0">
+	xmlns:svcs="http://rdfs.org/sioc/services#" xmlns:doap="http://usefulinc.com/ns/doap#" xmlns:la="https://linked.art/ns/terms/" version="2.0">
 
 	<xsl:param name="mode" select="//lst[@name = 'params']/str[@name = 'mode']"/>
 	<xsl:param name="url" select="/content/config/url"/>
@@ -208,6 +208,12 @@
 					</dcterms:identifier>
 				</xsl:otherwise>
 			</xsl:choose>
+			
+			<xsl:if test="str[@name = 'lot_display']">
+				<la:member_of>
+					<xsl:value-of select="str[@name = 'lot_display']"/>
+				</la:member_of>
+			</xsl:if>
 			
 			<xsl:if test="arr[@name = 'homepage_uri']">
 				<xsl:for-each select="arr[@name = 'homepage_uri']/str">

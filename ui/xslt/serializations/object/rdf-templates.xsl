@@ -17,7 +17,7 @@
 	xmlns:crmarchaeo="http://www.cidoc-crm.org/cidoc-crm/CRMarchaeo/"
 	xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"
 	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:foaf="http://xmlns.com/foaf/0.1/"
-	xmlns:mets="http://www.loc.gov/METS/" xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+	xmlns:mets="http://www.loc.gov/METS/" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:la="https://linked.art/ns/terms/"
 	exclude-result-prefixes="xsl xs nuds nh xlink numishare mets gml tei" version="2.0">
 
 	<!-- ************** PELAGIOS TEMPLATES **************** -->
@@ -342,6 +342,12 @@
 									<xsl:value-of
 										select="nuds:descMeta/nuds:adminDesc/nuds:identifier"/>
 								</dcterms:identifier>
+							</xsl:if>
+							<xsl:if test="nuds:descMeta/nuds:adminDesc/nuds:lot">
+								<la:member_of>
+									<xsl:value-of
+										select="nuds:descMeta/nuds:adminDesc/nuds:lot"/>
+								</la:member_of>
 							</xsl:if>
 							<xsl:for-each select="descendant::nuds:collection">
 								<nmo:hasCollection>
