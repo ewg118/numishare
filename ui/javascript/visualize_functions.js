@@ -1,8 +1,8 @@
 /************************************
-VISUALIZATION FUNCTIONS
-Written by Ethan Gruber, gruber@numismatics.org
-Library: jQuery
-Description: Rendering graphics based on hoard counts
+ VISUALIZATION FUNCTIONS
+ Written by Ethan Gruber, gruber@numismatics.org
+ Library: jQuery
+ Description: Rendering graphics based on hoard counts
  ************************************/
 $(document).ready(function () {
     
@@ -25,7 +25,7 @@ $(document).ready(function () {
         }
     })();
     
-    var path = './';
+    var path = $('#path').text();
     
     
     /**** RENDER CHART ****/
@@ -85,6 +85,20 @@ $(document).ready(function () {
         return false;
     });
     
+    //catch the page on submission of the visualization form and trigger the chart rendering if on a provenance page
+    $('#distributionForm').submit(function() {
+        var page = $('#page').text();
+        if (page == 'provenance') {
+            urlParams = {};
+            urlParams['category'] = $('select[name=category] option:selected').val();
+            urlParams['compare'] = $('input[name=compare]').val();
+            
+            $('.chart-container').removeClass('hidden');
+            renderDistChart(path, urlParams);
+            return false;            
+        }
+    });
+        
     //remove comparison or custom queries
     $('#compareQueryDiv').on('click', '.compareQuery .removeQuery', function () {
         $(this).parent('div').remove();
@@ -92,6 +106,8 @@ $(document).ready(function () {
         return false;
     });
 });
+
+
 
 function renderDistChart(path, urlParams) {
     var distValue = $('select[name=category] option:selected').val();
@@ -103,7 +119,7 @@ function renderDistChart(path, urlParams) {
         var y = 'percentage';
     }
     
-    $.get(path + 'apis/getSolrDistribution', $.param(urlParams, true),
+    $. get (path + 'apis/getSolrDistribution', $.param(urlParams, true),
     function (data) {
         //$('#distribution .chart-container').removeClass('hidden');
         $('#distribution-chart').html('');
@@ -130,13 +146,17 @@ function validate(formId) {
         elements.push(false);
     }
     
+    var page = $('#page').text();
+    
     //there must be at least one compare container on the analsyis page
-    if ($('#' + formId + ' .compareQuery span.query').length >= 1) {
-        elements.push(true);
-        $('#empty-query-alert').addClass('hidden');
-    } else {
-        elements.push(false);
-        $('#empty-query-alert').removeClass('hidden');
+    if (page == 'page') {
+        if ($('#' + formId + ' .compareQuery span.query').length >= 1) {
+            elements.push(true);
+            $('#empty-query-alert').addClass('hidden');
+        } else {
+            elements.push(false);
+            $('#empty-query-alert').removeClass('hidden');
+        }
     }
     
     //if there is a false element to the form OR if there is only one element (i.e., the category, then the form is invalid
@@ -155,7 +175,13 @@ function validate(formId) {
             queries.push($(this).text());
         });
         
-        compare = queries.join('|');
+        if (page == 'page') {
+            compare = queries.join('|');
+        } else if (page == 'provenance') {
+            compare = $('#query').text();
+        }
+        
+        
         $('#' + formId).children('input[name=compare]').val(compare);
     } else {
         $('#' + formId).children('.visualize-submit').prop("disabled", true);
