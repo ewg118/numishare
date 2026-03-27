@@ -86,19 +86,21 @@ $(document).ready(function () {
     });
     
     //catch the page on submission of the visualization form and trigger the chart rendering if on a provenance page
-    $('#distributionForm').submit(function() {
+    $('#distributionForm').submit(function () {
         var page = $('#page').text();
         if (page == 'provenance') {
-            urlParams = {};
+            urlParams = {
+            };
             urlParams['category'] = $('select[name=category] option:selected').val();
+            urlParams['type'] = $('input[name=type]:checked').val();
             urlParams['compare'] = $('input[name=compare]').val();
             
             $('.chart-container').removeClass('hidden');
             renderDistChart(path, urlParams);
-            return false;            
+            return false;
         }
     });
-        
+    
     //remove comparison or custom queries
     $('#compareQueryDiv').on('click', '.compareQuery .removeQuery', function () {
         $(this).parent('div').remove();
