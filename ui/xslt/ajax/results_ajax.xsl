@@ -72,7 +72,7 @@
 			<!-- don't display headings for object lots -->
 			<xsl:choose>
 				<xsl:when test="$pipeline = 'lot'">
-					<h3>Public Objects</h3>
+					<h2>Public Objects</h2>
 				</xsl:when>
 				<xsl:otherwise>
 					<h1>

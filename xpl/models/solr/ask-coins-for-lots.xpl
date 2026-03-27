@@ -59,12 +59,18 @@
 					</xsl:choose>
 				</xsl:variable>
 
+				<!-- include regular search facets for populating visualization distribution categories -->
+				<xsl:variable name="facets">
+					<xsl:text>&amp;facet.field=</xsl:text>
+					<xsl:value-of select="string-join(doc('input:config-xml')/config/facets/facet, '&amp;facet.field=')"/>
+				</xsl:variable>
+
 				<!-- config variables -->
 				<xsl:variable name="solr-url"
 					select="concat(doc('input:config-xml')/config/solr_published, 'select/')"/>
 
 				<xsl:variable name="service"
-					select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+recordId:', encode-for-uri($query), '&amp;rows=0&amp;facet=true&amp;facet.limit=1&amp;facet.field=productionPlace_geo&amp;facet.field=mint_geo&amp;facet.field=issuePlace_geo&amp;facet.field=subject_geo&amp;facet.field=findspot_geo&amp;facet.field=hoard_geo')"/>
+					select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+recordId:', encode-for-uri($query), '&amp;rows=0&amp;facet=true&amp;facet.limit=1', $facets, '&amp;facet.field=productionPlace_geo&amp;facet.field=mint_geo&amp;facet.field=issuePlace_geo&amp;facet.field=subject_geo&amp;facet.field=findspot_geo&amp;facet.field=hoard_geo')"/>
 
 				<xsl:template match="/">
 					<config>

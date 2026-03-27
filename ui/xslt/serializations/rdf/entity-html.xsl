@@ -12,6 +12,7 @@
 
 	<xsl:include href="../../templates.xsl"/>
 	<xsl:include href="../../functions.xsl"/>
+	<xsl:include href="../../vis-solr-templates.xsl"/>
 
 	<!-- URL params -->
 	<xsl:variable name="collection-name"
@@ -62,13 +63,25 @@
 		select="concat($url, 'entity/', tokenize(doc('input:request')/request/request-uri, '/')[last()])"/>
 
 	<!-- specimen variables -->
-	<xsl:variable name="numFound" select="doc('input:specimens')/response/result[@name = 'response']/@numFound"/>
+	<xsl:variable name="numFound"
+		select="doc('input:specimens')/response/result[@name = 'response']/@numFound"/>
 	<xsl:variable name="hasGeo" as="xs:boolean">
 		<xsl:choose>
-			<xsl:when test="doc('input:specimens')/descendant::lst[ends-with(@name, 'geo')]/int">true</xsl:when>
+			<xsl:when test="doc('input:specimens')/descendant::lst[ends-with(@name, 'geo')]/int"
+				>true</xsl:when>
 			<xsl:otherwise>false</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
+
+	<!-- visualization mode -->
+	<xsl:variable name="page">provenance</xsl:variable>
+
+	<!-- empty variables for visualization -->
+	<xsl:param name="q"/>
+	<xsl:variable name="tokenized_q"/>
+	<xsl:param name="dist"/>
+	<xsl:param name="compare"/>
+	<xsl:param name="numericType"/>
 
 	<!-- namespaces -->
 	<xsl:variable name="namespaces" as="item()*">
@@ -151,9 +164,10 @@
 				type="text/css" media="screen"/>
 			<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 
-			<!-- network graph functions -->
+			<!-- visualization functions -->
 			<script type="text/javascript" src="{$include_path}/javascript/d3.min.js"/>
-			<script type="text/javascript" src="{$include_path}/javascript/d3plus-network.full.min.js"/>
+			<script type="text/javascript" src="{$include_path}/javascript/d3plus-plot.full.min.js"/>
+			<script type="text/javascript" src="{$include_path}/javascript/visualize_functions.js"/>
 
 			<script type="text/javascript" src="{$include_path}/javascript/lot_functions.js"/>
 
@@ -177,8 +191,31 @@
 
 	<xsl:template name="body">
 		<div class="container-fluid content">
-			
+			<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
+				<xsl:attribute name="style">direction: rtl;</xsl:attribute>
+			</xsl:if>
+
 			<xsl:apply-templates select="//*[@rdf:about = $objectUri][1]"/>
+
+			<xsl:if test="$numFound &gt; 0">
+				<div class="row">
+					<div class="col-md-12">
+						<div id="results"/>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12">
+						<h2>
+							<xsl:value-of
+								select="numishare:normalizeLabel('header_visualize', $lang)"/>
+						</h2>
+
+						<xsl:apply-templates select="doc('input:specimens')//response"/>
+
+					</div>
+				</div>
+			</xsl:if>
 		</div>
 
 		<!-- hidden variables -->
@@ -212,6 +249,12 @@
 			<span id="objectURI">
 				<xsl:value-of select="$objectUri"/>
 			</span>
+
+			<!-- visualization templates -->
+			<span id="page">
+				<xsl:value-of select="$page"/>
+			</span>
+			<span id="interface">distribution</span>
 		</div>
 	</xsl:template>
 
@@ -233,6 +276,10 @@
 					</code>
 				</p>
 
+				<p>
+					<a href="#distribution">Distribution Analysis</a>
+				</p>
+
 				<dl class="dl-horizontal">
 					<xsl:apply-templates select="la:equivalent"/>
 
@@ -245,7 +292,8 @@
 
 			<div class="col-md-{if ($hasGeo = true()) then '6' else '12'}">
 				<p class="text-info">
-					<strong>Note: </strong> Contents recorded in the accession history may differ than what is publicly available in the collection database. </p>
+					<strong>Note: </strong> Contents recorded in the accession history may differ
+					than what is publicly available in the collection database. </p>
 				<table class="table table-striped table-responsive">
 					<thead>
 						<tr>
@@ -268,14 +316,6 @@
 				</div>
 			</xsl:if>
 		</div>
-
-		<xsl:if test="$numFound &gt; 0">
-			<div class="row">
-				<div class="col-md-12">
-					<div id="results"/>
-				</div>
-			</div>
-		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="la:equivalent">
@@ -329,6 +369,21 @@
 
 	<xsl:template match="crm:E55_Type" mode="acquisition-type">
 		<xsl:value-of select="rdfs:label"/>
+	</xsl:template>
+
+	<!-- render the distribution interface based on the Solr response and facet terms -->
+	<xsl:template match="response">
+		<xsl:call-template name="solr-chart">
+			<xsl:with-param name="hidden" select="true()" as="xs:boolean"/>
+			<xsl:with-param name="interface">distribution</xsl:with-param>
+			<xsl:with-param name="page" select="$page"/>
+		</xsl:call-template>
+
+		<div id="distribution">
+			<xsl:call-template name="solr-distribution-form">
+				<xsl:with-param name="page" select="$page"/>
+			</xsl:call-template>
+		</div>
 	</xsl:template>
 
 </xsl:stylesheet>
