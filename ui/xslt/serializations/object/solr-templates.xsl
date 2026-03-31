@@ -1336,46 +1336,48 @@
 
 	<xsl:template name="parse_dates">
 		<xsl:param name="typologies"/>
+		
+		<!-- only parse values of date and dateRange which appears directly in typeDesc, excluding any which comes within dateOnObject -->
 
 		<xsl:choose>
 			<!-- use the date text when @notBefore and @notAfter are used -->
-			<xsl:when test="count($typologies//nuds:date) = 1 and $typologies//nuds:date[@notBefore and @notAfter]">
+			<xsl:when test="count($typologies//nuds:typeDesc/nuds:date) = 1 and $typologies//nuds:typeDesc/nuds:date[@notBefore and @notAfter]">
 				<field name="year_minint">
-					<xsl:value-of select="number($typologies//nuds:date/@notBefore)"/>
+					<xsl:value-of select="number($typologies//nuds:typeDesc/nuds:date/@notBefore)"/>
 				</field>
 				<field name="year_num">
-					<xsl:value-of select="number($typologies//nuds:date/@notBefore)"/>
+					<xsl:value-of select="number($typologies//nuds:typeDesc/nuds:date/@notBefore)"/>
 				</field>
 				<field name="year_maxint">
-					<xsl:value-of select="number($typologies//nuds:date/@notAfter)"/>
+					<xsl:value-of select="number($typologies//nuds:typeDesc/nuds:date/@notAfter)"/>
 				</field>
 				<field name="year_num">
-					<xsl:value-of select="number($typologies//nuds:date/@notAfter)"/>
+					<xsl:value-of select="number($typologies//nuds:typeDesc/nuds:date/@notAfter)"/>
 				</field>
 				<field name="date_display">
-					<xsl:value-of select="$typologies//nuds:date"/>
+					<xsl:value-of select="$typologies//nuds:typeDesc/nuds:date"/>
 				</field>
 			</xsl:when>
-			<xsl:when test="count($typologies//nuds:date) = 1 and $typologies//nuds:date[@standardDate]">
+			<xsl:when test="count($typologies//nuds:typeDesc/nuds:date) = 1 and $typologies//nuds:typeDesc/nuds:date[@standardDate]">
 				<field name="year_minint">
-					<xsl:value-of select="number($typologies//nuds:date/@standardDate)"/>
+					<xsl:value-of select="number($typologies//nuds:typeDesc/nuds:date/@standardDate)"/>
 				</field>
 				<field name="year_num">
-					<xsl:value-of select="number($typologies//nuds:date/@standardDate)"/>
+					<xsl:value-of select="number($typologies//nuds:typeDesc/nuds:date/@standardDate)"/>
 				</field>
 				<field name="year_maxint">
-					<xsl:value-of select="number($typologies//nuds:date/@standardDate)"/>
+					<xsl:value-of select="number($typologies//nuds:typeDesc/nuds:date/@standardDate)"/>
 				</field>
 
 				<xsl:choose>
 					<xsl:when test="$collection-name = 'oscar'">
 						<field name="date_display">
-							<xsl:value-of select="$typologies//nuds:date"/>
+							<xsl:value-of select="$typologies//nuds:typeDesc/nuds:date"/>
 						</field>
 					</xsl:when>
 					<xsl:otherwise>
 						<field name="date_display">
-							<xsl:value-of select="numishare:normalizeDate($typologies//nuds:date[1]/@standardDate)"/>
+							<xsl:value-of select="numishare:normalizeDate($typologies//nuds:typeDesc/nuds:date[1]/@standardDate)"/>
 						</field>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -1384,7 +1386,7 @@
 			<xsl:otherwise>
 				<xsl:variable name="dates" as="element()*">
 					<dates>
-						<xsl:for-each select="distinct-values($typologies/descendant::*/@standardDate)">
+						<xsl:for-each select="distinct-values($typologies/descendant::*[not(parent::nuds:dateOnObject)]/@standardDate)">
 							<xsl:sort order="ascending" data-type="number"/>
 							<xsl:if test="number(.)">
 								<date>
