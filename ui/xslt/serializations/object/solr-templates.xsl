@@ -944,7 +944,7 @@
 				<field name="dob_text">
 					<xsl:value-of select="normalize-space(.)"/>
 				</field>
-				<xsl:if test="*[@standardDate]">
+				<xsl:if test="number(*/@standardDate)">
 					<field name="dob_num">
 						<xsl:value-of select="number(*/@standardDate)"/>
 					</field>
