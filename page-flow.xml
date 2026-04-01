@@ -105,7 +105,7 @@
 	
 	<!-- object lot -->
 	<page path="/numishare/[^\/]+/lot/(.*)\.rdf" view="xpl/models/lot/get-lot.xpl"/>
-	<page path="/numishare/[^\/]+/lot/(.*)\.jsonld" model="xpl/models/lot/get-lot.xpl" view="xpl/views/serializations/object/json-ld.xpl"/>
+	<page path="/numishare/[^\/]+/lot/(.*)\.jsonld" model="xpl/models/lot/get-lot.xpl" view="xpl/views/serializations/rdf/linkedart-json-ld.xpl"/>
 	<page path="/numishare/[^\/]+/lot/(.*)\.ttl" model="xpl/models/lot/get-lot.xpl" view="xpl/views/serializations/rdf/ttl.xpl"/>
 	<page path="/numishare/[^\/]+/lot/(.*)$" model="xpl/models/lot/get-lot.xpl" view="xpl/views/serializations/rdf/lot-html.xpl"/>
 	
