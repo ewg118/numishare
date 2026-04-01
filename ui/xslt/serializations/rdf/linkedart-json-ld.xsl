@@ -295,7 +295,7 @@
 			<_label>
 				<xsl:value-of select="rdfs:label"/>
 			</_label>
-			<xsl:if test="crm:P2_has_type">
+			<xsl:if test="crm:P2_has_type[@rdf:resource]">
 				<classified_as>
 					<_array>
 						<_object>
