@@ -395,10 +395,10 @@
 				<xsl:value-of select="crm:P90_has_value"/>
 			</td>
 			<td>
-				<xsl:value-of select="crm:P2_has_type/crm:E55_Type[crm:P2_has_type = 'http://vocab.getty.edu/aat/300435443']/rdfs:label"/>
+				<xsl:value-of select="crm:P2_has_type/crm:E55_Type[crm:P2_has_type/@rdf:resource = 'http://vocab.getty.edu/aat/300435443']/rdfs:label"/>
 			</td>
 			<td>
-				<xsl:value-of select="crm:P2_has_type/crm:E55_Type[crm:P2_has_type = 'http://vocab.getty.edu/aat/300263534']/rdfs:label"/>
+				<xsl:value-of select="crm:P2_has_type/crm:E55_Type[crm:P2_has_type/@rdf:resource = 'http://vocab.getty.edu/aat/300263534']/rdfs:label"/>
 			</td>
 		</tr>
 	</xsl:template>
