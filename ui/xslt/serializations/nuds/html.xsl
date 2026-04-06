@@ -7,6 +7,7 @@
 	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/"
 	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:nm="http://nomisma.org/id/" xmlns:gml="http://www.opengis.net/gml" xmlns:tei="http://www.tei-c.org/ns/1.0"
 	xmlns:nmo="http://nomisma.org/ontology#" xmlns:org="http://www.w3.org/ns/org#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"
+	xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:la="https://linked.art/ns/terms/"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds" exclude-result-prefixes="#all"
 	version="2.0">
 	<xsl:include href="../../templates.xsl"/>
@@ -92,8 +93,12 @@
 	<xsl:variable name="display_path">
 		<xsl:if test="not(string($mode))">
 			<xsl:choose>
-				<xsl:when test="string(//config/uri_space) and $recordType = 'physical'">					
-					<xsl:value-of select="if (doc('input:request')/request/scheme = 'https') then replace($url, 'http://', 'https://') else $url"/>
+				<xsl:when test="string(//config/uri_space) and $recordType = 'physical'">
+					<xsl:value-of select="
+							if (doc('input:request')/request/scheme = 'https') then
+								replace($url, 'http://', 'https://')
+							else
+								$url"/>
 				</xsl:when>
 				<xsl:otherwise>../</xsl:otherwise>
 			</xsl:choose>
@@ -159,7 +164,8 @@
 	<xsl:variable name="rdf" as="element()*">
 		<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 			xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
-			xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#" xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#">
+			xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#" xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#"
+			xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:la="https://linked.art/ns/terms/">
 
 			<!-- aggregate distinct Nomisma URIs and perform an API lookup to get the RDF for all of them -->
 			<xsl:variable name="id-param">
@@ -248,6 +254,34 @@
 					<xsl:copy-of select="document(concat($href, '.rdf'))/rdf:RDF/*"/>
 				</xsl:if>
 			</xsl:for-each>
+
+			<!-- load object lot CIDOC-CRM RDF if applicable -->
+			<xsl:if test="descendant::nuds:lot">
+				<xsl:variable name="lotURI">
+					<xsl:choose>
+						<xsl:when test="descendant::nuds:lot/@xlink:href">
+							<xsl:value-of select="descendant::nuds:lot[1]/@xlink:href"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:choose>
+								<xsl:when test="//config/uri_space">
+									<xsl:value-of select="concat(replace(//config/uri_space, 'collection', 'lot'), descendant::nuds:lot[1])"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="concat($url, 'lot/', descendant::nuds:lot[1])"/>
+								</xsl:otherwise>
+							</xsl:choose>
+
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+
+				<xsl:if test="doc-available(concat($lotURI, '.rdf'))">
+					<xsl:copy-of select="document(concat($lotURI, '.rdf'))/rdf:RDF/*"/>
+				</xsl:if>
+
+			</xsl:if>
+
 		</rdf:RDF>
 	</xsl:variable>
 
@@ -330,12 +364,10 @@
 			<xsl:otherwise>false</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-	
+
 	<xsl:variable name="hasIssuePlaces" as="xs:boolean">
 		<xsl:choose>
-			<xsl:when
-				test="descendant::nuds:geographic/nuds:geogname[(@xlink:role = 'issuePlace') and contains(@xlink:href, 'geonames.org')]"
-				>true</xsl:when>
+			<xsl:when test="descendant::nuds:geographic/nuds:geogname[(@xlink:role = 'issuePlace') and contains(@xlink:href, 'geonames.org')]">true</xsl:when>
 			<xsl:otherwise>false</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
@@ -365,15 +397,15 @@
 					</xsl:if>
 					<head>
 						<xsl:call-template name="generic_head"/>
-						
+
 						<!-- Add fancyBox -->
 						<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
 						<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
-						
+
 						<xsl:choose>
 							<xsl:when test="$recordType = 'physical'">
 								<script type="text/javascript" src="{$include_path}/javascript/display_functions.js"/>
-								
+
 								<!--- IIIF -->
 								<!-- use Leaflet for standard photographs of coins in IIIF -->
 								<xsl:if test="descendant::mets:fileGrp[@USE = 'obverse' or @USE = 'reverse' or @USE = 'combined']/mets:file[@USE = 'iiif']">
@@ -392,7 +424,7 @@
 										<script type="text/javascript" src="{$include_path}/javascript/leaflet.legend.js"/>
 										<link type="text/css" href="{$include_path}/css/leaflet.legend.css" rel="stylesheet"/>
 										<script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"/>
-										<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" rel="stylesheet"/>										
+										<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" rel="stylesheet"/>
 										<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
 									</xsl:if>
 								</xsl:if>
@@ -401,7 +433,7 @@
 							<xsl:when test="$recordType = 'conceptual'">
 								<!--- IIIF -->
 								<script type="text/javascript" src="{$include_path}/javascript/leaflet-iiif.js"/>
-								
+
 								<script type="text/javascript" src="{$include_path}/javascript/display_functions.js"/>
 
 								<!-- visualization -->
@@ -488,22 +520,20 @@
 							<span id="publisher">
 								<xsl:value-of select="descendant::nuds:copyrightHolder"/>
 							</span>
-							<span id="legend"> [{"label": "<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>", "type": "rectangle", "fillColor": "#6992fd", "color": "black", "weight": 1},
-								{"label": "<xsl:value-of select="numishare:regularize_node('hoard', $lang)"/>", "type": "rectangle", "fillColor": "#d86458", "color": "black", "weight": 1}
-								<xsl:if test="$rdf//nmo:Mint[skos:related]">
-									<!-- only display the uncertain mint key if there's an uncertain mint match -->
-									,{"label": "<xsl:value-of select="concat(numishare:regularize_node('mint', $lang), ' (uncertain)')"/>", "type": "rectangle", "fillColor": "#666666", "color": "black", "weight": 1}
-								</xsl:if>
-								<xsl:if test="not($collection_type = 'hoard')"> 
-									,{"label": "<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>", "type": "rectangle", "fillColor": "#f98f0c", "color": "black", "weight": 1} 
-									<xsl:if test="descendant::nuds:subject[contains(@xlink:href, 'geonames.org')]">
-										,{"label": "<xsl:value-of select="numishare:regularize_node('subject', $lang)"/>", "type": "rectangle", "fillColor": "#00e64d", "color": "black", "weight": 1}
+							<span id="legend"> [{"label": "<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>", "type": "rectangle", "fillColor": "#6992fd", "color":
+								"black", "weight": 1}, {"label": "<xsl:value-of select="numishare:regularize_node('hoard', $lang)"/>", "type": "rectangle", "fillColor": "#d86458",
+								"color": "black", "weight": 1} <xsl:if test="$rdf//nmo:Mint[skos:related]">
+									<!-- only display the uncertain mint key if there's an uncertain mint match --> ,{"label": "<xsl:value-of
+										select="concat(numishare:regularize_node('mint', $lang), ' (uncertain)')"/>", "type": "rectangle", "fillColor": "#666666", "color": "black",
+									"weight": 1} </xsl:if>
+								<xsl:if test="not($collection_type = 'hoard')"> ,{"label": "<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>", "type":
+									"rectangle", "fillColor": "#f98f0c", "color": "black", "weight": 1} <xsl:if
+										test="descendant::nuds:subject[contains(@xlink:href, 'geonames.org')]"> ,{"label": "<xsl:value-of
+											select="numishare:regularize_node('subject', $lang)"/>", "type": "rectangle", "fillColor": "#00e64d", "color": "black", "weight": 1} </xsl:if>
+									<xsl:if test="descendant::nuds:geogname[@xlink:role = 'issuePlace']"> ,{"label": "<xsl:value-of
+											select="numishare:regularize_node('issuePlace', $lang)"/>", "type": "rectangle", "fillColor": "#00e64d", "color": "black", "weight": 1}
 									</xsl:if>
-									<xsl:if test="descendant::nuds:geogname[@xlink:role = 'issuePlace']">
-										,{"label": "<xsl:value-of select="numishare:regularize_node('issuePlace', $lang)"/>", "type": "rectangle", "fillColor": "#00e64d", "color": "black", "weight": 1}
-									</xsl:if>
-								</xsl:if>]
-							</span>
+								</xsl:if>] </span>
 
 
 							<xsl:if test="$recordType = 'conceptual'">
@@ -540,8 +570,8 @@
 										<xsl:value-of select="doc('input:die-frequencies-query')"/>
 									</span>
 								</xsl:if>
-								
-								
+
+
 
 								<!-- IIIF -->
 								<span id="hasFindspots">
@@ -939,15 +969,16 @@
 										</a>
 									</code>
 								</p>
-								
+
 								<xsl:if test="nuds:control/nuds:otherRecordId[@semantic = 'foaf:homepage']">
 									<p>
 										<strong>URL: </strong>
 										<code>
-											<a href="{nuds:control/nuds:otherRecordId[@semantic = 'foaf:homepage']}" title="{nuds:control/nuds:otherRecordId[@semantic = 'foaf:homepage']}" rel="foaf:homepage">
+											<a href="{nuds:control/nuds:otherRecordId[@semantic = 'foaf:homepage']}"
+												title="{nuds:control/nuds:otherRecordId[@semantic = 'foaf:homepage']}" rel="foaf:homepage">
 												<xsl:value-of select="nuds:control/nuds:otherRecordId[@semantic = 'foaf:homepage']"/>
 											</a>
-										</code>										
+										</code>
 									</p>
 								</xsl:if>
 							</div>
@@ -1303,7 +1334,7 @@
 		<h3>
 			<xsl:value-of select="numishare:normalizeLabel('display_map', $lang)"/>
 		</h3>
-		
+
 		<div id="mapcontainer"/>
 	</xsl:template>
 
@@ -1466,50 +1497,17 @@
 		</span>
 	</xsl:template>
 
-	<xsl:template match="nuds:adminDesc">
-		<div class="metadata_section">
-			<h3>
-				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
-			</h3>
-			<ul>
-				<xsl:apply-templates mode="descMeta"/>
-			</ul>
-		</div>
-	</xsl:template>
-
-
-	<xsl:template match="nuds:rightsStmt">
-		<div class="metadata_section">
-			<h3>
-				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
-			</h3>
-			<ul>
-				<xsl:apply-templates select="nuds:license[@for = 'images'] | nuds:rights | nuds:copyrightHolder" mode="descMeta"/>
-			</ul>
-		</div>
-	</xsl:template>
-
+	<!-- notes and descriptions -->
 	<xsl:template match="nuds:subjectSet | nuds:noteSet">
 		<div class="metadata_section">
 			<h3>
 				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 			</h3>
-			
+
 			<ul>
 				<xsl:apply-templates mode="descMeta"/>
 			</ul>
 		</div>
-	</xsl:template>
-
-	<xsl:template match="nuds:subject[@localType = 'category' and string(@xml:id)]" mode="descMeta">
-		<li>
-			<strong><xsl:value-of select="numishare:regularize_node(@localType, $lang)"/>: </strong>
-			
-			<xsl:call-template name="assemble_category_query">
-				<xsl:with-param name="full-id" select="@xml:id"/>
-			</xsl:call-template>
-		</li>
-
 	</xsl:template>
 
 	<xsl:template match="nuds:descriptionSet">
@@ -1564,7 +1562,165 @@
 		</li>
 	</xsl:template>
 
-	<!-- ***** provenance styling ***** -->
+	<xsl:template match="nuds:subject[@localType = 'category' and string(@xml:id)]" mode="descMeta">
+		<li>
+			<strong><xsl:value-of select="numishare:regularize_node(@localType, $lang)"/>: </strong>
+
+			<xsl:call-template name="assemble_category_query">
+				<xsl:with-param name="full-id" select="@xml:id"/>
+			</xsl:call-template>
+		</li>
+
+	</xsl:template>
+
+	<!-- rights and license statements -->
+	<xsl:template match="nuds:rightsStmt">
+		<div class="metadata_section">
+			<h3>
+				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+			</h3>
+			<ul>
+				<xsl:apply-templates select="nuds:license[@for = 'images'] | nuds:rights | nuds:copyrightHolder" mode="descMeta"/>
+			</ul>
+		</div>
+	</xsl:template>
+
+	<!-- ***** ADMIN DESC STYLING ***** -->
+	<xsl:template match="nuds:adminDesc">
+
+
+		<div class="metadata_section">
+			<h3>
+				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+			</h3>
+			<ul>
+
+				<!-- display lot metadata from RDF/XML either within nuds:provenance or replicating nuds:provenance HTML structure, if applicable -->
+				<xsl:choose>
+					<xsl:when test="nuds:lot">
+						<xsl:variable name="lotURI">
+							<xsl:choose>
+								<xsl:when test="nuds:lot/@xlink:href">
+									<xsl:value-of select="nuds:lot[1]/@xlink:href"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:choose>
+										<xsl:when test="//config/uri_space">
+											<xsl:value-of select="concat(replace(//config/uri_space, 'collection', 'lot'), nuds:lot[1])"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="concat($url, 'lot/', nuds:lot[1])"/>
+										</xsl:otherwise>
+									</xsl:choose>
+
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:variable>
+
+						<xsl:choose>
+							<xsl:when test="$rdf//la:Set[@rdf:about = $lotURI]">
+								<xsl:apply-templates select="*[not(local-name() = 'lot')]" mode="descMeta"/>
+
+
+								<xsl:if test="not(nuds:provenance)">
+									<li>
+										<h4>
+											<xsl:value-of select="numishare:regularize_node('provenance', $lang)"/>
+										</h4>
+										<ul>
+											<xsl:apply-templates select="$rdf//la:Set[@rdf:about = $lotURI]"/>
+										</ul>
+									</li>
+
+
+								</xsl:if>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:apply-templates mode="descMeta"/>
+							</xsl:otherwise>
+						</xsl:choose>
+
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:apply-templates mode="descMeta"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</ul>
+		</div>
+	</xsl:template>
+
+	<!-- ***** PROVENANCE ***** -->
+	
+	<!-- object lot CIDOC-CRM RDF/XML -->
+	<xsl:template match="la:Set">
+		<li>
+			<strong>
+				<xsl:choose>
+					<xsl:when test="la:members_exemplified_by/crm:E22_Human-Made_Object/crm:P24i_changed_ownership_through//crm:E52_Time-Span">
+						<xsl:value-of select="la:members_exemplified_by/crm:E22_Human-Made_Object/crm:P24i_changed_ownership_through//crm:E52_Time-Span/rdfs:label"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node('lot', $lang)"/>
+					</xsl:otherwise>
+				</xsl:choose>
+				<xsl:text>: </xsl:text>
+			</strong>
+
+			<a href="{@rdf:about}" title="Lot {rdfs:label}">Lot <xsl:value-of select="rdfs:label"/></a>
+			
+			<xsl:text> (</xsl:text>
+			<xsl:apply-templates select="descendant::crm:E8_Acquisition/crm:P2_has_type"/>
+			
+			<xsl:if test="descendant::crm:E8_Acquisition/crm:P23_transferred_title_from">
+				<xsl:text>: </xsl:text>
+			</xsl:if>
+			
+			<xsl:apply-templates select="descendant::crm:E8_Acquisition/crm:P23_transferred_title_from"/>
+			<xsl:text>)</xsl:text>
+			
+			<xsl:apply-templates select="descendant::crm:E8_Acquisition/crm:P67i_is_referred_to_by"/>
+		</li>
+
+		
+
+	</xsl:template>
+	
+	<xsl:template match="crm:P2_has_type">
+		<xsl:variable name="typeURI" select="@rdf:resource"/>
+		
+		<xsl:apply-templates select="$rdf//*[@rdf:about = $typeURI]"/>
+	</xsl:template>
+	
+	<xsl:template match="crm:P23_transferred_title_from">
+		<xsl:variable name="entityURI" select="@rdf:resource"/>
+		
+		<xsl:apply-templates select="$rdf//*[@rdf:about = $entityURI]"/>
+		
+		<xsl:if test="not(position() = last())">
+			<xsl:text>, </xsl:text>
+		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template match="crm:E21_Person | crm:E74_Group">
+		<a href="{@rdf:about}" title="{rdfs:label}">
+			<xsl:value-of select="rdfs:label"/>
+		</a>
+	</xsl:template>	
+	
+	<xsl:template match="crm:E55_Type">
+		<xsl:value-of select="rdfs:label"/>
+	</xsl:template>
+	
+	<xsl:template match="crm:P67i_is_referred_to_by">
+		<ul>
+			<li>
+				<strong><xsl:value-of select="numishare:regularize_node('acknowledgment', $lang)"/>: </strong>
+				<xsl:value-of select="crm:E33_Linguistic_Object/crm:P190_has_symbolic_content"/>
+			</li>
+		</ul>
+	</xsl:template>
+
+	<!-- NUDS provenance -->
 	<xsl:template match="nuds:provenance" mode="descMeta">
 		<li>
 			<h4>
@@ -1576,6 +1732,29 @@
 				</xsl:choose>
 			</h4>
 			<ul>
+				<!-- insert object lot metadata as the most recent event in the provenance sequence -->
+				<xsl:if test="parent::node()/nuds:lot">
+					<xsl:variable name="lotURI">
+						<xsl:choose>
+							<xsl:when test="parent::node()/nuds:lot/@xlink:href">
+								<xsl:value-of select="parent::node()/nuds:lot[1]/@xlink:href"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:choose>
+									<xsl:when test="//config/uri_space">
+										<xsl:value-of select="concat(replace(//config/uri_space, 'collection', 'lot'), parent::node()/nuds:lot[1])"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="concat($url, 'lot/', parent::node()/nuds:lot[1])"/>
+									</xsl:otherwise>
+								</xsl:choose>								
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					
+					<xsl:apply-templates select="$rdf//la:Set[@rdf:about = $lotURI]"/>					
+				</xsl:if>
+
 				<xsl:apply-templates select="descendant::nuds:chronItem">
 					<!-- sort by latest date -->
 					<xsl:sort select="
@@ -1590,7 +1769,15 @@
 
 	<xsl:template match="nuds:chronItem">
 		<li>
-			<xsl:apply-templates select="nuds:date | nuds:dateRange" mode="provenance"/>
+			<xsl:choose>
+				<xsl:when test="nuds:date or nuds:dateRange">
+					<xsl:apply-templates select="nuds:date | nuds:dateRange" mode="provenance"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<strong>No Date: </strong>
+				</xsl:otherwise>
+			</xsl:choose>
+			
 			<xsl:apply-templates select="nuds:acquiredFrom | nuds:previousColl"/>
 		</li>
 	</xsl:template>
@@ -1620,8 +1807,8 @@
 				<span class="glyphicon glyphicon-new-window"/>
 			</a>
 		</xsl:if>
-		
-		<xsl:apply-templates select="nuds:persname|nuds:corpname|nuds:famname" mode="provenance"/>
+
+		<xsl:apply-templates select="nuds:persname | nuds:corpname | nuds:famname" mode="provenance"/>
 
 		<xsl:if test="nuds:identifier">
 			<xsl:text>, no. </xsl:text>
@@ -1642,8 +1829,8 @@
 		</strong>
 		<xsl:text>: </xsl:text>
 	</xsl:template>
-	
-	<xsl:template match="nuds:persname|nuds:corpname|nuds:famname" mode="provenance">
+
+	<xsl:template match="nuds:persname | nuds:corpname | nuds:famname" mode="provenance">
 		<xsl:text> (</xsl:text>
 		<xsl:call-template name="display-label">
 			<xsl:with-param name="field">
@@ -1666,7 +1853,7 @@
 	<xsl:template match="nuds:editors" mode="descMeta">
 		<xsl:apply-templates mode="descMeta"/>
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:measurementsSet" mode="descMeta">
 		<xsl:apply-templates select="*" mode="descMeta">
 			<xsl:sort order="ascending" select="local-name()"/>
@@ -1789,13 +1976,13 @@
 	<!-- ***** CHARTS TEMPLATES ***** -->
 	<xsl:template name="charts">
 		<!-- measurements only generated on button click to prevent bot overload of SPARQL -->
-		
+
 		<h3>
 			<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
 		</h3>
-		
+
 		<p>Average measurements for this coin type:</p>
-		
+
 		<button class="btn btn-primary" id="get-measurements">Generate</button>
 
 		<dl class=" {if(//config/languages/language[@code = $lang]/@rtl = true()) then 'dl-horizontal dl-rtl' else 'dl-horizontal'} hidden" id="measurements-container">

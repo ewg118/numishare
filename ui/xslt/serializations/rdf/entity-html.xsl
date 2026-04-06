@@ -42,12 +42,8 @@
 	<xsl:variable name="url" select="/content/config/url"/>
 	<xsl:variable name="display_path">
 		<xsl:choose>
-			<xsl:when test="string(//config/uri_space)">
-				<xsl:value-of select="
-						if (doc('input:request')/request/scheme = 'https') then
-							replace($url, 'http://', 'https://')
-						else
-							$url"/>
+			<xsl:when test="string(//config/uri_space)">					
+				<xsl:value-of select="replace($url, 'https?://', '//')"/>
 			</xsl:when>
 			<xsl:otherwise>../</xsl:otherwise>
 		</xsl:choose>
