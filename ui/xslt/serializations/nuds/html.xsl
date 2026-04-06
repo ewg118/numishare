@@ -1650,7 +1650,7 @@
 	</xsl:template>
 
 	<!-- ***** PROVENANCE ***** -->
-	
+
 	<!-- object lot CIDOC-CRM RDF/XML -->
 	<xsl:template match="la:Set">
 		<li>
@@ -1667,50 +1667,50 @@
 			</strong>
 
 			<a href="{@rdf:about}" title="Lot {rdfs:label}">Lot <xsl:value-of select="rdfs:label"/></a>
-			
+
 			<xsl:text> (</xsl:text>
 			<xsl:apply-templates select="descendant::crm:E8_Acquisition/crm:P2_has_type"/>
-			
+
 			<xsl:if test="descendant::crm:E8_Acquisition/crm:P23_transferred_title_from">
 				<xsl:text>: </xsl:text>
 			</xsl:if>
-			
+
 			<xsl:apply-templates select="descendant::crm:E8_Acquisition/crm:P23_transferred_title_from"/>
 			<xsl:text>)</xsl:text>
-			
+
 			<xsl:apply-templates select="descendant::crm:E8_Acquisition/crm:P67i_is_referred_to_by"/>
 		</li>
 
-		
+
 
 	</xsl:template>
-	
+
 	<xsl:template match="crm:P2_has_type">
 		<xsl:variable name="typeURI" select="@rdf:resource"/>
-		
+
 		<xsl:apply-templates select="$rdf//*[@rdf:about = $typeURI]"/>
 	</xsl:template>
-	
+
 	<xsl:template match="crm:P23_transferred_title_from">
 		<xsl:variable name="entityURI" select="@rdf:resource"/>
-		
+
 		<xsl:apply-templates select="$rdf//*[@rdf:about = $entityURI]"/>
-		
+
 		<xsl:if test="not(position() = last())">
 			<xsl:text>, </xsl:text>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template match="crm:E21_Person | crm:E74_Group">
 		<a href="{@rdf:about}" title="{rdfs:label}">
 			<xsl:value-of select="rdfs:label"/>
 		</a>
-	</xsl:template>	
-	
+	</xsl:template>
+
 	<xsl:template match="crm:E55_Type">
 		<xsl:value-of select="rdfs:label"/>
 	</xsl:template>
-	
+
 	<xsl:template match="crm:P67i_is_referred_to_by">
 		<ul>
 			<li>
@@ -1747,12 +1747,12 @@
 									<xsl:otherwise>
 										<xsl:value-of select="concat($url, 'lot/', parent::node()/nuds:lot[1])"/>
 									</xsl:otherwise>
-								</xsl:choose>								
+								</xsl:choose>
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-					
-					<xsl:apply-templates select="$rdf//la:Set[@rdf:about = $lotURI]"/>					
+
+					<xsl:apply-templates select="$rdf//la:Set[@rdf:about = $lotURI]"/>
 				</xsl:if>
 
 				<xsl:apply-templates select="descendant::nuds:chronItem">
@@ -1774,11 +1774,26 @@
 					<xsl:apply-templates select="nuds:date | nuds:dateRange" mode="provenance"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<strong>No Date: </strong>
+
+					<strong>
+						<xsl:choose>
+							<xsl:when test="nuds:acquiredFrom">
+								<xsl:value-of select="numishare:regularize_node('acquiredFrom', $lang)"/>
+							</xsl:when>
+							<xsl:when test="nuds:previousColl">
+								<xsl:value-of select="numishare:regularize_node('previousColl', $lang)"/>
+							</xsl:when>
+						</xsl:choose>
+						<xsl:text>: </xsl:text>
+					</strong>
 				</xsl:otherwise>
 			</xsl:choose>
-			
+
 			<xsl:apply-templates select="nuds:acquiredFrom | nuds:previousColl"/>
+			
+			<xsl:if test="not(nuds:date) and not(nuds:dateRange)">
+				<i> (no date)</i>
+			</xsl:if>
 		</li>
 	</xsl:template>
 
