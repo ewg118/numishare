@@ -343,7 +343,9 @@
 			<xsl:apply-templates
 				select="la:members_exemplified_by/crm:E22_Human-Made_Object/crm:P24i_changed_ownership_through/crm:E8_Acquisition"/>
 			<td>
-				<xsl:value-of select="sum(descendant::crm:P90_has_value)"/>
+				<xsl:if test="descendant::crm:P90_has_value">
+					<xsl:value-of select="sum(descendant::crm:P90_has_value)"/>
+				</xsl:if>
 			</td>
 		</tr>
 	</xsl:template>
