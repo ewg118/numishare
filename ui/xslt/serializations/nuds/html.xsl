@@ -1668,15 +1668,18 @@
 
 			<a href="{@rdf:about}" title="Lot {rdfs:label}">Lot <xsl:value-of select="rdfs:label"/></a>
 
-			<xsl:text> (</xsl:text>
-			<xsl:apply-templates select="descendant::crm:E8_Acquisition/crm:P2_has_type"/>
-
-			<xsl:if test="descendant::crm:E8_Acquisition/crm:P23_transferred_title_from">
-				<xsl:text>: </xsl:text>
+			<xsl:if test="descendant::crm:E8_Acquisition/crm:P2_has_type or descendant::crm:E8_Acquisition/crm:P23_transferred_title_from">
+				<xsl:text> (</xsl:text>
+				<xsl:apply-templates select="descendant::crm:E8_Acquisition/crm:P2_has_type"/>
+				
+				<xsl:if test="descendant::crm:E8_Acquisition/crm:P2_has_type and descendant::crm:E8_Acquisition/crm:P23_transferred_title_from">
+					<xsl:text>: </xsl:text>
+				</xsl:if>
+				
+				<xsl:apply-templates select="descendant::crm:E8_Acquisition/crm:P23_transferred_title_from"/>
+				<xsl:text>)</xsl:text>
 			</xsl:if>
-
-			<xsl:apply-templates select="descendant::crm:E8_Acquisition/crm:P23_transferred_title_from"/>
-			<xsl:text>)</xsl:text>
+			
 
 			<xsl:apply-templates select="descendant::crm:E8_Acquisition/crm:P67i_is_referred_to_by"/>
 		</li>
