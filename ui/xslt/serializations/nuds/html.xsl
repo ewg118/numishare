@@ -1655,14 +1655,7 @@
 	<xsl:template match="la:Set">
 		<li>
 			<strong>
-				<xsl:choose>
-					<xsl:when test="la:members_exemplified_by/crm:E22_Human-Made_Object/crm:P24i_changed_ownership_through//crm:E52_Time-Span">
-						<xsl:value-of select="la:members_exemplified_by/crm:E22_Human-Made_Object/crm:P24i_changed_ownership_through//crm:E52_Time-Span/rdfs:label"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="numishare:regularize_node('lot', $lang)"/>
-					</xsl:otherwise>
-				</xsl:choose>
+				<xsl:value-of select="numishare:regularize_node('acquisition', $lang)"/>				
 				<xsl:text>: </xsl:text>
 			</strong>
 
@@ -1678,6 +1671,11 @@
 				
 				<xsl:apply-templates select="descendant::crm:E8_Acquisition/crm:P23_transferred_title_from"/>
 				<xsl:text>)</xsl:text>
+			</xsl:if>
+			
+			<xsl:if test="la:members_exemplified_by/crm:E22_Human-Made_Object/crm:P24i_changed_ownership_through//crm:E52_Time-Span">
+				<xsl:text>, </xsl:text>
+				<xsl:value-of select="la:members_exemplified_by/crm:E22_Human-Made_Object/crm:P24i_changed_ownership_through//crm:E52_Time-Span/rdfs:label"/>
 			</xsl:if>
 			
 

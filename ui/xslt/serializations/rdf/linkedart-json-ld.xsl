@@ -273,6 +273,9 @@
 		<timespan>
 			<_object>
 				<type>TimeSpan</type>
+				<_label>
+					<xsl:value-of select="rdfs:label"/>
+				</_label>
 				<begin_of_the_begin>
 					<xsl:value-of select="crm:P82a_begin_of_the_begin"/>
 				</begin_of_the_begin>
